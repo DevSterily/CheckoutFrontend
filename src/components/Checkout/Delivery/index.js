@@ -20,7 +20,7 @@ import {
   DeliveryLabel,
   DeliveryPrice,
   DeliveryDiscount,
-  ArrowRight
+  ArrowRight,
 } from "./Delivery.style";
 import { Tooltip } from "@mui/material";
 function Delivery() {
@@ -30,21 +30,25 @@ function Delivery() {
         <Step>2</Step>
         <Title>Entrega</Title>
       </Header>
-      <Disclaimer>
-        Cadastre ou selecione um endereço
-      </Disclaimer>
+      <Disclaimer>Cadastre ou selecione um endereço</Disclaimer>
       <Label>CEP</Label>
       <InputDefault small value="00000-000"></InputDefault>
       <City>São Paulo / SP</City>
       <Label>Endereço</Label>
       <InputDefault value="Rua Teste"></InputDefault>
       <AddressContainer>
-        <div><Label>Número</Label>
-        <InputDefault number value="123"></InputDefault></div>
-        <div><Label>Bairro</Label>
-        <InputDefault value="Bairro Teste"></InputDefault></div>
+        <div>
+          <Label>Número</Label>
+          <InputDefault number value="123"></InputDefault>
+        </div>
+        <div>
+          <Label>Bairro</Label>
+          <InputDefault value="Bairro Teste"></InputDefault>
+        </div>
       </AddressContainer>
-      <Label>Complemento <small>{`(opcional)`}</small></Label>
+      <Label>
+        Complemento <small>{`(opcional)`}</small>
+      </Label>
       <InputDefault></InputDefault>
       <Label>Destinatário</Label>
       <InputDefault value="Fulano"></InputDefault>
@@ -54,15 +58,23 @@ function Delivery() {
         <RadioButton checked></RadioButton>
         <DeliveryTitle>Rua 1, 123 - Bairro X</DeliveryTitle>
         <DeliveryDescription>São Paulo-SP | CEP 123456-789</DeliveryDescription>
-        <Tooltip title="Editar" placement="top" arrow><EditIcon></EditIcon></Tooltip>
-        <Tooltip title="Excluir" placement="top" arrow><DeleteIcon></DeleteIcon></Tooltip>
+        <Tooltip title="Editar" placement="top" arrow>
+          <EditIcon></EditIcon>
+        </Tooltip>
+        <Tooltip title="Excluir" placement="top" arrow>
+          <DeleteIcon></DeleteIcon>
+        </Tooltip>
       </DeliveryCard>
       <DeliveryCard>
         <RadioButton></RadioButton>
         <DeliveryTitle>Rua 1, 123 - Bairro X</DeliveryTitle>
         <DeliveryDescription>São Paulo-SP | CEP 123456-789</DeliveryDescription>
-        <Tooltip title="Editar" placement="top" arrow><EditIcon></EditIcon></Tooltip>
-        <Tooltip title="Excluir" placement="top" arrow><DeleteIcon></DeleteIcon></Tooltip>
+        <Tooltip title="Editar" placement="top" arrow>
+          <EditIcon></EditIcon>
+        </Tooltip>
+        <Tooltip title="Excluir" placement="top" arrow>
+          <DeleteIcon></DeleteIcon>
+        </Tooltip>
       </DeliveryCard>
       <DeliveryLabel>Escolha uma forma de entrega:</DeliveryLabel>
       <DeliveryCard shipping checked>
@@ -72,7 +84,10 @@ function Delivery() {
         <DeliveryPrice>R$ 18,00</DeliveryPrice>
         <DeliveryDiscount>Grátis</DeliveryDiscount>
       </DeliveryCard>
-      <Button>Continuar<ArrowRight /></Button>
+      <Button>
+        Continuar
+        <ArrowRight />
+      </Button>
     </Container>
   );
 }

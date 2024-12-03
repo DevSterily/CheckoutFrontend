@@ -51,11 +51,7 @@ function Footer() {
         <PaymentList>
           {icons.map((payment) => {
             return (
-              <Icon
-                src={payment.icon}
-                alt={payment.slug}
-                key={payment.slug}
-              />
+              <Icon src={payment.icon} alt={payment.slug} key={payment.slug} />
             );
           })}
         </PaymentList>
