@@ -33,6 +33,7 @@ function Delivery() {
   const [step, setStep] = useState(1);
   const [isFilled, setIsFilled] = useState(false);
 
+  // eslint-disable-next-line no-unused-vars
   const handleOpen = () => {
     setIsOpened(!isOpened);
   };

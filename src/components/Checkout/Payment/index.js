@@ -25,7 +25,9 @@ import {
 import Plastic from "react-plastic";
 import { Tooltip } from "@mui/material";
 function Payment() {
+  // eslint-disable-next-line no-unused-vars
   const [isOpened, setIsOpened] = useState(true);
+  // eslint-disable-next-line no-unused-vars
   const [payment, setPayment] = useState("credit");
 
   const icons = [
