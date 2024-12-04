@@ -1,15 +1,23 @@
 import styled from "styled-components";
+import CheckIcon from '@mui/icons-material/Check';
 
 export const Container = styled.div`
-  border: 2px solid #999999;
-  cursor: default;
-  background: #fff;
+  border: ${(props) => props.success ? 'none' : '2px solid #999999'};
+  cursor: ${(props) => props.success ? 'pointer' : 'default'};
+  background: ${(props) => props.success ? '#f9fdf7' : '#fff'};
   border-radius: 5px;
   margin: 0;
   padding: 30px;
   display: flex;
   flex-direction: column;
-  margin-top: -100px;
+  margin-top: 30px;
+  position: relative;
+
+  ${(props) => props.closed && `
+    pointer-events: none;
+    opacity: .5;
+    border: none !important;
+  `};
 `
 
 export const Header = styled.div`
@@ -19,7 +27,7 @@ export const Header = styled.div`
 `
 
 export const Step = styled.span`
-  background: #333;
+  background: ${(props) => props.success ? '#36b376' : '#333'};
   color: #fff;
   border-radius: 50%;
   font-size: 12px;
@@ -30,12 +38,16 @@ export const Step = styled.span`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  ${(props) => props.closed && `
+    background: #ccc !important;
+  `};
 `
 
 export const Title = styled.p`
   line-height: 21px;
   font-weight: 700;
-  color: #666667;
+  color: ${(props) => props.success ? '#36b376' : '#666667'};
   font-size: 18px;
 `
 
@@ -68,7 +80,7 @@ export const InputDefault = styled.input`
   padding: 16px 35px 15px 20px;
   margin-bottom: ${(props) => (props.error ? '0px' : '15px')};
   max-width: ${(props) => (props.small ? '200px' : 'initial')};
-  width: ${(props) => (props.phone && '100%' || props.number && '40px' || 'initial')};
+  width: ${(props) => ((props.phone && '100%') ||( props.number && '40px') || 'initial')};
   border-top-left-radius: ${(props) => (props.phone ? '0 !important' : '5px')};
   border-bottom-left-radius: ${(props) => (props.phone ? '0 !important' : '5px')};
 
@@ -298,4 +310,34 @@ export const ArrowRight = styled.i`
   height: 13px;
   width: 17px;
   display: flex;
+`
+
+export const StyledCheckIcon = styled(CheckIcon)`
+  fill: #36b376 !important;
+`
+
+export const FinalEditIcon = styled.i`
+  background: url(assets/img/icons/pencil-edit.svg) no-repeat;
+  height: 15px;
+  width: 15px;
+  display: flex;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+  z-index: 2;
+`
+
+export const DeliveryFinalTitle = styled.p`
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+  margin-top: 20px !important;
+  margin-bottom: 5px !important;
+`
+
+export const DeliveryFinalText = styled.p`
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 5px !important;
 `
