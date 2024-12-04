@@ -9,10 +9,12 @@ function Checkout() {
   return (
     <StyledCheckout>
       <Container>
-        <Identification />
+        <div>
+          <Identification />
+          <Delivery />
+        </div>
         <Payment />
         <Summary />
-        <Delivery />
       </Container>
     </StyledCheckout>
   );
