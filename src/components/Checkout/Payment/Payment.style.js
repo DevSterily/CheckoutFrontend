@@ -1,6 +1,9 @@
 import styled from "styled-components";
+import HelpIcon from '@mui/icons-material/Help';
+import LockIcon from '@mui/icons-material/Lock';
 
 export const Container = styled.div`
+  max-width: 350px !important;
   border: 2px solid #999999;
   cursor: default;
   background: #fff;
@@ -9,6 +12,12 @@ export const Container = styled.div`
   padding: 30px;
   display: flex;
   flex-direction: column;
+
+  ${(props) => props.closed && `
+    pointer-events: none;
+    opacity: .5;
+    border: none !important;
+  `};
 `
 
 export const Header = styled.div`
@@ -29,6 +38,10 @@ export const Step = styled.span`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  ${(props) => props.closed && `
+    background: #ccc !important;
+  `};
 `
 
 export const Title = styled.p`
@@ -50,6 +63,9 @@ export const Label = styled.p`
   color: #333;
   font-size: 13px;
   margin-bottom: 6px !important;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 `
 
 export const InputDefault = styled.input`
@@ -66,7 +82,7 @@ export const InputDefault = styled.input`
   outline: none;
   padding: 16px 35px 15px 20px;
   margin-bottom: ${(props) => (props.error ? '0px' : '15px')};
-  max-width: ${(props) => (props.small ? '200px' : 'initial')};
+  max-width: ${(props) => (props.small ? '100px' : 'initial')};
   width: ${(props) => (props.phone ? '100%' : 'initial')};
   border-top-left-radius: ${(props) => (props.phone ? '0 !important' : '5px')};
   border-bottom-left-radius: ${(props) => (props.phone ? '0 !important' : '5px')};
@@ -121,8 +137,9 @@ export const Button = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 5px;
   cursor: pointer;
+  margin-bottom: 10px;
   
   &:hover {
     opacity: .8;
@@ -138,12 +155,13 @@ export const ErrorMessage = styled.p`
 `
 
 export const PaymentCard = styled.div`
+  display: flex;
+  flex-direction: column;
   background: ${(props) => props.checked ? '#f4f6f8' : '#fff'};
   border: 1px solid ${(props) => props.checked ? '#333' : '#d0d0d0'};
   border-radius: 5px;
   color: #333;
   cursor: pointer;
-  display: block;
   font-size: 11px;
   line-height: 14px;
   margin: 0 0 10px;
@@ -156,10 +174,14 @@ export const PaymentCard = styled.div`
     justify-content: center;
   `};
 
-
   &:hover {
     background: #f4f6f8;
     border: 1px solid #333;
+  }
+
+  span {
+    margin-top: -10px;
+    margin-bottom: 20px;
   }
 `
 
@@ -199,7 +221,12 @@ export const RadioButton = styled.input.attrs({ type: "radio" })`
 export const PaymentTitle = styled.p`
   font-weight: 500;
   margin-left: 30px !important;
-  font-size: ${(props) => props.big ? '12px' : '11px'};
+  margin-top: 6px !important;
+  font-size: ${(props) => props.big ? '14px' : '11px'};
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: ${(props) => props.selected ? '20px !important' : '5px !important'};
 `
 
 export const PaymentDescription = styled.p`
@@ -262,4 +289,94 @@ export const ArrowRight = styled.i`
   height: 13px;
   width: 17px;
   display: flex;
+`
+
+export const PaymentList = styled.div`
+  margin: 8px 0;
+  margin-left: 30px !important;
+`
+
+export const Icon = styled.img`
+  display: inline-block;
+  height: 20px;
+  margin: 3px;
+  width: 30px;
+`
+
+export const PixIcon = styled.i`
+  background: url(assets/img/icons/pix.svg?v=1) no-repeat;
+  height: 16px;
+  width: 16px;
+  display: flex;
+`
+
+export const BarcodeIcon = styled.i`
+  background: url(assets/img/icons/barcode.svg?v=1) no-repeat;
+  height: 12px;
+  width: 14px;
+  display: flex;
+`
+
+export const PaymentDisclaimer = styled.p`
+  font-size: 13px;
+  color: #333;
+  line-height: 1.4em;
+  margin-bottom: 10px !important;
+  font-weight: 500;
+`
+
+export const PaymentTotal = styled.p`
+  color: #44C485;
+  font-size: 16px;
+  font-weight: 700;
+  margin-top: 20px !important;
+  margin-bottom: 20px !important;
+`
+
+export const CreditContainer = styled.div`
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+  }
+`
+
+export const StyledHelpIcon = styled(HelpIcon)`
+    width: 15px !important;
+    height: 15px !important;
+    fill: #999 !important;
+`
+
+export const StyledLockIcon = styled(LockIcon)`
+  height: 15px !important;
+  width: 15px !important;
+`
+
+export const Select = styled.select`
+  display: flex;
+  margin: 0;
+  background: ${(props) => (props.error ? '#feecef' : '#fff')};
+  border: ${(props) => (props.error ? '1px solid #e50f38' : '1px solid #d0d0d0')};
+  border-radius: 5px;
+  color: #333;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 14px;
+  outline: none;
+  padding: 12px 35px 11px 20px;
+  margin-bottom: ${(props) => (props.error ? '0px' : '15px')};
+  max-width: ${(props) => (props.small ? '100px' : 'initial')};
+  width: ${(props) => (props.phone ? '100%' : 'initial')};
+  border-top-left-radius: ${(props) => (props.phone ? '0 !important' : '5px')};
+  border-bottom-left-radius: ${(props) => (props.phone ? '0 !important' : '5px')};
+
+  &:focus {
+    background: #f4f6f8;
+    border-color: #333;
+  }
 `
