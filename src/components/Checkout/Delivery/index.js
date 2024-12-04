@@ -27,6 +27,7 @@ import {
   DeliveryFinalText,
 } from "./Delivery.style";
 import { Tooltip } from "@mui/material";
+import InputMask from 'react-input-mask';
 
 function Delivery() {
   const [isOpened, setIsOpened] = useState(true);
@@ -80,7 +81,7 @@ function Delivery() {
         <>
           <Disclaimer>Cadastre ou selecione um endereço</Disclaimer>
           <Label>CEP</Label>
-          <InputDefault small value={data.cep}></InputDefault>
+          <InputDefault as={InputMask} mask="99999-999" small value={data.cep}></InputDefault>
           <City>{data.location}</City>
           <Label>Endereço</Label>
           <InputDefault value={data.address}></InputDefault>

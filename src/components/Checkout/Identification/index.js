@@ -18,6 +18,7 @@ import {
   Title,
 } from "./Identification.style";
 import { Tooltip } from "@mui/material";
+import InputMask from "react-input-mask";
 
 function Identification() {
   const [isFilled, setIsFilled] = useState(false);
@@ -65,14 +66,18 @@ function Identification() {
           ></InputDefault>
           <Label>CPF</Label>
           <InputDefault
+            as={InputMask}
+            mask="999.999.999-99"
             value={data.cpf}
             small
             placeholder="000.000.000-00"
-          ></InputDefault>
+          />
           <Label>Celular / WhatsApp</Label>
           <InputMobileContainer>
             <InputMobileCode>+55</InputMobileCode>
             <InputDefault
+              as={InputMask}
+              mask="(99) 99999-9999"
               value={data.mobile}
               phone
               placeholder="(00) 00000-0000"

@@ -24,6 +24,8 @@ import {
 } from "./Payment.style";
 import Plastic from "react-plastic";
 import { Tooltip } from "@mui/material";
+import InputMask from 'react-input-mask';
+
 function Payment() {
   // eslint-disable-next-line no-unused-vars
   const [isOpened, setIsOpened] = useState(true);
@@ -78,13 +80,15 @@ function Payment() {
               cvc="•••"
             />
             <Label>Número do cartão</Label>
-            <InputDefault placeholder="1234 1234 1234 1234"></InputDefault>
+            <InputDefault as={InputMask}
+            mask="9999 9999 9999 9999" placeholder="1234 1234 1234 1234"></InputDefault>
             <CreditContainer>
               <div>
                 <Label>
                   Validade <small>(mês/ano)</small>
                 </Label>
-                <InputDefault small placeholder="MM/AA"></InputDefault>
+                <InputDefault as={InputMask}
+            mask="99/99" small placeholder="MM/AA"></InputDefault>
               </div>
               <div>
                 <Label>
@@ -97,13 +101,15 @@ function Payment() {
                     <StyledHelpIcon />
                   </Tooltip>
                 </Label>
-                <InputDefault small></InputDefault>
+                <InputDefault as={InputMask}
+            mask="9999" small></InputDefault>
               </div>
             </CreditContainer>
             <Label>Nome e sobrenome do titular</Label>
             <InputDefault placeholder="ex.: Maria de Almeida Cruz"></InputDefault>
             <Label>CPF do titular</Label>
-            <InputDefault placeholder="000.000.000-00"></InputDefault>
+            <InputDefault as={InputMask}
+            mask="999.999.999-99" placeholder="000.000.000-00"></InputDefault>
             <Label>Nº de Parcelas</Label>
             <Select disabled>
               <option selected>---</option>
