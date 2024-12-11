@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import CheckIcon from '@mui/icons-material/Check';
+import InputMask from "react-input-mask";
+import { Form } from "formik";
 
 export const Container = styled.div`
   border: ${(props) => props.success ? 'none' : '2px solid #999999'};
@@ -11,6 +13,23 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
+
+  @media (max-width: 1060px) {
+    display: ${(props) => props.success ? 'none' : 'flex'};
+    max-width: 500px;
+    min-width: 500px;
+  }
+
+  @media (max-width: 520px) {
+    display: ${(props) => props.success ? 'none' : 'flex'};
+    max-width: 50%;
+    min-width: 50%;
+  }
+
+  @media (max-width: 400px) {
+    max-width: 80% !important;
+    min-width: 80%;
+  }
 `
 
 export const Header = styled.div`
@@ -77,6 +96,14 @@ export const InputDefault = styled.input`
     background: #f4f6f8;
     border-color: #333;
   }
+
+  background-image: ${(props) =>
+    props.isValid
+      ? `url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2336b376"%3E%3Cpath d="M9 16.2l-3.5-3.5 1.4-1.4L9 13.4l7.1-7.1 1.4 1.4L9 16.2z"/%3E%3C/svg%3E')`
+      : "none"};
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 1.5rem;
 `
 
 export const InputMobileContainer = styled.div`
@@ -174,4 +201,42 @@ export const IdentificationFinalText = styled.p`
   font-size: 14px;
   color: #333;
   margin-bottom: 5px !important;
+`
+
+export const StyledInputMask = styled(InputMask)`
+  display: flex;
+  margin: 0;
+  background: ${(props) => (props.error ? '#feecef' : '#fff')};
+  border: ${(props) => (props.error ? '1px solid #e50f38' : '1px solid #d0d0d0')};
+  border-radius: 5px;
+  color: #333;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 14px;
+  outline: none;
+  padding: 16px 35px 15px 20px;
+  margin-bottom: ${(props) => (props.error ? '0px' : '15px')};
+  max-width: ${(props) => (props.small ? '200px' : 'initial')};
+  width: ${(props) => (props.phone ? '100%' : 'initial')};
+  border-top-left-radius: ${(props) => (props.phone ? '0 !important' : '5px')};
+  border-bottom-left-radius: ${(props) => (props.phone ? '0 !important' : '5px')};
+
+  &:focus {
+    background: #f4f6f8;
+    border-color: #333;
+  }
+
+  background-image: ${(props) =>
+    props.isValid
+      ? `url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2336b376"%3E%3Cpath d="M9 16.2l-3.5-3.5 1.4-1.4L9 13.4l7.1-7.1 1.4 1.4L9 16.2z"/%3E%3C/svg%3E')`
+      : "none"};
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 1.5rem;
+`
+
+export const StyledForm = styled(Form)`
+  display: flex;
+  flex-direction: column;
 `

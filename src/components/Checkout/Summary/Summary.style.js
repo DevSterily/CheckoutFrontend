@@ -10,6 +10,32 @@ export const Container = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
+
+  .group {
+    margin-top: 15px;
+  }
+
+  @media (max-width: 1060px) {
+    max-width: 500px;
+    min-width: 500px;
+
+    .group {
+      order: 2;
+      border-top: 1px solid #eee;
+      margin-top: 20px;
+      padding-top: 20px;
+    }
+  }
+
+  @media (max-width: 520px) {
+    max-width: 65%;
+    min-width: 65%;
+  }
+
+   @media (max-width: 400px) {
+    max-width: 70%;
+    min-width: 70%;
+  }
 `
 
 export const Title = styled.span`

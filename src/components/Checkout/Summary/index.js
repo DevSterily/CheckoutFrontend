@@ -47,6 +47,7 @@ function Summary() {
   return (
     <Container>
       <Title>Resumo</Title>
+      <div class="group">
       <CouponLabel>Tem um cupom?</CouponLabel>
       <CouponContainer>
         <CouponIcon />
@@ -73,6 +74,7 @@ function Summary() {
           <p>R$ 162,00</p>
         </TotalContainer>
       </PriceTotal>
+      </div>
       {items.map((item, index) => {
         return (
           <ItemsContainer key={index} isFirstItem={index === 0}>

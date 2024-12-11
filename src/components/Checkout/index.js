@@ -9,7 +9,7 @@ function Checkout() {
   return (
     <StyledCheckout>
       <Container>
-        <div>
+        <div class="group">
           <Identification />
           <Delivery />
         </div>

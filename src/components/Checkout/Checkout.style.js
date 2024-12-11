@@ -16,4 +16,17 @@ export const Container = styled.div`
   gap: 30px;
   max-width: 1196px;
   width: 100%;
+
+  @media (max-width: 1060px) {
+    display: flex;
+    flex-direction: column-reverse !important;
+    align-items: center;
+  }
+
+  @media (max-width: 520px) {
+    display: flex;
+    flex-direction: column-reverse !important;
+    align-items: center;
+    max-width: 100%;
+  }
 `

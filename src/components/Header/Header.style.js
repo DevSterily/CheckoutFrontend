@@ -40,4 +40,8 @@ export const Logo = styled.img`
 export const ItemSecurity = styled.img`
   display: block;
   float: right;
+
+  @media (max-width: 1060px) {
+    margin-right: 50px;
+  }
 `
