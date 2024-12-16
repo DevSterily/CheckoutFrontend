@@ -44,7 +44,8 @@ import {
   selectAddress,
   editAddresses,
   finishDelivery,
-  editDelivery
+  editDelivery,
+  setCostumerId,
 } from "../../../redux/deliverySlice";
 
 const validationSchema = Yup.object({
@@ -69,9 +70,10 @@ function Delivery() {
     name: recipientName,
   } = useSelector((state) => state.identification);
 
-  const { hasFinished, addresses, step, selectedAddress, isEditing } = useSelector(
-    (state) => state.delivery
-  );
+  const { hasFinished, addresses, step, selectedAddress, isEditing } =
+    useSelector((state) => state.delivery);
+
+  const { data } = useSelector((state) => state.summary);
 
   useEffect(() => {
     if (lastStepHasFinished) {
@@ -140,6 +142,29 @@ function Delivery() {
       setAddress(undefined);
     } else {
       dispatch(setAddresses({ ...payload, ...address }));
+      const queryParams = new URLSearchParams(window.location.search);
+      const cartId = queryParams.get("cartId");
+      axios.put(
+        `${process.env.REACT_APP_API_URL}/cart/${cartId}`,
+        {
+          status: "ENDERECO CLIENTE CAPTURADOS",
+          dados_capturados: {
+            cep: payload.zipCode,
+            bairro: address.neighborhood,
+            cidade: address.city,
+            estado: address.state,
+            numero: parseInt(payload.number),
+            complemento: payload.additionalData || "",
+            endereco: address.street,
+          },
+        },
+        {
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${process.env.REACT_APP_API_KEY}`,
+          },
+        }
+      );
       setAddress(undefined);
     }
   };
@@ -191,8 +216,11 @@ function Delivery() {
 
   useEffect(() => {
     if (addresses.length > 0) {
-      localStorage.removeItem('STERILY_CHECKOUT_ADDRESS')
-      localStorage.setItem('STERILY_CHECKOUT_ADDRESS', JSON.stringify(addresses))
+      localStorage.removeItem("STERILY_CHECKOUT_ADDRESS");
+      localStorage.setItem(
+        "STERILY_CHECKOUT_ADDRESS",
+        JSON.stringify(addresses)
+      );
       handleSelectedAddress(addresses.length - 1);
     } else {
       addNewAddress();
@@ -201,26 +229,98 @@ function Delivery() {
   }, [addresses]);
 
   useEffect(() => {
-    localStorage.removeItem('STERILY_CHECKOUT_DELIVERY_SA')
-    localStorage.setItem('STERILY_CHECKOUT_DELIVERY_SA', selectedAddress)
-  }, [selectedAddress])
+    localStorage.removeItem("STERILY_CHECKOUT_DELIVERY_SA");
+    localStorage.setItem("STERILY_CHECKOUT_DELIVERY_SA", selectedAddress);
+  }, [selectedAddress]);
 
   useEffect(() => {
-    const cachedData = localStorage.getItem('STERILY_CHECKOUT_ADDRESS')
-    const cachedSa = localStorage.getItem('STERILY_CHECKOUT_DELIVERY_SA')
-    if(addresses.length <= 0 && cachedData && cachedSa) {
-      dispatch(editAddresses(JSON.parse(cachedData)))
-      handleSelectedAddress(parseInt(cachedSa));
+    const cachedData =
+      data &&
+      data.dados_capturados &&
+      data.dados_capturados.endereco &&
+      data.dados_capturados.numero &&
+      data.dados_capturados.cidade &&
+      data.dados_capturados.estado &&
+      data.dados_capturados.bairro &&
+      data.dados_capturados.cep &&
+      data.dados_capturados.nome;
+    if (cachedData) {
+      const cachedDataObject = {
+        zipCode: data.dados_capturados.cep,
+        number: data.dados_capturados.numero.toString(),
+        recipient: data.dados_capturados.nome,
+        additionalData: data.dados_capturados.complemento || "",
+        cep: data.dados_capturados.cep,
+        state: data.dados_capturados.estado,
+        city: data.dados_capturados.cidade,
+        neighborhood: data.dados_capturados.bairro,
+        street: data.dados_capturados.endereco,
+      };
+      dispatch(editAddresses([cachedDataObject]));
+      handleSelectedAddress(0);
       dispatch(finishDelivery());
+      axios
+        .post(
+          `${process.env.REACT_APP_API_URL}/customer`,
+          {
+            name: data.dados_capturados.nome,
+            type: "individual",
+            gender: "male",
+            email: data.dados_capturados.email,
+            document_type: "cpf",
+            document: data.dados_capturados.cpf,
+            address_country: "BR",
+            address_state: data.dados_capturados.estado,
+            address_city: data.dados_capturados.cidade,
+            address_zip_code: data.dados_capturados.cep.replace("-", ""),
+            address_line_1: data.dados_capturados.endereco,
+            address_line_2: data.dados_capturados.complemento || "",
+            phones_mobile_phone_country_code: "55",
+            phones_mobile_phone_area_code: data.dados_capturados.celular
+              .split(" ")[0]
+              .replace("(", "")
+              .replace(")", ""),
+            phones_mobile_phone_number: data.dados_capturados.celular
+              .split(" ")[1]
+              .replace("-", ""),
+            phones_home_phone_country_code: "55",
+            phones_home_phone_area_code: data.dados_capturados.celular
+              .split(" ")[0]
+              .replace("(", "")
+              .replace(")", ""),
+            phones_home_phone_number: data.dados_capturados.celular
+              .split(" ")[1]
+              .replace("-", "")
+              .substring(1),
+            birthdate: "19-07-1990",
+          },
+          {
+            headers: {
+              accept: "application/json",
+              Authorization: `Bearer ${process.env.REACT_APP_API_KEY}`,
+            },
+          }
+        )
+        .then((results) => {
+          dispatch(setCostumerId(results.data.id));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
-  // eslint-disable-next-line
-  }, [])
+    // eslint-disable-next-line
+  }, [data]);
+
+  const hasDeliveryTax = data?.resumo?.total < 10000;
 
   return (
     <Container
       id="step-2"
       onClick={editData}
-      success={(isEditingLastStep && lastStepHasFinished) || (!isEditing && hasFinished)}
+      success={
+        (isEditingLastStep && lastStepHasFinished) ||
+        (!isEditing && hasFinished)
+      }
       closed={!lastStepHasFinished}
     >
       <Header>
@@ -406,8 +506,8 @@ function Delivery() {
             <RadioButton checked></RadioButton>
             <DeliveryTitle big>Rápida - 1 a 4 dias</DeliveryTitle>
             <DeliveryDescription big>Entrega garantida</DeliveryDescription>
-            <DeliveryPrice>R$ 18,00</DeliveryPrice>
-            <DeliveryDiscount>Grátis</DeliveryDiscount>
+            <DeliveryPrice free={!hasDeliveryTax}>R$ 18,00</DeliveryPrice>
+            {!hasDeliveryTax && <DeliveryDiscount>Grátis</DeliveryDiscount>}
           </DeliveryCard>
           <Button onClick={handleFinishDelivery}>
             Continuar
@@ -423,7 +523,9 @@ function Delivery() {
           </DeliveryFinalText>
           <DeliveryFinalText>{`${addresses[selectedAddress]?.city}-${addresses[selectedAddress]?.state} | CEP ${addresses[selectedAddress]?.cep}`}</DeliveryFinalText>
           <DeliveryFinalTitle>Forma de entrega:</DeliveryFinalTitle>
-          <DeliveryFinalText>Rápida - 1 a 4 dias Grátis</DeliveryFinalText>
+          <DeliveryFinalText>
+            Rápida - 1 a 4 dias {hasDeliveryTax ? "R$ 18,00" : "Grátis"}
+          </DeliveryFinalText>
         </>
       )}
     </Container>

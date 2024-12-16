@@ -3,11 +3,12 @@ import { createSlice } from "@reduxjs/toolkit";
 export const slice = createSlice({
   name: "delivery",
   initialState: {
+    costumerId: undefined,
     addresses: [],
     hasFinished: false,
     step: 1,
     selectedAddress: undefined,
-    isEditing: true
+    isEditing: true,
   },
   reducers: {
     setAddresses(state, { payload }) {
@@ -28,9 +29,12 @@ export const slice = createSlice({
     finishDelivery(state) {
       return { ...state, hasFinished: true, isEditing: false };
     },
-    editDelivery(state) { 
-      return { ...state, isEditing: true }
-    }
+    editDelivery(state) {
+      return { ...state, isEditing: true };
+    },
+    setCostumerId(state, { payload }) {
+      return { ...state, costumerId: payload };
+    },
   },
 });
 
@@ -41,7 +45,8 @@ export const {
   selectAddress,
   editAddresses,
   finishDelivery,
-  editDelivery
+  editDelivery,
+  setCostumerId,
 } = slice.actions;
 
 export default slice.reducer;

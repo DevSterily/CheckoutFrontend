@@ -1,3 +1,4 @@
+import { CircularProgress } from "@mui/material";
 import styled from "styled-components";
 
 export const Container = styled.div`
@@ -170,6 +171,7 @@ export const ItemName = styled.p`
   line-height: 1.4;
   color: #888;
   margin-bottom: 10px !important;
+  max-width: 80%;
 `
 export const ItemVariaton = styled.p`
   display: inline-block;
@@ -188,6 +190,7 @@ export const ItemPrice = styled.p`
 export const QuantityContainer = styled.div`
   position: relative;
   margin-top: 11px; 
+  max-width: 197px;
 `
 
 export const QuantityRemove = styled.a`
@@ -208,6 +211,7 @@ export const RemoveIcon = styled.i`
 `
 
 export const QuantityInput = styled.input`
+  width: 100%;
   background-color: #f5f5f5;
   border: 0;
   font-size: 14px;
@@ -251,4 +255,30 @@ export const Delete = styled.i`
   position: absolute;
   right: 30px;
   cursor: pointer;
+`
+
+export const LoadingContainer = styled.div`
+  position: absolute;
+  width: 215px;
+  height: 100%;
+  background: #f5f5f5;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
+export const Loading = styled(CircularProgress)`
+  height: 20px !important;
+  width: 20px !important;
+  color: #999999 !important;
+`
+
+export const ErrorMessage = styled.p`
+  color: #e50f38;
+  font-size: 11px;
+  line-height: 1.3;
+  margin: 7px 0 15px !important;
+  text-align: left;
 `

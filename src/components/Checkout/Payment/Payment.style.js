@@ -454,3 +454,42 @@ export const StyledInputMask = styled(InputMask)`
   background-position: right 10px center;
   background-size: 1.5rem;
 `
+
+export const CardErrorTitle = styled.p`
+  color: #e50f38;
+  font-size: 24px;
+  font-weight: 700;
+`
+
+export const CardErrorDescription = styled.p`
+  margin-top: 10px !important;
+  color: #333;
+`
+
+export const CardErrorButton = styled.button`
+  margin: 0;
+  width: 100%;
+  min-height: 50px;
+  line-height: 26px;
+  background-color: #666;
+  color: #fff;
+  padding: 12px 20px;
+  font-size: 16px;
+  border: 0;
+  border-radius: 5px;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+  font-family: 'Montserrat', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  z-index: 9;
+  margin-top: 10px;
+
+  &:hover {
+    opacity: .8;
+  }
+`

@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import {
   BarcodeIcon,
   Button,
+  CardErrorButton,
+  CardErrorDescription,
+  CardErrorTitle,
   Container,
   CreditContainer,
   Disclaimer,
@@ -25,12 +28,18 @@ import {
   Title,
 } from "./Payment.style";
 import Plastic from "react-plastic";
-import { Tooltip } from "@mui/material";
+import { Box, Modal, Tooltip } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { setPayment } from "../../../redux/paymentSlice";
+import {
+  setIsLoading,
+  setPayment,
+  setPaymentTransaction,
+} from "../../../redux/paymentSlice";
 import * as Yup from "yup";
 import { isValidCPF } from "../../../utils/isValidCpf";
 import { Formik, Field } from "formik";
+import axios from "axios";
+import { formatPrice } from "../../../utils/formatPrice";
 
 const validationSchema = Yup.object({
   cardNumber: Yup.string().required("Campo obrigatório."),
@@ -56,9 +65,11 @@ const validationSchema = Yup.object({
 });
 
 function Payment() {
-  const { hasFinished: lastStepHasFinished } = useSelector(
+  const { hasFinished: lastStepHasFinished, costumerId } = useSelector(
     (state) => state.delivery
   );
+
+  const { data } = useSelector((state) => state.summary);
 
   const { selectedPayment } = useSelector((state) => state.payment);
 
@@ -120,6 +131,154 @@ function Payment() {
     cardCpf: "",
   };
 
+  const [paymentData, setPaymentData] = useState();
+  const [cardToken, setCardToken] = useState();
+  const handlePayment = async (type) => {
+    dispatch(setIsLoading(true));
+    const allCostumers = await axios.get(
+      `${process.env.REACT_APP_API_URL}/customer`,
+      {
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${process.env.REACT_APP_API_KEY}`,
+        },
+      }
+    );
+    await axios.get("https://api.ipify.org?format=json").then((results) => {
+      axios
+        .post(
+          `${process.env.REACT_APP_API_URL}/payment`,
+          {
+            cartId: data?.id,
+            customerId:
+              costumerId ||
+              allCostumers.data.find((item) => {
+                return item.document === data?.dados_capturados?.cpf;
+              })?.id,
+            paymentMethod: type,
+            cardToken: cardToken || undefined,
+            installment: installment || undefined,
+            shipping: {
+              recipient_name: data?.dados_capturados?.nome,
+              recipient_phone: data?.dados_capturados?.celular,
+              address: {
+                country: "BR",
+                state: data?.dados_capturados?.estado,
+                city: data?.dados_capturados?.cidade,
+                zip_code: data?.dados_capturados?.cep?.replace("-", ""),
+                line_1: data?.dados_capturados?.endereco,
+                line_2: data?.dados_capturados?.complemento || "",
+              },
+            },
+            ip: results.data.ip,
+          },
+          {
+            headers: {
+              accept: "application/json",
+              Authorization: `Bearer ${process.env.REACT_APP_API_KEY}`,
+            },
+          }
+        )
+        .then((results) => {
+          setPaymentData(results.data);
+          dispatch(setPaymentTransaction(results.data));
+          dispatch(setIsLoading(false));
+
+          if (results.data.last_transaction.status === "not_authorized") {
+            setCardError(true);
+            dispatch(setIsLoading(false));
+          }
+        })
+        .catch((error) => {
+          console.log("error", error);
+          setCardError(true);
+          dispatch(setIsLoading(false));
+        });
+    });
+  };
+
+  useEffect(() => {
+    if (paymentData) {
+      axios
+        .get(
+          `${process.env.REACT_APP_API_URL}/payment/${paymentData.paymentId}`,
+          {
+            headers: {
+              accept: "application/json",
+              Authorization: `Bearer ${process.env.REACT_APP_API_KEY}`,
+            },
+          }
+        )
+        .then((results) => {
+          console.log(results.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [paymentData]);
+
+  const [installment, setInstallment] = useState(1);
+  const [cardError, setCardError] = useState();
+  const generateCardToken = (payload) => {
+    axios
+      .post(
+        "https://api.pagar.me/core/v5/tokens?appId=pk_test_rjyBpo9lT6TrMdEg",
+        {
+          card: {
+            number: payload.cardNumber.replace(/\s+/g, ""),
+            holder_name: payload.cardName,
+            exp_month: payload.cardExpiry.split("/")[0],
+            exp_year: payload.cardExpiry.split("/")[1],
+            cvv: payload.cardCvc,
+          },
+          type: "card",
+        }
+      )
+      .then((results) => {
+        setCardToken(results.data.id);
+      })
+      .catch(() => {
+        setCardError(true);
+      });
+  };
+
+  useEffect(() => {
+    if (cardToken) {
+      handlePayment("CREDIT_CARD");
+    }
+    // eslint-disable-next-line
+  }, [cardToken]);
+
+  function handleFees(total) {
+    // Tabela de juros para cada número de parcelas (em porcentagem)
+    const fees = [
+      0, // 1x - Sem juros
+      2.0, // 2x - 2,00% de juros
+      2.9, // 3x - 2,90% de juros
+      3.2, // 4x - 3,20% de juros
+      4.03, // 5x - 4,03% de juros
+      4.31, // 6x - 4,31% de juros
+      5.31, // 7x - 5,31% de juros
+      5.63, // 8x - 5,63% de juros
+      6.38, // 9x - 6,38% de juros
+      7.3, // 10x - 7,30% de juros
+      8.0, // 11x - 8,00% de juros
+      8.57, // 12x - 8,57% de juros
+    ];
+
+    // Calcula os valores por parcela considerando os juros
+    const installments = fees.map((fee, index) => {
+      const installment = index + 1;
+      const totalWithFee = total * (1 + fee / 100);
+      return `${installment}x de ${formatPrice(
+        (totalWithFee / installment).toFixed(2)
+      )} ${index !== 0 ? "*" : ""}`; // Formata para 2 casas decimais
+    });
+
+    return installments;
+  }
+
   return (
     <Container id="step-3" closed={!lastStepHasFinished}>
       <Header>
@@ -162,7 +321,7 @@ function Payment() {
                   initialValues={initialValues}
                   validationSchema={validationSchema}
                   onSubmit={(values) => {
-                    console.log(values);
+                    generateCardToken(values);
                   }}
                 >
                   {({ errors, touched, values }) => {
@@ -256,13 +415,31 @@ function Payment() {
                           <ErrorMessage>{errors.cardCpf}</ErrorMessage>
                         )}
                         <Label>Nº de Parcelas</Label>
-                        <Select disabled>
-                          <option selected>---</option>
+                        <Select>
+                          {handleFees(data?.resumo?.total).map(
+                            (item, index) => {
+                              return (
+                                <option
+                                  onClick={() => {
+                                    setInstallment(index + 1);
+                                  }}
+                                  key={index}
+                                >
+                                  {item}
+                                </option>
+                              );
+                            }
+                          )}
                         </Select>
                         <span>
                           Preencha o cartão para selecionar as parcelas
                         </span>
-                        <Button>
+                        <Button
+                          onClick={() => {
+                            generateCardToken(values);
+                          }}
+                          type="submit"
+                        >
                           <StyledLockIcon />
                           Comprar agora
                         </Button>
@@ -289,8 +466,16 @@ function Payment() {
                   A confirmação de pagamento é realizada em poucos minutos.
                   Utilize o aplicativo do seu banco para pagar.
                 </PaymentDisclaimer>
-                <PaymentTotal>Valor no Pix: R$ 199,00</PaymentTotal>
-                <Button>
+                <PaymentTotal>
+                  Valor no Pix:{" "}
+                  {data?.resumo?.formattedTotalDiscount ||
+                    data?.resumo?.formattedTotal}
+                </PaymentTotal>
+                <Button
+                  onClick={() => {
+                    handlePayment("PIX");
+                  }}
+                >
                   <StyledLockIcon />
                   Comprar agora
                 </Button>
@@ -315,8 +500,16 @@ function Payment() {
                   de entrega passa a ser contado somente após a confirmação do
                   pagamento.
                 </PaymentDisclaimer>
-                <PaymentTotal>Valor no boleto: R$ 199,00</PaymentTotal>
-                <Button>
+                <PaymentTotal>
+                  Valor no boleto:{" "}
+                  {data?.resumo?.formattedTotalDiscount ||
+                    data?.resumo?.formattedTotal}
+                </PaymentTotal>
+                <Button
+                  onClick={() => {
+                    handlePayment("BOLETO");
+                  }}
+                >
                   <StyledLockIcon />
                   Comprar agora
                 </Button>
@@ -325,6 +518,45 @@ function Payment() {
           </PaymentCard>
         </>
       )}
+      <Modal
+        open={cardError}
+        onClose={() => {
+          setCardError(false);
+        }}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+            border: "2px solid #e50f38",
+            boxShadow: 24,
+            borderRadius: "8px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "column",
+            p: 4,
+          }}
+        >
+          <CardErrorTitle>Ops, temos um problema</CardErrorTitle>
+          <CardErrorDescription id="modal-modal-description" sx={{ mt: 2 }}>
+            Infelizmente o seu pedido não foi aprovado
+          </CardErrorDescription>
+          <CardErrorButton
+            onClick={() => {
+              setCardError(false);
+            }}
+          >
+            TENTAR NOVAMENTE
+          </CardErrorButton>
+        </Box>
+      </Modal>
     </Container>
   );
 }

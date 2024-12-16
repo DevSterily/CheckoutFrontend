@@ -28,6 +28,7 @@ import {
   setIdentification,
   handleEditingIdentification,
 } from "../../../redux/identificationSlice";
+import axios from "axios";
 
 const validationSchema = Yup.object({
   name: Yup.string()
@@ -65,6 +66,8 @@ function Identification() {
     (state) => state.identification
   );
 
+  const { data } = useSelector((state) => state.summary);
+
   const [initialValues, setInitialValues] = useState({
     name: "",
     email: "",
@@ -75,21 +78,50 @@ function Identification() {
   const dispatch = useDispatch();
   const handleSetIdentification = (payload) => {
     dispatch(setIdentification(payload));
-    localStorage.removeItem("STERILY_CHECKOUT_IDENTIFICATION");
-    localStorage.setItem(
-      "STERILY_CHECKOUT_IDENTIFICATION",
-      JSON.stringify(payload)
+
+    const queryParams = new URLSearchParams(window.location.search);
+    const cartId = queryParams.get("cartId");
+    axios.put(
+      `${process.env.REACT_APP_API_URL}/cart/${cartId}`,
+      {
+        status: "DADOS CLIENTE CAPTURADOS",
+        dados_capturados: {
+          nome: payload.name,
+          email: payload.email,
+          cpf: payload.cpf,
+          celular: payload.mobile,
+        },
+      },
+      {
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${process.env.REACT_APP_API_KEY}`,
+        },
+      }
     );
   };
 
   useEffect(() => {
-    const cachedData = localStorage.getItem("STERILY_CHECKOUT_IDENTIFICATION");
+    const cachedData =
+      data &&
+      data.dados_capturados &&
+      data.dados_capturados.nome &&
+      data.dados_capturados.email &&
+      data.dados_capturados.cpf &&
+      data.dados_capturados.nome &&
+      data.dados_capturados.celular;
     if (cachedData) {
-      setInitialValues(JSON.parse(cachedData));
-      handleSetIdentification(JSON.parse(cachedData));
+      const cachedDataObject = {
+        name: data.dados_capturados.nome,
+        email: data.dados_capturados.email,
+        mobile: data.dados_capturados.celular,
+        cpf: data.dados_capturados.cpf,
+      };
+      setInitialValues(cachedDataObject);
+      handleSetIdentification(cachedDataObject);
     }
-  // eslint-disable-next-line
-  }, []);
+    // eslint-disable-next-line
+  }, [data]);
 
   const editData = () => {
     if (!isEditing) {

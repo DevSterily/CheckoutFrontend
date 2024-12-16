@@ -338,13 +338,13 @@ export const DeliveryLabel = styled.p`
 `
 
 export const DeliveryPrice = styled.p`
-  color: #999;
-  text-decoration: line-through;
+  color: ${(props) => props.free ? '#999' : '#333'};
+  text-decoration: ${(props) => props.free ? 'line-through' : 'none'};
   line-height: 1.4em;
   font-size: 12px;
   position: absolute;
   right: 15px;
-  top: 12px;
+  top: ${(props) => props.free ? '12px' : '24px'};
 `
 
 export const DeliveryDiscount = styled.p`

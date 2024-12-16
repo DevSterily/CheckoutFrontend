@@ -8,6 +8,7 @@ export const StyledCheckout = styled.section`
   min-height: 70vh;
   background: #F4F6F8;
   padding: 25px 0 45px;
+  overflow: hidden !important;
 `
 export const Container = styled.div`
   display: grid;
