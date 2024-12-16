@@ -28,7 +28,7 @@ function Pix({ paymentData }) {
         </PaymentTitle>
         <PaymentImage
           alt="Pix"
-          src={paymentData.last_transaction.qr_code_url}
+          src={paymentData?.last_transaction?.qr_code_url}
         />
         <PaymentValue>
           Valor do Pix: <strong>R$ 51,00</strong>

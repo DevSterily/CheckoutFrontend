@@ -17,7 +17,7 @@ function Boleto({ paymentData }) {
         <Title>Seu pedido foi realizado.</Title>
         <Button
           onClick={() => {
-            window.open(paymentData.last_transaction.pdf, "_blank");
+            window.open(paymentData?.last_transaction?.pdf, "_blank");
           }}
         >
           IMPRIMIR BOLETO
@@ -30,7 +30,7 @@ function Boleto({ paymentData }) {
           2. Você também pode pagar pela internet usando o código de barras:
         </PaymentInstructions>
         <PaymentLabel>CÓDIGO DE BARRAS DO BOLETO</PaymentLabel>
-        <PaymentValue>{paymentData.last_transaction.line}</PaymentValue>
+        <PaymentValue>{paymentData?.last_transaction?.line}</PaymentValue>
       </PaymentContainer>
     </Container>
   );

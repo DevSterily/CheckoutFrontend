@@ -5,6 +5,11 @@ export const Container = styled.div`
   align-items: start;
   justify-content: space-between;
   min-height: 50vh;
+
+  @media (max-width: 1060px) {
+    display: flex;
+    flex-direction: column;
+  }
 `
 export const TextContainer = styled.div`
   display: flex;
