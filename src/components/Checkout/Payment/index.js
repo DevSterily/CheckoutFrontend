@@ -276,6 +276,7 @@ function Payment() {
       )} ${index !== 0 ? "*" : ""}`; // Formata para 2 casas decimais
     });
 
+    if (data?.resumo?.total / 100 <= 50) return installments.slice(0, 6);
     return installments;
   }
 
