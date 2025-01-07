@@ -70,6 +70,7 @@ function Payment() {
   );
 
   const { data } = useSelector((state) => state.summary);
+  console.log(data);
 
   const { selectedPayment } = useSelector((state) => state.payment);
 
@@ -420,20 +421,26 @@ function Payment() {
                         )}
                         <Label>Nº de Parcelas</Label>
                         <Select>
-                          {handleFees(data?.resumo?.total).map(
-                            (item, index) => {
-                              return (
-                                <option
-                                  onClick={() => {
-                                    setInstallment(index + 1);
-                                  }}
-                                  key={index}
-                                >
-                                  {item}
-                                </option>
-                              );
-                            }
-                          )}
+                          {handleFees(
+                            data?.resumo?.totalWithDiscount
+                              ? data?.resumo?.totalWithDiscount < 10000
+                                ? data?.resumo?.totalWithDiscount + 1800
+                                : data?.resumo?.totalWithDiscount
+                              : data?.resumo?.total < 10000
+                              ? data?.resumo?.total + 1800
+                              : data?.resumo?.total
+                          ).map((item, index) => {
+                            return (
+                              <option
+                                onClick={() => {
+                                  setInstallment(index + 1);
+                                }}
+                                key={index}
+                              >
+                                {item}
+                              </option>
+                            );
+                          })}
                         </Select>
                         <span>
                           Preencha o cartão para selecionar as parcelas
@@ -472,8 +479,15 @@ function Payment() {
                 </PaymentDisclaimer>
                 <PaymentTotal>
                   Valor no Pix:{" "}
-                  {data?.resumo?.formattedTotalDiscount ||
-                    data?.resumo?.formattedTotal}
+                  {formatPrice(
+                    data?.resumo?.totalWithDiscount
+                      ? data?.resumo?.totalWithDiscount < 10000
+                        ? data?.resumo?.totalWithDiscount + 1800
+                        : data?.resumo?.totalWithDiscount
+                      : data?.resumo?.total < 10000
+                      ? data?.resumo?.total + 1800
+                      : data?.resumo?.total
+                  )}
                 </PaymentTotal>
                 <Button
                   onClick={() => {
@@ -506,8 +520,15 @@ function Payment() {
                 </PaymentDisclaimer>
                 <PaymentTotal>
                   Valor no boleto:{" "}
-                  {data?.resumo?.formattedTotalDiscount ||
-                    data?.resumo?.formattedTotal}
+                  {formatPrice(
+                    data?.resumo?.totalWithDiscount
+                      ? data?.resumo?.totalWithDiscount < 10000
+                        ? data?.resumo?.totalWithDiscount + 1800
+                        : data?.resumo?.totalWithDiscount
+                      : data?.resumo?.total < 10000
+                      ? data?.resumo?.total + 1800
+                      : data?.resumo?.total
+                  )}
                 </PaymentTotal>
                 <Button
                   onClick={() => {

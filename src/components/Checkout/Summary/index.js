@@ -209,11 +209,13 @@ function Summary() {
             <p>
               {data &&
                 formatPrice(
-                  hasDeliveryTax
-                    ? data?.resumo?.total + deliveryTax
-                    : !couponData
-                    ? data?.resumo?.total
-                    : data?.resumo?.total - handleDiscount() * 100
+                  data?.resumo?.totalWithDiscount
+                    ? data?.resumo?.totalWithDiscount < 10000
+                      ? data?.resumo?.totalWithDiscount + 1800
+                      : data?.resumo?.totalWithDiscount
+                    : data?.resumo?.total < 10000
+                    ? data?.resumo?.total + 1800
+                    : data?.resumo?.total
                 )}
             </p>
           </TotalContainer>
