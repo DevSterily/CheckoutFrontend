@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   AddIcon,
   Container,
@@ -29,7 +29,7 @@ import {
 } from "./Summary.style";
 import { Tooltip } from "@mui/material";
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setCheckoutData } from "../../../redux/summarySlice";
 import { formatPrice } from "../../../utils/formatPrice";
 
@@ -153,6 +153,18 @@ function Summary() {
           100
       : couponData.valor_desconto;
   };
+
+  const { hasFinished: hasDeliveryFinished } = useSelector(
+    (state) => state.delivery
+  );
+
+  useEffect(() => {
+    if (hasDeliveryFinished) {
+      getCartData();
+    }
+  // eslint-disable-next-line
+  }, [hasDeliveryFinished]);
+
   return (
     <Container>
       <Title>Resumo</Title>
@@ -188,7 +200,7 @@ function Summary() {
         <PriceTotal>
           <DescriptionContainer>
             <p>Produtos</p>
-            <p>{data && formatPrice(data?.resumo?.total)}</p>
+            <p>{data && formatPrice(data?.dados?.total_price)}</p>
           </DescriptionContainer>
           {couponData && (
             <DescriptionContainer>
@@ -209,13 +221,7 @@ function Summary() {
             <p>
               {data &&
                 formatPrice(
-                  data?.resumo?.totalWithDiscount
-                    ? data?.resumo?.totalWithDiscount < 10000
-                      ? data?.resumo?.totalWithDiscount + 1800
-                      : data?.resumo?.totalWithDiscount
-                    : data?.resumo?.total < 10000
-                    ? data?.resumo?.total + 1800
-                    : data?.resumo?.total
+                  data?.resumo?.totalWithDiscount || data?.resumo?.total
                 )}
             </p>
           </TotalContainer>

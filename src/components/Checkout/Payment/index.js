@@ -70,7 +70,6 @@ function Payment() {
   );
 
   const { data } = useSelector((state) => state.summary);
-  console.log(data);
 
   const { selectedPayment } = useSelector((state) => state.payment);
 
@@ -420,13 +419,8 @@ function Payment() {
                         <Label>Nº de Parcelas</Label>
                         <Select>
                           {handleFees(
-                            data?.resumo?.totalWithDiscount
-                              ? data?.resumo?.totalWithDiscount < 10000
-                                ? data?.resumo?.totalWithDiscount + 1800
-                                : data?.resumo?.totalWithDiscount
-                              : data?.resumo?.total < 10000
-                              ? data?.resumo?.total + 1800
-                              : data?.resumo?.total
+                            data?.resumo?.totalWithDiscount ||
+                              data?.resumo?.total
                           ).map((item, index) => {
                             return (
                               <option
@@ -478,13 +472,7 @@ function Payment() {
                 <PaymentTotal>
                   Valor no Pix:{" "}
                   {formatPrice(
-                    data?.resumo?.totalWithDiscount
-                      ? data?.resumo?.totalWithDiscount < 10000
-                        ? data?.resumo?.totalWithDiscount + 1800
-                        : data?.resumo?.totalWithDiscount
-                      : data?.resumo?.total < 10000
-                      ? data?.resumo?.total + 1800
-                      : data?.resumo?.total
+                    data?.resumo?.totalWithDiscount || data?.resumo?.total
                   )}
                 </PaymentTotal>
                 <Button
@@ -519,13 +507,7 @@ function Payment() {
                 <PaymentTotal>
                   Valor no boleto:{" "}
                   {formatPrice(
-                    data?.resumo?.totalWithDiscount
-                      ? data?.resumo?.totalWithDiscount < 10000
-                        ? data?.resumo?.totalWithDiscount + 1800
-                        : data?.resumo?.totalWithDiscount
-                      : data?.resumo?.total < 10000
-                      ? data?.resumo?.total + 1800
-                      : data?.resumo?.total
+                    data?.resumo?.totalWithDiscount || data?.resumo?.total
                   )}
                 </PaymentTotal>
                 <Button
