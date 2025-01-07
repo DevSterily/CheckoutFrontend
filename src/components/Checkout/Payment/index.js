@@ -135,6 +135,7 @@ function Payment() {
   const [cardToken, setCardToken] = useState();
   const handlePayment = async (type) => {
     dispatch(setIsLoading(true));
+    setCardError(false);
     const allCostumers = await axios.get(
       `${process.env.REACT_APP_API_URL}/customer`,
       {
@@ -145,6 +146,7 @@ function Payment() {
       }
     );
     await axios.get("https://api.ipify.org?format=json").then((results) => {
+      setCardError(false);
       axios
         .post(
           `${process.env.REACT_APP_API_URL}/payment`,
@@ -199,6 +201,7 @@ function Payment() {
 
   useEffect(() => {
     if (paymentData) {
+      setCardError(false);
       axios
         .get(
           `${process.env.REACT_APP_API_URL}/payment/${paymentData.paymentId}`,

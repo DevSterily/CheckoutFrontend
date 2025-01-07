@@ -201,7 +201,7 @@ function Summary() {
             <p>
               {data && !hasDeliveryTax
                 ? "Grátis"
-                : `+ ${formatPrice(deliveryTax)}`}
+                : `+ ${formatPrice(deliveryTax * 100)}`}
             </p>
           </DescriptionContainer>
           <TotalContainer>

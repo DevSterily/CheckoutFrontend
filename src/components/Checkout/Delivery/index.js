@@ -108,6 +108,8 @@ function Delivery() {
         });
     } catch (error) {
       console.log(error);
+      setHasError(true);
+      setHasCalledApi(false);
     }
   };
 

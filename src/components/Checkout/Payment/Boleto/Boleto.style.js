@@ -64,6 +64,10 @@ export const PaymentContainer = styled.div`
   padding: 20px 40px;
   align-items: center;
   gap: 10px;
+
+  @media (max-width: 520px) {
+    width: 80vw;
+  }
 `
 export const PaymentTitle = styled.p`
   font-size: 14px;
@@ -88,4 +92,10 @@ export const PaymentValue = styled.p`
   font-weight: 700;
   padding: 10px;
   border: 1px dotted #333;
+
+  @media (max-width: 520px) {
+    max-width: 80vw;
+    width: 100%;
+    word-break: break-all;
+  }
 `
