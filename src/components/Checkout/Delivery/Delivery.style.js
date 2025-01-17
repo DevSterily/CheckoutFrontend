@@ -23,14 +23,14 @@ export const Container = styled.div`
   `};
 
   @media (max-width: 1060px) {
-    display: ${(props) => props.success ? 'none' : 'flex'};
+    display: ${(props) => props.closed ? 'none' : 'flex'};
     max-width: 500px;
     min-width: 500px;
     margin-top: 0px;
   }
 
   @media (max-width: 520px) {
-    display: ${(props) => props.success ? 'none' : 'flex'};
+    display: ${(props) => props.closed ? 'none' : 'flex'};
     max-width: 50%;
     min-width: 50%;
     margin-top: 0px;

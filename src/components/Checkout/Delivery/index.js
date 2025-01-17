@@ -314,7 +314,6 @@ function Delivery() {
   }, [data]);
 
   const hasDeliveryTax = data?.resumo?.total < 10000;
-
   return (
     <Container
       id="step-2"

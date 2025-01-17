@@ -282,3 +282,70 @@ export const ErrorMessage = styled.p`
   margin: 7px 0 15px !important;
   text-align: left;
 `
+
+export const ModalErrorTitle = styled.p`
+  color: #333;
+  font-size: 24px;
+  font-weight: 700;
+`
+
+export const ModalErrorDescription = styled.p`
+  margin-top: 10px !important;
+  color: #333;
+`
+
+export const ModalErrorButtonOutline = styled.button`
+  margin: 0;
+  width: 100%;
+  min-height: 50px;
+  line-height: 26px;
+  border: 2px solid #e50f38;
+  background: transparent;
+  color: #e50f38;
+  padding: 12px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+  font-family: 'Montserrat', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  z-index: 9;
+  margin-top: 40px;
+
+  &:hover {
+    opacity: .8;
+  }
+`
+
+export const ModalErrorButtonFilled = styled.button`
+  margin: 0;
+  width: 100%;
+  min-height: 50px;
+  line-height: 26px;
+  background-color: #58B62F;
+  color: #fff;
+  padding: 12px 20px;
+  font-size: 16px;
+  border: 0;
+  border-radius: 5px;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+  font-family: 'Montserrat', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  z-index: 9;
+  margin-top: 10px;
+
+  &:hover {
+    opacity: .8;
+  }
+`

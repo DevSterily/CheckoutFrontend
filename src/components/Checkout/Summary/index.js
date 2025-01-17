@@ -18,6 +18,10 @@ import {
   ItemVariaton,
   Loading,
   LoadingContainer,
+  ModalErrorButtonFilled,
+  ModalErrorButtonOutline,
+  ModalErrorDescription,
+  ModalErrorTitle,
   PriceTotal,
   QuantityAdd,
   QuantityContainer,
@@ -27,7 +31,7 @@ import {
   Title,
   TotalContainer,
 } from "./Summary.style";
-import { Tooltip } from "@mui/material";
+import { Box, Modal, Tooltip } from "@mui/material";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setCheckoutData } from "../../../redux/summarySlice";
@@ -74,30 +78,45 @@ function Summary() {
   const [isLoading, setIsLoading] = useState(false);
   const [changedItem, setChangedItem] = useState();
 
+  const [isModalOpened, setIsModalOpened] = useState(false);
+  const handleModal = () => {
+    setIsModalOpened(!isModalOpened);
+  };
+  const [lastItemData, setLastItemData] = useState();
+
   const handleItemQuantity = async (itemId, quantity, action) => {
     if (itemId) {
-      setIsLoading(true);
-      setChangedItem(itemId);
-      await axios.put(
-        `${process.env.REACT_APP_API_URL}/cart/${cartId}/item/${itemId}`,
-        {
-          quantity:
-            action === "delete"
-              ? 0
-              : action === "increase"
-              ? quantity + 1
-              : quantity - 1,
-        },
-        {
-          headers: {
-            accept: "application/json",
-            Authorization: `Bearer ${process.env.REACT_APP_API_KEY}`,
+      if (
+        !isModalOpened &&
+        data?.resumo?.totalItems === 1 &&
+        (action === "decrease" || action === "delete")
+      ) {
+        setLastItemData({ itemId, quantity, action });
+        handleModal();
+      } else {
+        setIsLoading(true);
+        setChangedItem(itemId);
+        await axios.put(
+          `${process.env.REACT_APP_API_URL}/cart/${cartId}/item/${itemId}`,
+          {
+            quantity:
+              action === "delete"
+                ? 0
+                : action === "increase"
+                ? quantity + 1
+                : quantity - 1,
           },
-        }
-      );
-      getCartData();
-      setIsLoading(false);
-      setChangedItem(undefined);
+          {
+            headers: {
+              accept: "application/json",
+              Authorization: `Bearer ${process.env.REACT_APP_API_KEY}`,
+            },
+          }
+        );
+        getCartData();
+        setIsLoading(false);
+        setChangedItem(undefined);
+      }
     }
   };
 
@@ -162,8 +181,15 @@ function Summary() {
     if (hasDeliveryFinished) {
       getCartData();
     }
-  // eslint-disable-next-line
+    // eslint-disable-next-line
   }, [hasDeliveryFinished]);
+
+  useEffect(() => {
+    console.log(data);
+    if (data?.resumo?.totalItems === 0) {
+      window.location.href = "https://www.sterilybrasil.com/";
+    }
+  }, [data]);
 
   return (
     <Container>
@@ -197,35 +223,39 @@ function Summary() {
           )}
         </CouponContainer>
         {couponError && <ErrorMessage>Cupom inválido</ErrorMessage>}
-        <PriceTotal>
-          <DescriptionContainer>
-            <p>Produtos</p>
-            <p>{data && formatPrice(data?.dados?.total_price)}</p>
-          </DescriptionContainer>
-          {couponData && (
+        {data?.resumo?.totalItems > 0 && (
+          <PriceTotal>
             <DescriptionContainer>
-              <p>Cupom</p>
-              <p>{couponData && `- ${formatPrice(handleDiscount() * 100)}`}</p>
+              <p>Produtos</p>
+              <p>{data && formatPrice(data?.dados?.total_price)}</p>
             </DescriptionContainer>
-          )}
-          <DescriptionContainer>
-            <p>Frete</p>
-            <p>
-              {data && !hasDeliveryTax
-                ? "Grátis"
-                : `+ ${formatPrice(deliveryTax * 100)}`}
-            </p>
-          </DescriptionContainer>
-          <TotalContainer>
-            <p>Total</p>
-            <p>
-              {data &&
-                formatPrice(
-                  data?.resumo?.totalWithDiscount || data?.resumo?.total
-                )}
-            </p>
-          </TotalContainer>
-        </PriceTotal>
+            {couponData && (
+              <DescriptionContainer>
+                <p>Cupom</p>
+                <p>
+                  {couponData && `- ${formatPrice(handleDiscount() * 100)}`}
+                </p>
+              </DescriptionContainer>
+            )}
+            <DescriptionContainer>
+              <p>Frete</p>
+              <p>
+                {data && !hasDeliveryTax
+                  ? "Grátis"
+                  : `+ ${formatPrice(deliveryTax * 100)}`}
+              </p>
+            </DescriptionContainer>
+            <TotalContainer>
+              <p>Total</p>
+              <p>
+                {data &&
+                  formatPrice(
+                    data?.resumo?.totalWithDiscount || data?.resumo?.total
+                  )}
+              </p>
+            </TotalContainer>
+          </PriceTotal>
+        )}
       </div>
       {data &&
         data?.dados?.items?.map((item, index) => {
@@ -276,6 +306,58 @@ function Summary() {
             );
           return null;
         })}
+      <Modal
+        open={isModalOpened}
+        onClose={() => {
+          handleModal();
+        }}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+            border: "2px solid #e50f38",
+            boxShadow: 24,
+            borderRadius: "8px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "column",
+            p: 4,
+          }}
+        >
+          <ModalErrorTitle>Você tem certeza?</ModalErrorTitle>
+          <ModalErrorDescription id="modal-modal-description" sx={{ mt: 2 }}>
+            Esse é o último item do seu carrinho!
+          </ModalErrorDescription>
+
+          <ModalErrorButtonOutline
+            onClick={() => {
+              handleModal();
+              handleItemQuantity(
+                lastItemData.itemId,
+                lastItemData.quantity,
+                lastItemData.action
+              );
+            }}
+          >
+            APAGAR CARRINHO
+          </ModalErrorButtonOutline>
+          <ModalErrorButtonFilled
+            onClick={() => {
+              handleModal();
+            }}
+          >
+            CANCELAR
+          </ModalErrorButtonFilled>
+        </Box>
+      </Modal>
     </Container>
   );
 }
