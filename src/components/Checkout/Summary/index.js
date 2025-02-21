@@ -185,7 +185,6 @@ function Summary() {
   }, [hasDeliveryFinished]);
 
   useEffect(() => {
-    console.log(data);
     if (data?.resumo?.totalItems === 0) {
       window.location.href = "https://www.sterilybrasil.com/";
     }
