@@ -16,6 +16,7 @@
     "formik": "^2.4.6",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-facebook-pixel": "^1.0.4",
     "react-input-mask": "^2.0.4",
     "react-plastic": "^1.1.1",
     "react-redux": "^9.1.2",
