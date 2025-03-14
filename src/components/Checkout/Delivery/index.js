@@ -90,6 +90,8 @@ function Delivery() {
   const [address, setAddress] = useState(undefined);
   const [hasError, setHasError] = useState(false);
   const [hasCalledApi, setHasCalledApi] = useState(false);
+  const [noStreet, setNoStreet] = useState(false);
+  const [noNeighborhood, setNoNeighborhood] = useState(false);
 
   const [lastZipCode, setLastZipCode] = useState();
   const getAddress = async (zipCode) => {
@@ -99,8 +101,29 @@ function Delivery() {
         .get(`https://brasilapi.com.br/api/cep/v1/${zipCode}`)
         .then((results) => {
           setHasError(false);
-          setAddress(results.data);
+          if (results.data && results?.data?.street === '' && results?.data?.neighborhood === '' && addresses[currentEditingAddress]?.street !== '' && addresses[currentEditingAddress]?.neighborhood !== '') {
+            setAddress(
+              { 
+                ...results.data, 
+                street: addresses[currentEditingAddress]?.street, 
+                neighborhood: addresses[currentEditingAddress]?.neighborhood 
+              }
+            );
+          } else {
+            setAddress(results.data);
+          }
           setHasCalledApi(false);
+          if (!results.data.street || results?.data?.street === '') {
+            setNoStreet(true)
+          } else {
+            setNoStreet(false)
+          }
+
+          if (!results.data.neighborhood || results?.data?.neighborhood === '') {
+            setNoNeighborhood(true)
+          } else {
+            setNoNeighborhood(false)
+          }
         })
         .catch(() => {
           setHasError(address.cep === zipCode ? false : true);
@@ -410,9 +433,12 @@ function Delivery() {
                       </City>
                       <Label>Endereço</Label>
                       <InputDefault
-                        disabled
-                        isValid
+                        disabled={!noStreet}
+                        isValid={address?.street && address?.street !== ''}
                         value={address?.street}
+                        onChange={(e) => {
+                          setAddress({ ...address, street: e.target.value })
+                        }}
                       ></InputDefault>
                       <AddressContainer>
                         <div>
@@ -431,9 +457,12 @@ function Delivery() {
                         <div>
                           <Label>Bairro</Label>
                           <InputDefault
-                            disabled
-                            isValid
-                            value={address.neighborhood}
+                            disabled={!noNeighborhood}
+                            isValid={address?.neighborhood && address?.neighborhood !== ''}
+                            value={address?.neighborhood}
+                            onChange={(e) => {
+                              setAddress({ ...address, neighborhood: e.target.value })
+                            }}
                           ></InputDefault>
                         </div>
                       </AddressContainer>
