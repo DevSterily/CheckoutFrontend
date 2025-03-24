@@ -13,7 +13,7 @@ function Header() {
       <Container>
         <LogoContainer>
           <a href="https://www.sterilybrasil.com/">
-            <Logo src="assets/img/logo.svg" alt="Logo Sterily" />
+            <Logo src="/assets/img/logo.webp" alt="Logo Sterily" height="45" width="165" />
           </a>
         </LogoContainer>
         <ItemSecurity
