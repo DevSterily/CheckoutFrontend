@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyledCheckout, Container } from "./Checkout.style";
 import Identification from "./Identification";
 import Delivery from "./Delivery";
@@ -8,9 +8,37 @@ import { useSelector } from "react-redux";
 import Pix from "./Payment/Pix";
 import Boleto from "./Payment/Boleto";
 import Credito from "./Payment/Credito";
+import axios from "axios";
 
 function Checkout() {
   const { paymentData } = useSelector((state) => state.payment);
+
+  const [isPaid, setIsPaid] = useState(false);
+
+  const checkPayment = async () => {
+    await axios
+      .get(
+        `${process.env.REACT_APP_API_URL}/payment/${paymentData.paymentId}`,
+        {
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${process.env.REACT_APP_API_KEY}`,
+          },
+        }
+      )
+      .then((results) => {
+        setIsPaid(results.data.status === 'paid');
+      })
+      .catch(() => {
+        return;
+      });
+  }
+
+  if (paymentData) {
+    setInterval(() => {
+      checkPayment();
+    }, 10000)
+  }
 
   return (
     <StyledCheckout>
@@ -25,9 +53,10 @@ function Checkout() {
           <Summary />
         </Container>
       )}
-      {paymentData &&
+      {!isPaid && paymentData &&
         paymentData?.last_transaction &&
-        paymentData?.last_transaction?.transaction_type === "pix" && (
+        paymentData?.last_transaction?.transaction_type === "pix" &&
+        (
           <Pix paymentData={paymentData} />
         )}
       {paymentData &&
@@ -39,6 +68,9 @@ function Checkout() {
         paymentData?.last_transaction &&
         paymentData?.last_transaction?.transaction_type === "credit_card" &&
         paymentData?.last_transaction?.status !== "not_authorized" && (
+          <Credito />
+        )}
+      {isPaid && (
           <Credito />
         )}
     </StyledCheckout>

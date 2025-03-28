@@ -191,7 +191,6 @@ function Payment() {
           }
         })
         .catch((error) => {
-          console.log("error", error);
           setCardError(true);
           dispatch(setIsLoading(false));
         });
@@ -211,10 +210,10 @@ function Payment() {
           }
         )
         .then((results) => {
-          console.log(results.data);
+          return;
         })
         .catch((err) => {
-          console.log(err);
+          return;
         });
     }
   }, [paymentData]);

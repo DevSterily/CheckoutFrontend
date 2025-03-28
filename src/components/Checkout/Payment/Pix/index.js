@@ -11,6 +11,7 @@ import {
   Title,
 } from "./Pix.style";
 import { formatPrice } from "../../../../utils/formatPrice";
+import axios from "axios";
 function Pix({ paymentData }) {
   // Define o tempo inicial em segundos (30 minutos = 1800 segundos)
   const [timeLeft, setTimeLeft] = useState(30 * 60);
@@ -36,6 +37,34 @@ function Pix({ paymentData }) {
       remainingSeconds
     ).padStart(2, "0")}`;
   };
+
+  const [isPaid, setIsPaid] = useState(false);
+
+  const checkPayment = async () => {
+    await axios
+        .get(
+          `${process.env.REACT_APP_API_URL}/payment/${paymentData.paymentId}`,
+          {
+            headers: {
+              accept: "application/json",
+              Authorization: `Bearer ${process.env.REACT_APP_API_KEY}`,
+            },
+          }
+        )
+        .then((results) => {
+          setIsPaid(results.data.status === 'paid');
+        })
+        .catch((err) => {
+          return;
+        });
+  }
+
+  useEffect(() => {
+    setInterval(() => {
+      checkPayment();
+    }, 10000)
+  // eslint-disable-next-line
+  }, []);
   return (
     <Container>
       <TextContainer>
@@ -44,7 +73,7 @@ function Pix({ paymentData }) {
           Pague seu Pix dentro de <strong>{formatTime(timeLeft)}</strong> para
           garantir sua compra.
         </Description>
-        <Status>Aguardando pagamento</Status>
+        <Status isPaid={isPaid}>{ isPaid ? 'Pagamento aprovado' : 'Aguardando pagamento' }</Status>
       </TextContainer>
       <PaymentContainer>
         <PaymentTitle>

@@ -60,7 +60,7 @@ function Summary() {
         dispatch(setCheckoutData(results.data));
       })
       .catch((error) => {
-        console.log(error);
+        return;
       });
   };
 
@@ -153,7 +153,7 @@ function Summary() {
                 }
               )
               .catch((err) => {
-                console.log(err);
+                return;
               });
           } else {
             setCouponError(true);

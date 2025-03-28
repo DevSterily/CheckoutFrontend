@@ -26,11 +26,11 @@ export const Description = styled.p`
   color: #333;
 `
 export const Status = styled.p`
-  background: #ffffd1;
+  background: ${(props) => (props.isPaid ? '#f9fdf7' : '#ffffd1')};
   width: 100%;
   max-width: 50%;
   font-size: 14px;
-  color: #bf9500;
+  color: ${(props) => (props.isPaid ? '#36b376' : '#bf9500')};
   padding: 5px;
   text-align: center;
   border-radius: 8px;

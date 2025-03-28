@@ -130,7 +130,6 @@ function Delivery() {
           setHasCalledApi(false);
         });
     } catch (error) {
-      console.log(error);
       setHasError(true);
       setHasCalledApi(false);
     }
@@ -330,7 +329,7 @@ function Delivery() {
           dispatch(setCostumerId(results.data.id));
         })
         .catch((err) => {
-          console.log(err);
+          return;
         });
     }
     // eslint-disable-next-line
