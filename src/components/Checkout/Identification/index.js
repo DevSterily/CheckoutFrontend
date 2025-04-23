@@ -113,7 +113,7 @@ function Identification() {
 		if (cachedData) {
 			const cachedDataObject = {
 				name: data.dados_capturados.nome,
-				email: data.dados_capturados.email.toLowerCase(),
+				email: data.dados_capturados.email,
 				mobile: data.dados_capturados.celular,
 				cpf: data.dados_capturados.cpf,
 			};
