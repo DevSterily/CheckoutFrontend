@@ -103,9 +103,7 @@ function Identification() {
 
 	useEffect(() => {
 		const cachedData =
-			data &&
-			data.dados_capturados &&
-			data.dados_capturados.nome &&
+			data?.dados_capturados?.nome &&
 			data.dados_capturados.email &&
 			data.dados_capturados.cpf &&
 			data.dados_capturados.nome &&
@@ -154,7 +152,7 @@ function Identification() {
 						handleSetIdentification(values);
 					}}
 				>
-					{({ errors, touched }) => (
+					{({ errors, touched, setFieldValue }) => (
 						<StyledForm>
 							<Disclaimer>
 								Utilizaremos seu e-mail para: Identificar seu perfil, histórico
@@ -180,6 +178,11 @@ function Identification() {
 								placeholder="ex.: maria@gmail.com"
 								error={touched.email && !!errors.email}
 								isValid={touched.email && !errors.email}
+								onChange={(e) => {
+									const lowerCaseEmail = e.target.value.toLowerCase();
+									e.target.value = lowerCaseEmail; // Atualiza o valor no campo
+									setFieldValue("email", lowerCaseEmail); // Atualiza o valor no Formik
+								}}
 							/>
 							{touched.email && errors.email && (
 								<ErrorMessage>{errors.email}</ErrorMessage>
