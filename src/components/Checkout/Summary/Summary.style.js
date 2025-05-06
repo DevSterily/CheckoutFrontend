@@ -4,7 +4,7 @@ import styled from "styled-components";
 export const Container = styled.div`
   box-shadow: 0 4px 12px rgba(0,0,0,.05);
   background: #fff;
-  border: 2px solid transparent;
+  /* border: 2px solid transparent; */
   border-radius: 5px;
   margin: 0;
   padding: 30px;
@@ -23,8 +23,8 @@ export const Container = styled.div`
     .group {
       order: 2;
       border-top: 1px solid #eee;
-      margin-top: 20px;
-      padding-top: 20px;
+      margin-top: 10px;
+      padding-top: 10px;
     }
   }
 
@@ -34,10 +34,10 @@ export const Container = styled.div`
   }
 
    @media (max-width: 400px) {
-    max-width: 70%;
-    min-width: 70%;
+    max-width: 80%;
+    min-width: 80%;
   }
-`
+`;
 
 export const Title = styled.span`
   color: #333 !important;
@@ -45,20 +45,20 @@ export const Title = styled.span`
   font-size: 18px;
   font-weight: 500;
   text-transform: uppercase;
-`
+`;
 
 export const CouponLabel = styled.span`
-  margin-top: 15px;
+  /* margin-top: 15px; */
   color: #333 !important;
   font-size: 13px;
   margin-bottom: 6px;
-`
+`;
 
 export const CouponContainer = styled.div`
   display: flex;
   align-items: center;
   postion: relative;
-`
+`;
 
 export const CouponInput = styled.input`
   height: 36px;
@@ -80,7 +80,7 @@ export const CouponInput = styled.input`
     background: #f4f6f8;
     border-color: #333;
   }
-`
+`;
 
 export const CouponIcon = styled.i`
   margin-left: 11px;
@@ -90,7 +90,7 @@ export const CouponIcon = styled.i`
   height: 23px;
   width: 24px;
   position: absolute;
-`
+`;
 
 export const CouponButton = styled.button`
   width: auto;
@@ -111,7 +111,7 @@ export const CouponButton = styled.button`
   &:hover {
     text-decoration: underline;
   }
-`
+`;
 
 export const PriceTotal = styled.div`
   background: #f4f6f8;
@@ -120,7 +120,7 @@ export const PriceTotal = styled.div`
   padding: 20px;
   margin-top: 20px;
   margin-bottom: 20px;
-`
+`;
 
 export const DescriptionContainer = styled.div`
   color: #333;
@@ -130,7 +130,7 @@ export const DescriptionContainer = styled.div`
   line-height: 1;
   padding: 9px 0;
   font-weight: 500;
-`
+`;
 
 export const TotalContainer = styled.div`
   color: #44C485;
@@ -146,33 +146,33 @@ export const TotalContainer = styled.div`
   > p:last-of-type {
     font-size: 16px;
   }
-`
+`;
 
 export const ItemsContainer = styled.div`
   padding: 20px 0;
   display: flex;
   align-items: start;
-  border-top: ${(props) => (props.isFirstItem ? 'none' : '1px solid #eee')};
-`
+  border-top: ${(props) => (props.isFirstItem ? "none" : "1px solid #eee")};
+`;
 
 export const ItemImage = styled.img`
   display: inline-block;
   max-height: 60px;
   object-fit: contain;
   width: 60px;
-`
+`;
 
 export const ItemDetails = styled.div`
   padding-left: 15px;
   font-size: 12px;
-`
+`;
 
 export const ItemName = styled.p`
   line-height: 1.4;
   color: #888;
   margin-bottom: 10px !important;
   max-width: 80%;
-`
+`;
 export const ItemVariaton = styled.p`
   display: inline-block;
   line-height: 1.4;
@@ -180,18 +180,18 @@ export const ItemVariaton = styled.p`
   padding: 0 3px;
   color: #666;
   font-weight: 700;
-`
+`;
 
 export const ItemPrice = styled.p`
   line-height: 1.5;
   margin-top: 14px !important;
-`
+`;
 
 export const QuantityContainer = styled.div`
   position: relative;
   margin-top: 11px; 
   max-width: 197px;
-`
+`;
 
 export const QuantityRemove = styled.a`
   left: 0;
@@ -201,14 +201,14 @@ export const QuantityRemove = styled.a`
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
-`
+`;
 
 export const RemoveIcon = styled.i`
   background: url(assets/img/icons/quantity-less.svg) no-repeat;
   height: 2px;
   width: 15px;
   display: flex;
-`
+`;
 
 export const QuantityInput = styled.input`
   width: 100%;
@@ -227,7 +227,7 @@ export const QuantityInput = styled.input`
   line-height: 14px;
   margin: 0;
   outline: none;
-`
+`;
 
 export const QuantityAdd = styled.a`
   right: 0;
@@ -237,14 +237,14 @@ export const QuantityAdd = styled.a`
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
-`
+`;
 
 export const AddIcon = styled.i`
   background: url(assets/img/icons/quantity-more.svg) no-repeat;
   height: 15px;
   width: 15px;
   display: flex;
-`
+`;
 
 export const Delete = styled.i`
   background: url(assets/img/icons/delete.svg) no-repeat;
@@ -255,7 +255,7 @@ export const Delete = styled.i`
   position: absolute;
   right: 30px;
   cursor: pointer;
-`
+`;
 
 export const LoadingContainer = styled.div`
   position: absolute;
@@ -267,13 +267,13 @@ export const LoadingContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`
+`;
 
 export const Loading = styled(CircularProgress)`
   height: 20px !important;
   width: 20px !important;
   color: #999999 !important;
-`
+`;
 
 export const ErrorMessage = styled.p`
   color: #e50f38;
@@ -281,18 +281,18 @@ export const ErrorMessage = styled.p`
   line-height: 1.3;
   margin: 7px 0 15px !important;
   text-align: left;
-`
+`;
 
 export const ModalErrorTitle = styled.p`
   color: #333;
   font-size: 24px;
   font-weight: 700;
-`
+`;
 
 export const ModalErrorDescription = styled.p`
   margin-top: 10px !important;
   color: #333;
-`
+`;
 
 export const ModalErrorButtonOutline = styled.button`
   margin: 0;
@@ -320,7 +320,7 @@ export const ModalErrorButtonOutline = styled.button`
   &:hover {
     opacity: .8;
   }
-`
+`;
 
 export const ModalErrorButtonFilled = styled.button`
   margin: 0;
@@ -348,4 +348,4 @@ export const ModalErrorButtonFilled = styled.button`
   &:hover {
     opacity: .8;
   }
-`
+`;

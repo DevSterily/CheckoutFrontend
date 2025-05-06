@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from "styled-components";
 
 export const StyledCheckout = styled.section`
   display: flex;
@@ -9,11 +9,11 @@ export const StyledCheckout = styled.section`
   background: #F4F6F8;
   padding: 25px 0 45px;
   overflow: hidden !important;
-`
+`;
 export const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  align-items: start;
+  align-items: center;
   gap: 30px;
   max-width: 1196px;
   width: 100%;
@@ -30,4 +30,27 @@ export const Container = styled.div`
     align-items: center;
     max-width: 100%;
   }
-`
+
+  div.group {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 30px !important;
+
+    @media (max-width: 1060px) {
+      display: flex;
+      flex-direction: column-reverse !important;
+      align-items: center;
+      max-width: 100%;
+    }
+
+    @media (max-width: 520px) {
+      display: flex;
+      flex-direction: column-reverse !important;
+      align-items: center;
+      max-width: 100%;
+    }
+  }
+`;
