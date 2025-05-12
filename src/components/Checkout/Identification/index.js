@@ -79,6 +79,8 @@ function Identification() {
 	const handleSetIdentification = (payload) => {
 		dispatch(setIdentification(payload));
 
+		localStorage.setItem("Sterily_Buyer_Name", payload.name);
+
 		const queryParams = new URLSearchParams(window.location.search);
 		const cartId = queryParams.get("cartId");
 		axios.put(

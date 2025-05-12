@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Etapas Dinâmicas</title>
+  <style>
+    body {
+      background-color: #f7f9fa;
+      font-family: Arial, sans-serif;
+      padding: 40px;
+    }
+
+    .progress-container {
+      position: relative;
+      max-width: 600px;
+      margin: auto;
+      height: 60px;
+    }
+
+    .progress-bar {
+      position: absolute;
+      top: 17px;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background-color: #d5d5d5;
+      z-index: 0;
+    }
+
+    .progress-fill {
+      height: 4px;
+      background-color: #00b26a;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .step-wrapper {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      z-index: 1;
+    }
+
+    .step {
+      text-align: center;
+      width: 33.33%;
+    }
+
+    .circle {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background-color: #d5d5d5;
+      color: #999;
+      font-size: 14px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: auto;
+      border: 5px solid #f7f9fa;
+    }
+
+    .step.active .circle {
+      background-color: #00b26a;
+      color: #fff;
+    }
+
+    .label {
+      margin-top: 6px;
+      font-size: 14px;
+      color: #999;
+    }
+
+    .step.active .label {
+      color: #000;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<div class="progress-container">
+  <div class="progress-bar">
+    <div class="progress-fill" id="progress-fill"></div>
+  </div>
+
+  <div class="step-wrapper" id="step-wrapper">
+    <div class="step active">
+      <div class="circle">1</div>
+      <div class="label">Informações<br>pessoais</div>
+    </div>
+
+    <div class="step">
+      <div class="circle">2</div>
+      <div class="label">Entrega</div>
+    </div>
+
+    <div class="step">
+      <div class="circle">3</div>
+      <div class="label">Pagamento</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function updateProgressBar() {
+    const steps = document.querySelectorAll('.step');
+    const activeSteps = document.querySelectorAll('.step.active').length;
+    const fill = document.getElementById('progress-fill');
+
+    // A barra liga os círculos, então o progresso vai até o círculo anterior ao atual
+    const percent = ((activeSteps) / (steps.length)) * 100;
+    fill.style.width = `${percent}%`;
+  }
+
+  updateProgressBar();
+</script>
+
+</body>
+</html>

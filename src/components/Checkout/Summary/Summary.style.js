@@ -29,8 +29,8 @@ export const Container = styled.div`
   }
 
   @media (max-width: 520px) {
-    max-width: 65%;
-    min-width: 65%;
+    max-width: 80%;
+    min-width: 80%;
   }
 
    @media (max-width: 400px) {
@@ -120,6 +120,7 @@ export const PriceTotal = styled.div`
   padding: 20px;
   margin-top: 20px;
   margin-bottom: 20px;
+  width: 85%;
 `;
 
 export const DescriptionContainer = styled.div`

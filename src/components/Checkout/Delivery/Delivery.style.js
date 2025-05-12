@@ -1,13 +1,13 @@
 import styled from "styled-components";
-import CheckIcon from '@mui/icons-material/Check';
+import CheckIcon from "@mui/icons-material/Check";
 import InputMask from "react-input-mask";
 import { Form } from "formik";
 import { CircularProgress } from "@mui/material";
 
 export const Container = styled.div`
-  border: ${(props) => props.success ? 'none' : '2px solid #999999'};
-  cursor: ${(props) => props.success ? 'pointer' : 'default'};
-  background: ${(props) => props.success ? '#f9fdf7' : '#fff'};
+  border: ${(props) => (props.success ? "none" : "2px solid #999999")};
+  cursor: ${(props) => (props.success ? "pointer" : "default")};
+  background: ${(props) => (props.success ? "#f9fdf7" : "#fff")};
   border-radius: 5px;
   margin: 0;
   padding: 30px;
@@ -16,23 +16,25 @@ export const Container = styled.div`
   margin-top: 30px;
   position: relative;
 
-  ${(props) => props.closed && `
+  ${(props) =>
+		props.closed &&
+		`
     pointer-events: none;
     opacity: .5;
     border: none !important;
   `};
 
   @media (max-width: 1060px) {
-    display: ${(props) => props.closed ? 'none' : 'flex'};
+    display: ${(props) => (props.closed ? "none" : "flex")};
     max-width: 500px;
     min-width: 500px;
     margin-top: 0px;
   }
 
   @media (max-width: 520px) {
-    display: ${(props) => props.closed ? 'none' : 'flex'};
-    max-width: 50%;
-    min-width: 50%;
+    display: ${(props) => (props.closed ? "none" : "flex")};
+    max-width: 80%;
+    min-width: 80%;
     margin-top: 0px;
   }
 
@@ -40,16 +42,16 @@ export const Container = styled.div`
     max-width: 80% !important;
     min-width: 80%;
   }
-`
+`;
 
 export const Header = styled.div`
   display: flex;
   align-items: center;
   gap: 5px;
-`
+`;
 
 export const Step = styled.span`
-  background: ${(props) => props.success ? '#36b376' : '#333'};
+  background: ${(props) => (props.success ? "#36b376" : "#333")};
   color: #fff;
   border-radius: 50%;
   font-size: 12px;
@@ -61,17 +63,19 @@ export const Step = styled.span`
   align-items: center;
   justify-content: center;
 
-  ${(props) => props.closed && `
+  ${(props) =>
+		props.closed &&
+		`
     background: #ccc !important;
   `};
-`
+`;
 
 export const Title = styled.p`
   line-height: 21px;
   font-weight: 700;
-  color: ${(props) => props.success ? '#36b376' : '#666667'};
+  color: ${(props) => (props.success ? "#36b376" : "#666667")};
   font-size: 18px;
-`
+`;
 
 export const Disclaimer = styled.p`
   margin-top: 8px !important;
@@ -79,19 +83,19 @@ export const Disclaimer = styled.p`
   font-size: 13px;
   color: #666667;
   margin-bottom: 20px !important;
-`
+`;
 
 export const Label = styled.p`
   color: #333;
   font-size: 13px;
   margin-bottom: 6px !important;
-`
+`;
 
 export const InputDefault = styled.input`
   display: flex;
   margin: 0;
-  background: ${(props) => (props.error ? '#feecef' : '#fff')};
-  border: ${(props) => (props.error ? '1px solid #e50f38' : '1px solid #d0d0d0')};
+  background: ${(props) => (props.error ? "#feecef" : "#fff")};
+  border: ${(props) => (props.error ? "1px solid #e50f38" : "1px solid #d0d0d0")};
   border-radius: 5px;
   color: #333;
   font-family: 'Montserrat', sans-serif;
@@ -100,11 +104,11 @@ export const InputDefault = styled.input`
   line-height: 14px;
   outline: none;
   padding: 16px 35px 15px 20px;
-  margin-bottom: ${(props) => (props.error ? '0px' : '15px')};
-  max-width: ${(props) => (props.small ? '200px' : 'initial')};
-  width: ${(props) => ((props.phone && '100%') ||( props.number && '40px') || 'initial')};
-  border-top-left-radius: ${(props) => (props.phone ? '0 !important' : '5px')};
-  border-bottom-left-radius: ${(props) => (props.phone ? '0 !important' : '5px')};
+  margin-bottom: ${(props) => (props.error ? "0px" : "15px")};
+  max-width: ${(props) => (props.small ? "200px" : "initial")};
+  width: ${(props) => (props.phone && "100%") || (props.number && "40px") || "initial"};
+  border-top-left-radius: ${(props) => (props.phone ? "0 !important" : "5px")};
+  border-bottom-left-radius: ${(props) => (props.phone ? "0 !important" : "5px")};
 
   &:focus {
     background: #f4f6f8;
@@ -112,17 +116,17 @@ export const InputDefault = styled.input`
   }
 
   background-image: ${(props) =>
-    props.isValid
-      ? `url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2336b376"%3E%3Cpath d="M9 16.2l-3.5-3.5 1.4-1.4L9 13.4l7.1-7.1 1.4 1.4L9 16.2z"/%3E%3C/svg%3E')`
-      : "none"};
+		props.isValid
+			? `url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2336b376"%3E%3Cpath d="M9 16.2l-3.5-3.5 1.4-1.4L9 13.4l7.1-7.1 1.4 1.4L9 16.2z"/%3E%3C/svg%3E')`
+			: "none"};
   background-repeat: no-repeat;
   background-position: right 10px center;
   background-size: 1.5rem;
-`
+`;
 
 export const InputMobileContainer = styled.div`
   display: flex;
-`
+`;
 
 export const InputMobileCode = styled.span`
   display: flex;
@@ -144,7 +148,7 @@ export const InputMobileCode = styled.span`
   white-space: nowrap;
   width: 64px;
   padding: 0 8px;
-`
+`;
 
 export const Button = styled.button`
   margin: 0;
@@ -171,7 +175,7 @@ export const Button = styled.button`
   &:hover {
     opacity: .8;
   }
-`
+`;
 
 export const ErrorMessage = styled.p`
   color: #e50f38;
@@ -179,7 +183,7 @@ export const ErrorMessage = styled.p`
   line-height: 1.3;
   margin: 7px 0 15px !important;
   text-align: left;
-`
+`;
 
 export const AddressContainer = styled.div`
   display: grid;
@@ -190,13 +194,13 @@ export const AddressContainer = styled.div`
     display: flex;
     flex-direction: column;
   }
-`
+`;
 
 export const City = styled.p`
   margin: 15px 0 10px -5px !important;
   color: #666;
   font-size: 13px;
-`
+`;
 
 export const NewAddressButton = styled.a`
   padding: 6px 0px;
@@ -214,7 +218,7 @@ export const NewAddressButton = styled.a`
   &:hover {
     opacity: .8;
   }
-`
+`;
 
 export const BackButton = styled.a`
   padding: 6px 0px;
@@ -231,12 +235,11 @@ export const BackButton = styled.a`
   &:hover {
     opacity: .8;
   }
-`
-
+`;
 
 export const DeliveryCard = styled.div`
-  background: ${(props) => props.checked ? '#f4f6f8' : '#fff'};
-  border: 1px solid ${(props) => props.checked ? '#333' : '#d0d0d0'};
+  background: ${(props) => (props.checked ? "#f4f6f8" : "#fff")};
+  border: 1px solid ${(props) => (props.checked ? "#333" : "#d0d0d0")};
   border-radius: 5px;
   color: #333;
   cursor: pointer;
@@ -246,7 +249,9 @@ export const DeliveryCard = styled.div`
   margin: 0 0 10px;
   padding: 11px 15px;
   position: relative;
-  ${(props) => props.shipping && `
+  ${(props) =>
+		props.shipping &&
+		`
     height: 40px;
     display: flex;
     flex-direction: column;
@@ -258,7 +263,7 @@ export const DeliveryCard = styled.div`
     background: #f4f6f8;
     border: 1px solid #333;
   }
-`
+`;
 
 export const RadioButton = styled.input.attrs({ type: "radio" })`
   height: 25px;
@@ -291,19 +296,19 @@ export const RadioButton = styled.input.attrs({ type: "radio" })`
     left: 50%;
     transform: translate(-50%, -50%);
   }
-`
+`;
 
 export const DeliveryTitle = styled.p`
   font-weight: 500;
   margin-left: 30px !important;
-  font-size: ${(props) => props.big ? '12px' : '11px'};
+  font-size: ${(props) => (props.big ? "12px" : "11px")};
   width: 70%;
-`
+`;
 
 export const DeliveryDescription = styled.p`
   margin-left: 30px !important;
-  font-size: ${(props) => props.big ? '12px' : '11px'};
-`
+  font-size: ${(props) => (props.big ? "12px" : "11px")};
+`;
 
 export const EditIcon = styled.i`
   background: url(assets/img/icons/pencil-edit.svg) no-repeat;
@@ -315,7 +320,7 @@ export const EditIcon = styled.i`
   right: 40px;
   cursor: pointer;
   z-index: 2;
-`
+`;
 
 export const DeleteIcon = styled.i`
   background: url(assets/img/icons/delete.svg) no-repeat;
@@ -327,7 +332,7 @@ export const DeleteIcon = styled.i`
   right: 10px;
   cursor: pointer;
   z-index: 2;
-`
+`;
 
 export const DeliveryLabel = styled.p`
   border-top: 1px solid #eee;
@@ -335,17 +340,17 @@ export const DeliveryLabel = styled.p`
   font-size: 13px;
   color: #333;
   margin-top: 10px !important;
-`
+`;
 
 export const DeliveryPrice = styled.p`
-  color: ${(props) => props.free ? '#999' : '#333'};
-  text-decoration: ${(props) => props.free ? 'line-through' : 'none'};
+  color: ${(props) => (props.free ? "#999" : "#333")};
+  text-decoration: ${(props) => (props.free ? "line-through" : "none")};
   line-height: 1.4em;
   font-size: 12px;
   position: absolute;
   right: 15px;
-  top: ${(props) => props.free ? '12px' : '24px'};
-`
+  top: ${(props) => (props.free ? "12px" : "24px")};
+`;
 
 export const DeliveryDiscount = styled.p`
   font-size: 12px;
@@ -353,18 +358,18 @@ export const DeliveryDiscount = styled.p`
   position: absolute;
   right: 15px;
   bottom: 10px;
-`
+`;
 
 export const ArrowRight = styled.i`
   background: url(assets/img/icons/right.svg) no-repeat;
   height: 13px;
   width: 17px;
   display: flex;
-`
+`;
 
 export const StyledCheckIcon = styled(CheckIcon)`
   fill: #36b376 !important;
-`
+`;
 
 export const FinalEditIcon = styled.i`
   background: url(assets/img/icons/pencil-edit.svg) no-repeat;
@@ -376,7 +381,7 @@ export const FinalEditIcon = styled.i`
   right: 20px;
   cursor: pointer;
   z-index: 2;
-`
+`;
 
 export const DeliveryFinalTitle = styled.p`
   font-size: 14px;
@@ -384,19 +389,19 @@ export const DeliveryFinalTitle = styled.p`
   font-weight: 500;
   margin-top: 20px !important;
   margin-bottom: 5px !important;
-`
+`;
 
 export const DeliveryFinalText = styled.p`
   font-size: 14px;
   color: #333;
   margin-bottom: 5px !important;
-`
+`;
 
 export const StyledInputMask = styled(InputMask)`
   display: flex;
   margin: 0;
-  background: ${(props) => (props.error ? '#feecef' : '#fff')};
-  border: ${(props) => (props.error ? '1px solid #e50f38' : '1px solid #d0d0d0')};
+  background: ${(props) => (props.error ? "#feecef" : "#fff")};
+  border: ${(props) => (props.error ? "1px solid #e50f38" : "1px solid #d0d0d0")};
   border-radius: 5px;
   color: #333;
   font-family: 'Montserrat', sans-serif;
@@ -405,11 +410,11 @@ export const StyledInputMask = styled(InputMask)`
   line-height: 14px;
   outline: none;
   padding: 16px 35px 15px 20px;
-  margin-bottom: ${(props) => (props.error ? '0px' : '15px')};
-  max-width: ${(props) => (props.small ? '200px' : 'initial')};
-  width: ${(props) => ((props.phone && '100%') ||( props.number && '40px') || 'initial')};
-  border-top-left-radius: ${(props) => (props.phone ? '0 !important' : '5px')};
-  border-bottom-left-radius: ${(props) => (props.phone ? '0 !important' : '5px')};
+  margin-bottom: ${(props) => (props.error ? "0px" : "15px")};
+  max-width: ${(props) => (props.small ? "200px" : "initial")};
+  width: ${(props) => (props.phone && "100%") || (props.number && "40px") || "initial"};
+  border-top-left-radius: ${(props) => (props.phone ? "0 !important" : "5px")};
+  border-bottom-left-radius: ${(props) => (props.phone ? "0 !important" : "5px")};
 
   &:focus {
     background: #f4f6f8;
@@ -417,18 +422,18 @@ export const StyledInputMask = styled(InputMask)`
   }
 
   background-image: ${(props) =>
-    props.isValid
-      ? `url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2336b376"%3E%3Cpath d="M9 16.2l-3.5-3.5 1.4-1.4L9 13.4l7.1-7.1 1.4 1.4L9 16.2z"/%3E%3C/svg%3E')`
-      : "none"};
+		props.isValid
+			? `url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2336b376"%3E%3Cpath d="M9 16.2l-3.5-3.5 1.4-1.4L9 13.4l7.1-7.1 1.4 1.4L9 16.2z"/%3E%3C/svg%3E')`
+			: "none"};
   background-repeat: no-repeat;
   background-position: right 10px center;
   background-size: 1.5rem;
-`
+`;
 
 export const StyledForm = styled(Form)`
   display: flex;
   flex-direction: column;
-`
+`;
 
 export const StyledLoading = styled(CircularProgress)`
   width: 10px !important;
@@ -436,4 +441,4 @@ export const StyledLoading = styled(CircularProgress)`
   position: absolute;
   top: 135px;
   right: 120px;
-`
+`;
