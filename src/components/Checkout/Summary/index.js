@@ -54,6 +54,7 @@ function Summary() {
 			})
 			.then((results) => {
 				setData(results.data);
+				setDeliveryTax(results.data.resumo.shipping / 100);
 				if (results.data.resumo.discountCode) {
 					getCoupon(results.data.resumo.discountCode);
 				}
@@ -72,9 +73,10 @@ function Summary() {
 		window.location.href = "https://www.sterilybrasil.com/";
 	}
 
-	const hasDeliveryTax = data?.resumo?.total < 10000;
-	const deliveryTax = 18;
+	const hasDeliveryTax = data?.resumo?.total <= 9800;
+	// const deliveryTax = 18;
 
+	const [deliveryTax, setDeliveryTax] = useState(0);
 	const [isLoading, setIsLoading] = useState(false);
 	const [changedItem, setChangedItem] = useState();
 
@@ -139,6 +141,7 @@ function Summary() {
 					if (couponData && couponData.ativo) {
 						setCouponError(false);
 						setCouponData(couponData);
+
 						axios
 							.put(
 								`${process.env.REACT_APP_API_URL}/cart/${cartId}/apply-coupon`,
@@ -152,6 +155,9 @@ function Summary() {
 									},
 								},
 							)
+							.then(() => {
+								getCartData();
+							})
 							.catch((err) => {
 								return;
 							});
@@ -168,7 +174,8 @@ function Summary() {
 	const handleDiscount = () => {
 		return couponData.tipo_desconto === "porcentagem"
 			? (data?.resumo?.total -
-					(data?.resumo?.total * parseInt(couponData.valor_desconto)) / 100) /
+					(data?.resumo?.total * Number.parseInt(couponData.valor_desconto)) /
+						100) /
 					100
 			: couponData.valor_desconto;
 	};
@@ -208,7 +215,7 @@ function Summary() {
 						required
 						disabled={couponData}
 						onChange={(e) => {
-							setCouponText(e.target.value);
+							setCouponText(e.target.value.toLowerCase());
 						}}
 					/>
 					{!couponData && (
