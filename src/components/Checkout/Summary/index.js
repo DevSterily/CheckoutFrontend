@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
 	AddIcon,
 	Container,
@@ -37,14 +37,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCheckoutData } from "../../../redux/summarySlice";
 import { formatPrice } from "../../../utils/formatPrice";
 
+let cupomAtual = "";
+
 function Summary() {
 	const queryParams = new URLSearchParams(window.location.search);
 	const cartId = queryParams.get("cartId");
 
 	const dispatch = useDispatch();
 	const [data, setData] = useState();
+	const [couponText, setCouponText] = useState();
 
-	const getCartData = async () => {
+	const getCartData = useCallback(async () => {
 		await axios
 			.get(`${process.env.REACT_APP_API_URL}/cart/${cartId}`, {
 				headers: {
@@ -63,7 +66,7 @@ function Summary() {
 			.catch((error) => {
 				return;
 			});
-	};
+	}, [cartId, dispatch]);
 
 	if (cartId) {
 		if (!data) {
@@ -124,53 +127,67 @@ function Summary() {
 
 	const [couponData, setCouponData] = useState();
 	const [couponError, setCouponError] = useState();
-	const getCoupon = async (coupon = false) => {
-		if (coupon || couponText) {
-			coupon && setCouponText(coupon);
-			await axios
-				.get(`${process.env.REACT_APP_API_URL}/cupom`, {
-					headers: {
-						accept: "application/json",
-						Authorization: `Bearer ${process.env.REACT_APP_API_KEY}`,
-					},
-				})
-				.then((results) => {
-					const couponData = results.data.find((item) => {
-						return item.codigo === couponText || coupon;
-					});
-					if (couponData && couponData.ativo) {
-						setCouponError(false);
-						setCouponData(couponData);
+	const getCoupon = useCallback(
+		async (coupon = false) => {
+			console.log({
+				cupomAtual,
+				coupon,
+				retornar: cupomAtual === coupon,
+			});
 
-						axios
-							.put(
-								`${process.env.REACT_APP_API_URL}/cart/${cartId}/apply-coupon`,
-								{
-									coupon: couponText || coupon,
-								},
-								{
-									headers: {
-										accept: "application/json",
-										Authorization: `Bearer ${process.env.REACT_APP_API_KEY}`,
+			if (cupomAtual === coupon) {
+				return;
+			}
+
+			if (coupon || couponText) {
+				coupon && setCouponText(coupon);
+				await axios
+					.get(`${process.env.REACT_APP_API_URL}/cupom`, {
+						headers: {
+							accept: "application/json",
+							Authorization: `Bearer ${process.env.REACT_APP_API_KEY}`,
+						},
+					})
+					.then((results) => {
+						const couponData = results.data.find((item) => {
+							return item.codigo === couponText || coupon;
+						});
+						if (couponData?.ativo) {
+							setCouponError(false);
+							setCouponData(couponData);
+							axios
+								.put(
+									`${process.env.REACT_APP_API_URL}/cart/${cartId}/apply-coupon`,
+									{
+										coupon: couponText || coupon,
 									},
-								},
-							)
-							.then(() => {
-								getCartData();
-							})
-							.catch((err) => {
-								return;
-							});
-					} else {
-						setCouponError(true);
-					}
-				});
-		} else {
-			setCouponError(true);
-		}
-	};
+									{
+										headers: {
+											accept: "application/json",
+											Authorization: `Bearer ${process.env.REACT_APP_API_KEY}`,
+										},
+									},
+								)
+								.then(() => {
+									if (cupomAtual !== coupon) {
+										getCartData();
+									}
+									cupomAtual = coupon;
+								})
+								.catch((err) => {
+									return;
+								});
+						} else {
+							setCouponError(true);
+						}
+					});
+			} else {
+				setCouponError(true);
+			}
+		},
+		[couponText, cartId, getCartData],
+	);
 
-	const [couponText, setCouponText] = useState();
 	const handleDiscount = () => {
 		return couponData.tipo_desconto === "porcentagem"
 			? (data?.resumo?.total -
@@ -184,12 +201,14 @@ function Summary() {
 		(state) => state.delivery,
 	);
 
+	console.log(hasDeliveryFinished);
+
 	useEffect(() => {
 		if (hasDeliveryFinished) {
 			getCartData();
 		}
 		// eslint-disable-next-line
-	}, [hasDeliveryFinished]);
+	}, [hasDeliveryFinished, getCartData]);
 
 	useEffect(() => {
 		if (data?.resumo?.totalItems === 0) {
@@ -213,20 +232,20 @@ function Summary() {
 						placeholder="Código do cupom"
 						value={couponText}
 						required
-						disabled={couponData}
+						// disabled={couponData}
 						onChange={(e) => {
 							setCouponText(e.target.value.toLowerCase());
 						}}
 					/>
-					{!couponData && (
-						<CouponButton
-							onClick={() => {
-								getCoupon();
-							}}
-						>
-							Adicionar
-						</CouponButton>
-					)}
+					{/* {!couponData && ( */}
+					<CouponButton
+						onClick={() => {
+							getCoupon();
+						}}
+					>
+						Adicionar
+					</CouponButton>
+					{/* )} */}
 				</CouponContainer>
 				{couponError && <ErrorMessage>Cupom inválido</ErrorMessage>}
 				{data?.resumo?.totalItems > 0 && (

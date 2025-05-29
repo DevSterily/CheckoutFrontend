@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
 	AddressContainer,
 	Button,
@@ -87,11 +87,19 @@ function Delivery() {
 		}
 	}, [lastStepHasFinished]);
 
+	const formikRef = useRef(null); // Referência ao Formik
 	const [address, setAddress] = useState(undefined);
 	const [hasError, setHasError] = useState(false);
 	const [hasCalledApi, setHasCalledApi] = useState(false);
 	const [noStreet, setNoStreet] = useState(false);
 	const [noNeighborhood, setNoNeighborhood] = useState(false);
+
+	// useEffect(() => {
+	// 	const storedName = localStorage.getItem("Sterily_Buyer_Name");
+	// 	if (storedName && formikRef.current) {
+	// 		formikRef.current.setFieldValue("recipient", storedName); // Atualiza o valor no Formik
+	// 	}
+	// }, []); // Executa apenas uma vez ao montar o componente
 
 	const [lastZipCode, setLastZipCode] = useState();
 	const getAddress = async (zipCode) => {
@@ -100,6 +108,11 @@ function Delivery() {
 			await axios
 				.get(`https://brasilapi.com.br/api/cep/v1/${zipCode}`)
 				.then((results) => {
+					const storedName = localStorage.getItem("Sterily_Buyer_Name");
+					if (storedName && formikRef.current) {
+						formikRef.current.setFieldValue("recipient", storedName); // Atualiza o valor no Formik
+					}
+
 					setHasError(false);
 					if (
 						results.data &&
@@ -136,6 +149,11 @@ function Delivery() {
 					setHasError(address.cep === zipCode ? false : true);
 					setHasCalledApi(false);
 				});
+
+			// setInitialValues({
+			// 	...initialValues,
+			// 	recipient: localStorage.getItem("Sterily_Buyer_Name"),
+			// });
 		} catch (error) {
 			setHasError(true);
 			setHasCalledApi(false);
@@ -152,15 +170,22 @@ function Delivery() {
 		additionalData: "",
 	});
 
-	useEffect(() => {
-		setInitialValues({
-			zipCode: "",
-			number: "",
-			// recipient: recipientName || "",
-			recipient: localStorage.getItem("Sterily_Buyer_Name"),
-			additionalData: "",
-		});
-	}, [recipientName]);
+	// useEffect(() => {
+	// 	setInitialValues((prevValues) => ({
+	// 		...prevValues,
+	// 		recipient: localStorage.getItem("Sterily_Buyer_Name") || "", // Atualiza o nome do localStorage
+	// 	}));
+	// }, []);
+
+	// useEffect(() => {
+	// 	setInitialValues({
+	// 		zipCode: "",
+	// 		number: "",
+	// 		// recipient: recipientName || "",
+	// 		recipient: localStorage.getItem("Sterily_Buyer_Name"),
+	// 		additionalData: "",
+	// 	});
+	// }, [recipientName]);
 
 	const [currentEditingAddress, setCurrentEditingAddress] = useState(undefined);
 
@@ -385,13 +410,14 @@ function Delivery() {
 				<>
 					<Disclaimer>Cadastre ou selecione um endereço</Disclaimer>
 					<Formik
+						innerRef={formikRef} // Passa a referência ao Formik
 						initialValues={initialValues}
 						validationSchema={validationSchema}
 						onSubmit={(values) => {
 							handleSetAddresses(values);
 						}}
 					>
-						{({ errors, touched, values }) => {
+						{({ errors, touched, values, setFieldValue }) => {
 							const zipCodeRegex = /^\d{5}-\d{3}$/;
 							if (
 								hasError &&
@@ -494,6 +520,7 @@ function Delivery() {
 											/>
 											<Label>Destinatário</Label>
 											<Field
+												id="recipient"
 												name="recipient"
 												as={InputDefault}
 												error={touched.recipient && !!errors.recipient}

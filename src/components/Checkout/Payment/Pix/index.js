@@ -10,11 +10,16 @@ import {
   TextContainer,
   Title,
 } from "./Pix.style";
+import SmartphoneTwoToneIcon from '@mui/icons-material/SmartphoneTwoTone';
+import CopyAllIcon from '@mui/icons-material/CopyAll';
+import {Check} from '@mui/icons-material';
+import Alert from '@mui/material/Alert';
 import { formatPrice } from "../../../../utils/formatPrice";
 import axios from "axios";
 function Pix({ paymentData }) {
   // Define o tempo inicial em segundos (30 minutos = 1800 segundos)
   const [timeLeft, setTimeLeft] = useState(30 * 60);
+  const [showCopiado, setShowCopiado] = useState(false);
 
   useEffect(() => {
     // Verifica se o tempo acabou
@@ -65,6 +70,9 @@ function Pix({ paymentData }) {
     }, 10000)
   // eslint-disable-next-line
   }, []);
+
+  console.log(paymentData)
+
   return (
     <Container>
       <TextContainer>
@@ -78,16 +86,40 @@ function Pix({ paymentData }) {
       <PaymentContainer>
         <PaymentTitle>
           Abra seu aplicativo de pagamento onde você utiliza o Pix e escolha a
-          opção <strong>Ler QR Code</strong>
+          opção <strong style={{color: '#725bc2'}}>Ler QR Code</strong>
         </PaymentTitle>
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', fontSize: '14px', color: '#666', fontWeight: '500' }}>
+          <SmartphoneTwoToneIcon />
+          <span>Aponte a câmera do seu celular</span>
+        </div>
         <PaymentImage
           alt="Pix"
           src={paymentData?.last_transaction?.qr_code_url}
         />
         <PaymentValue>
           Valor do Pix:{" "}
-          <strong>{formatPrice(paymentData?.last_transaction?.amount)}</strong>
+          <strong style={{color: '#44C485'}}>{formatPrice(paymentData?.last_transaction?.amount)}</strong>
         </PaymentValue>
+
+        <div style={{fontSize: '13px', color: '#666', marginTop: '10px', maxWidth: '330px', textAlign: 'center', fontWeight: '400'}}>
+          <span>Você também pode pagar escolhendo a opção</span>
+          <span>Pix Copia e Cola no seu aplicativo de pagamento ou Internet Banking (banco online). Neste caso, copie o código clicando no botão abaixo:</span>
+        </div>
+        {showCopiado && <Alert display="hidden" icon={<Check fontSize="inherit" />} severity="success">
+          Copiado !
+        </Alert>}
+        <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', marginTop: '10px', padding: '10px 15px', backgroundColor: '#f5f5f5', borderRadius: '5px', color: '#333' }}
+          onClick={() => {
+            navigator.clipboard.writeText(paymentData?.last_transaction?.qr_code);
+            setShowCopiado(true);
+            setTimeout(() => {
+              setShowCopiado(false);
+            }, 2000);
+          }}
+        >
+          <CopyAllIcon />
+          Copiar Codigo
+        </div>
       </PaymentContainer>
     </Container>
   );

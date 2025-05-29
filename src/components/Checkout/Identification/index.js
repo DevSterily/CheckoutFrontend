@@ -151,6 +151,7 @@ function Identification() {
 					initialValues={initialValues}
 					validationSchema={validationSchema}
 					onSubmit={(values) => {
+						localStorage.setItem("Sterily_Buyer_Name", values.name);
 						handleSetIdentification(values);
 					}}
 				>
@@ -168,6 +169,22 @@ function Identification() {
 								placeholder="ex.: Maria de Almeida Cruz"
 								error={touched.name && !!errors.name}
 								isValid={touched.name && !errors.name}
+								onChange={(e) => {
+									const capitalizedName = e.target.value
+										.toLowerCase()
+										.replace(/(?:^|\s)\S/g, (a) => a.toUpperCase());
+									e.target.value = capitalizedName; // Atualiza o valor no campo
+									setFieldValue("name", capitalizedName); // Atualiza o valor no Formik
+									localStorage.setItem("Sterily_Buyer_Name", capitalizedName);
+								}}
+								onBlur={(e) => {
+									const capitalizedName = e.target.value
+										.toLowerCase()
+										.replace(/(?:^|\s)\S/g, (a) => a.toUpperCase())
+										.trim();
+									e.target.value = capitalizedName; // Atualiza o valor no campo
+									setFieldValue("name", capitalizedName); // Atualiza o valor no Formik
+								}}
 							/>
 							{touched.name && errors.name && (
 								<ErrorMessage>{errors.name}</ErrorMessage>
@@ -182,6 +199,17 @@ function Identification() {
 								isValid={touched.email && !errors.email}
 								onChange={(e) => {
 									const lowerCaseEmail = e.target.value.toLowerCase();
+									e.target.value = lowerCaseEmail; // Atualiza o valor no campo
+									setFieldValue("email", lowerCaseEmail); // Atualiza o valor no Formik
+								}}
+								onBlur={(e) => {
+									let lowerCaseEmail = e.target.value.trim().toLowerCase();
+
+									// remover o ultimo ponto se houver
+									if (lowerCaseEmail.endsWith(".")) {
+										lowerCaseEmail = lowerCaseEmail.slice(0, -1);
+									}
+
 									e.target.value = lowerCaseEmail; // Atualiza o valor no campo
 									setFieldValue("email", lowerCaseEmail); // Atualiza o valor no Formik
 								}}
