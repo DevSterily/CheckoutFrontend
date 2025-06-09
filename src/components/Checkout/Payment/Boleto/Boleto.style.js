@@ -64,6 +64,8 @@ export const PaymentContainer = styled.div`
   padding: 20px 40px;
   align-items: center;
   gap: 10px;
+    /* width: 700px;
+  background-color: aqua; */
 
   @media (max-width: 520px) {
     width: 80vw;
@@ -90,12 +92,24 @@ export const PaymentValue = styled.p`
   background: #ddd;
   color: #333;
   font-weight: 700;
-  padding: 10px;
+  padding: 5px 10px;
   border: 1px dotted #333;
+  display: flex;
+  text-align: center;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 15px;
+  width: 600px;
+
+  @media (max-width: 650px) {
+    width: auto;
+    flex-direction: column;
+  }
 
   @media (max-width: 520px) {
     max-width: 80vw;
     width: 100%;
     word-break: break-all;
+    
   }
 `
