@@ -1,49 +1,255 @@
-import styled from 'styled-components'
+import styled from "styled-components";
 
-export const StyledFooter = styled.footer`
-  background: #F7F7F8;
-  color: #666666;
-  padding: 30px 0 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
+export const Container = styled.div`
+  background-color: #f8f9fa;
+  padding: 40px 20px;
+  font-family: Arial, sans-serif;
+  color: #333;
+  line-height: 1.6;
 
-export const Container = styled.footer`
-  border-top: 1px solid #D0D0D0;
-  padding: 30px 0 60px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  max-width: 1196px;
-  width: 100%;
-`
+  @media (max-width: 1060px) {
+    padding: 50px 38px;
+  }
 
-export const Label = styled.p`
+  @media (max-width: 480px) {
+    padding: 50px 38px;
+  }
+`;
+
+export const PaymentMethodsHolder = styled.div`
+  margin-bottom: 30px;
+`;
+
+export const Title = styled.div`
   font-size: 13px;
-  margin: 0;
-`
+  font-family: "Montserrat", sans-serif;
+  font-weight: 400;
+  margin-bottom: 15px;
+  justify-content: center;
+  display: flex;
+  color: #666666;
+
+  @media (max-width: 1060px) {
+    font-size: 11px;
+    justify-content: center;
+    display: flex;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 11px;
+    justify-content: start;
+    display: flex-start;
+  }
+`;
 
 export const PaymentList = styled.div`
-  margin: 8px -6px;
-`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
 
-export const Icon = styled.img`
-  display: inline-block;
+  @media (max-width: 1060px) {
+    justify-content: center;
+    align-items: center;
+  }
+
+  @media (max-width: 480px) {
+    justify-content: start;
+    align-items: start;
+  }
+`;
+
+export const PaymentIcon = styled.img`
+  width: 39px;
   height: 26px;
   margin: 6px;
-  width: 39px;
-`
+  object-fit: contain;
 
-export const Text = styled.p`
-  margin: 0;
-  display: inline-block;
+  @media (max-width: 1060px) {
+    margin: 5px;
+    width: 29px;
+    height: 19px;
+  }
+
+  @media (max-width: 480px) {
+    margin: 5px;
+    width: 29px;
+    height: 19px;
+  }
+`;
+
+export const LineBreak = styled.span`
+  &.hide {
+    display: none;
+  }
+`;
+
+export const StoreInfoHolder = styled.div`
+  margin-bottom: 25px;
+`;
+
+export const StoreName = styled.div`
   font-size: 11px;
-  line-height: 1.36;
-  margin-top: 4px;
-`
+  font-weight: 400;
+  margin-bottom: 4px;
+  font-family: "Montserrat", sans-serif;
+  color: #666666;
+  text-align: center;
+
+  @media (max-width: 1060px) {
+    font-size: 11px;
+    justify-content: center;
+    display: flex;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 11px;
+    justify-content: start;
+    display: flex-start;
+  }
+`;
+
+export const Address = styled.div`
+  font-size: 11px;
+  color: #666666;
+  font-family: "Montserrat", sans-serif;
+  margin-bottom: 4px;
+  text-align: center;
+
+  @media (max-width: 1060px) {
+    text-align: center;
+  }
+
+  @media (max-width: 480px) {
+    text-align: start;
+  }
+`;
+
+export const SpaceHandler = styled.div`
+  margin-bottom: 4px;
+`;
+
+export const StoreDocument = styled.div`
+  font-size: 12px;
+  color: #666;
+  line-height: 1.4;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+
+  @media (max-width: 670px) {
+    text-align: center;
+    display: block;
+  }
+
+  @media (max-width: 480px) {
+    text-align: start;
+    display: block;
+  }
+`;
+
+export const HolderStoreName = styled.span`
+  font-size: 11px;
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 400;
+  font-family: "Montserrat", sans-serif;
+  color: #666666;
+  text-align: center;
+
+  @media (max-width: 1060px) {
+    text-align: center;
+  }
+
+  @media (max-width: 480px) {
+    text-align: start;
+  }
+`;
+
+export const HolderDocument = styled.span`
+  display: block;
+  font-size: 11px;
+`;
+
+export const Cnpj = styled.span`
+  font-weight: 400;
+  font-size: 11px;
+  font-family: "Montserrat", sans-serif;
+  color: #666666;
+  text-align: center;
+  display: block;
+
+  @media (max-width: 670px) {
+    display: block;
+  }
+
+  @media (max-width: 1060px) {
+    text-align: center;
+  }
+
+  @media (max-width: 480px) {
+    text-align: start;
+  }
+`;
+
+export const ContactHolder = styled.div`
+  margin-bottom: 25px;
+  font-size: 11px;
+  font-family: "Montserrat", sans-serif;
+  color: #666666;
+  text-align: center;
+
+  @media (max-width: 670px) {
+    text-align: center;
+  }
+
+  @media (max-width: 1060px) {
+    text-align: center;
+  }
+
+  @media (max-width: 480px) {
+    text-align: start;
+  }
+`;
+
+export const WhatsApp = styled.span`
+  display: inline-block;
+  margin-right: 5px;
+
+  @media (max-width: 670px) {
+    display: block;
+    margin-right: 0;
+    margin-top: 4px;
+    margin-bottom: 4px;
+  }
+`;
+
+export const Email = styled.span`
+  display: inline-block;
+
+  @media (max-width: 670px) {
+    display: block;
+  }
+`;
+
+export const InlineBlock = styled.span`
+  display: inline-block;
+`;
 
 export const ItemSecurity = styled.img`
-  margin-top: 30px;
-`
+  text-align: center;
+  margin: 20px auto 0;
+  display: block;
+
+  @media (min-width: 1060px) {
+    margin: 20px auto 0;
+    display: block;
+    text-align: center;
+  }
+
+  @media (max-width: 480px) {
+    margin: 20px 0 0 0;
+    display: block;
+    text-align: start;
+  }
+`;

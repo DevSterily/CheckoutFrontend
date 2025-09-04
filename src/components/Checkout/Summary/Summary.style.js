@@ -2,7 +2,7 @@ import { CircularProgress } from "@mui/material";
 import styled from "styled-components";
 
 export const Container = styled.div`
-  box-shadow: 0 4px 12px rgba(0,0,0,.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   background: #fff;
   /* border: 2px solid transparent; */
   border-radius: 5px;
@@ -17,12 +17,12 @@ export const Container = styled.div`
   }
 
   @media (max-width: 1060px) {
-    max-width: 500px;
-    min-width: 500px;
+    max-width: 460px;
+    min-width: 460px;
+    padding: 15px 20px 15px 20px;
 
     .group {
       order: 2;
-      border-top: 1px solid #eee;
       margin-top: 10px;
       padding-top: 10px;
     }
@@ -33,7 +33,7 @@ export const Container = styled.div`
     min-width: 80%;
   }
 
-   @media (max-width: 400px) {
+  @media (max-width: 400px) {
     max-width: 80%;
     min-width: 80%;
   }
@@ -41,10 +41,121 @@ export const Container = styled.div`
 
 export const Title = styled.span`
   color: #333 !important;
-  margin-top: 7px;
+  margin-top: ${(props) => (props.isMobile ? "0px" : "7px")};
   font-size: 18px;
   font-weight: 500;
   text-transform: uppercase;
+
+  @media (max-width: 1060px) {
+    font-size: 14px;
+  }
+  .title-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .title-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .collapse-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: ${(props) => (props.isMobile ? "3px" : "5px")};
+    display: ${(props) => (props.isMobile ? "flex" : "none")};
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: #333;
+    }
+  }
+
+  @media (max-width: 1060px) {
+    margin-top: 0px;
+  }
+
+  @media (max-width: 520px) {
+    font-size: 14px;
+  }
+`;
+
+export const TitleText = styled.span`
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+  font-family: "Montserrat", sans-serif;
+  color: #333;
+  text-transform: uppercase;
+  display: ${(props) => (props.hideOnMobile ? "block" : "none")};
+
+  @media (max-width: 1060px) {
+    font-size: 12px;
+    display: ${(props) => (props.hideOnMobile ? "none" : "block")};
+  }
+
+  @media (max-width: 520px) {
+    font-size: 12px;
+  }
+`;
+
+export const CollapseButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  transition: color 0.3s ease;
+
+  @media (max-width: 1060px) {
+    padding: 3px;
+    display: flex;
+  }
+
+  @media (max-width: 520px) {
+    padding: 3px;
+    display: flex;
+  }
+`;
+
+export const SubtitleText = styled.p`
+  margin: 5px 0 0 0;
+  font-size: 11px;
+  font-family: "Montserrat", sans-serif;
+  color: #666;
+  font-weight: 400;
+  text-transform: none;
+  display: none;
+
+  @media (max-width: 1060px) {
+    display: ${(props) => (props.isCollapsed ? "block" : "none")};
+  }
+
+  @media (max-width: 520px) {
+    display: ${(props) => (props.isCollapsed ? "block" : "none")};
+  }
+`;
+
+export const PriceDisplay = styled.span`
+  font-size: 14px;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  color: #44c485;
+  display: none;
+
+  @media (max-width: 1060px) {
+    display: inline;
+  }
 `;
 
 export const CouponLabel = styled.span`
@@ -57,6 +168,7 @@ export const CouponLabel = styled.span`
 export const CouponContainer = styled.div`
   display: flex;
   align-items: center;
+  margin-bottom: 10px;
   postion: relative;
 `;
 
@@ -69,13 +181,13 @@ export const CouponInput = styled.input`
   background: #fff;
   color: #333;
   font-weight: 400;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   line-height: 14px;
   outline: none;
   overflow: clip;
   border-radius: 5px;
   border: 1px solid #d0d0d0;
-  
+
   &:focus {
     background: #f4f6f8;
     border-color: #333;
@@ -99,14 +211,14 @@ export const CouponButton = styled.button`
   font-size: 13px;
   font-weight: 500;
   height: 36px;
-  color: #725BC2;
+  color: #725bc2;
   border-radius: 5px;
   text-transform: uppercase;
   text-align: center;
   cursor: pointer;
   background: transparent;
   border: none;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
 
   &:hover {
     text-decoration: underline;
@@ -118,9 +230,12 @@ export const PriceTotal = styled.div`
   border-radius: 4px;
   font-weight: 400;
   padding: 20px;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  width: 85%;
+  margin-top: 10px;
+
+  @media (max-width: 1060px) {
+    width: 90%;
+    padding: 15px;
+  }
 `;
 
 export const DescriptionContainer = styled.div`
@@ -134,7 +249,7 @@ export const DescriptionContainer = styled.div`
 `;
 
 export const TotalContainer = styled.div`
-  color: #44C485;
+  color: #44c485;
   display: flex;
   justify-content: space-between;
   font-size: 12px;
@@ -143,17 +258,21 @@ export const TotalContainer = styled.div`
   padding-bottom: 6px;
   padding-top: 12px;
   font-weight: 700;
-  
+
   > p:last-of-type {
     font-size: 16px;
   }
 `;
 
 export const ItemsContainer = styled.div`
-  padding: 20px 0;
+  padding: 20px 0 40px;
   display: flex;
   align-items: start;
   border-top: ${(props) => (props.isFirstItem ? "none" : "1px solid #eee")};
+
+  @media (max-width: 1060px) {
+    border-bottom: ${(props) => (props.isLastItem ? "none" : "1px solid #eee")};
+  }
 `;
 
 export const ItemImage = styled.img`
@@ -190,7 +309,7 @@ export const ItemPrice = styled.p`
 
 export const QuantityContainer = styled.div`
   position: relative;
-  margin-top: 11px; 
+  margin-top: 11px;
   max-width: 197px;
 `;
 
@@ -212,11 +331,11 @@ export const RemoveIcon = styled.i`
 `;
 
 export const QuantityInput = styled.input`
-  width: 100%;
+  width: 180px;
   background-color: #f5f5f5;
   border: 0;
   font-size: 14px;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-weight: 500;
   margin: 0;
   padding: 9px;
@@ -309,7 +428,7 @@ export const ModalErrorButtonOutline = styled.button`
   font-weight: 700;
   text-align: center;
   text-transform: uppercase;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -319,7 +438,7 @@ export const ModalErrorButtonOutline = styled.button`
   margin-top: 40px;
 
   &:hover {
-    opacity: .8;
+    opacity: 0.8;
   }
 `;
 
@@ -328,7 +447,7 @@ export const ModalErrorButtonFilled = styled.button`
   width: 100%;
   min-height: 50px;
   line-height: 26px;
-  background-color: #58B62F;
+  background-color: #58b62f;
   color: #fff;
   padding: 12px 20px;
   font-size: 16px;
@@ -337,7 +456,7 @@ export const ModalErrorButtonFilled = styled.button`
   font-weight: 700;
   text-align: center;
   text-transform: uppercase;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -347,6 +466,6 @@ export const ModalErrorButtonFilled = styled.button`
   margin-top: 10px;
 
   &:hover {
-    opacity: .8;
+    opacity: 0.8;
   }
 `;

@@ -2,21 +2,23 @@ import styled from "styled-components";
 
 export const StyledCheckout = styled.section`
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
   width: 100%;
   min-height: 70vh;
-  background: #F4F6F8;
+  background: #f4f6f8;
   padding: 25px 0 45px;
   overflow: hidden !important;
 `;
 export const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  align-items: center;
+  align-items: start;
   gap: 30px;
   max-width: 1196px;
   width: 100%;
+  margin-top: 0;
+  flex: 1;
 
   @media (max-width: 1060px) {
     display: flex;
@@ -34,21 +36,44 @@ export const Container = styled.div`
   div.group {
     display: flex;
     flex-direction: column;
-    gap: 30px;
-    width: 100%;
     max-width: 100%;
     margin-bottom: 30px !important;
 
     @media (max-width: 1060px) {
       display: flex;
-      flex-direction: column-reverse !important;
-      align-items: center;
+      flex-direction: column !important;
+      align-items: start;
       max-width: 100%;
+      margin-bottom: 0px !important;
     }
 
     @media (max-width: 520px) {
       display: flex;
-      flex-direction: column-reverse !important;
+      flex-direction: column !important;
+      align-items: start;
+      max-width: 100%;
+    }
+  }
+
+  div.steps {
+    display: flex;
+    flex-direction: column;
+    max-width: 100%;
+    margin-bottom: 30px !important;
+
+    @media (max-width: 1060px) {
+      display: flex;
+      box-sizing: border-box;
+      flex-direction: column !important;
+      align-items: center;
+      max-width: 100%;
+      margin-bottom: 0px !important;
+    }
+
+    @media (max-width: 520px) {
+      display: flex;
+      box-sizing: border-box;
+      flex-direction: column !important;
       align-items: center;
       max-width: 100%;
     }
