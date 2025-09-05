@@ -234,7 +234,7 @@ function Summary() {
   }, [isMobile, isTablet]);
 
   return (
-    <Container>
+    <Container isCollapsed={isCollapsed}>
       <Title isMobile={isMobile || isTablet}>
         <div className="title-content">
           <div>

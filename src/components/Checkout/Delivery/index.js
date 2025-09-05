@@ -70,6 +70,8 @@ function Delivery() {
     name: recipientName,
   } = useSelector((state) => state.identification);
 
+  const { isEditing: paymentEditing } = useSelector((state) => state.payment);
+
   const { hasFinished, addresses, step, selectedAddress, isEditing } =
     useSelector((state) => state.delivery);
 
@@ -372,6 +374,10 @@ function Delivery() {
   }, [data]);
 
   const hasDeliveryTax = data?.resumo?.total < 10000;
+
+  const shouldHideOnMobile =
+    (isEditingLastStep && !lastStepHasFinished) || paymentEditing;
+
   return (
     <Container
       id="step-2"
@@ -381,6 +387,7 @@ function Delivery() {
         (!isEditing && hasFinished)
       }
       closed={!lastStepHasFinished}
+      shouldHideOnMobile={shouldHideOnMobile}
     >
       <Header>
         <Step

@@ -13,13 +13,26 @@ function Header() {
       <Container>
         <LogoContainer>
           <a href="https://www.sterilybrasil.com/">
-            <Logo src="https://www.sterilybrasil.com/cdn/shop/files/Copia_de_Purewash_2500_x_2500_px.png?v=1730811340&width=280" alt="Logo Sterily" height="45" width="165" />
+            <Logo
+              src="https://www.sterilybrasil.com/cdn/shop/files/Copia_de_Purewash_2500_x_2500_px.png?v=1730811340&width=280"
+              alt="Logo Sterily"
+              height="45"
+              width="165"
+            />
           </a>
         </LogoContainer>
-        <ItemSecurity
-          src="assets/img/safepayment.svg"
-          alt="Pagamento 100% Seguro"
-        />
+        <ItemSecurity>
+          <img
+            src="assets/img/safepayment.svg"
+            alt="Pagamento 100% Seguro"
+            className="desktop-security"
+          />
+          <img
+            src="assets/img/security-lock.svg"
+            alt="Pagamento 100% Seguro"
+            className="mobile-security"
+          />
+        </ItemSecurity>
       </Container>
     </StyledHeader>
   );

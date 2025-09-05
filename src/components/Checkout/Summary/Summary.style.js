@@ -11,6 +11,7 @@ export const Container = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
+  min-width: 320px;
 
   .group {
     margin-top: 15px;
@@ -20,7 +21,7 @@ export const Container = styled.div`
     max-width: 460px;
     min-width: 460px;
     padding: 15px 20px 15px 20px;
-
+    background: ${(props) => (props.isCollapsed ? "#e3e8ed" : "white")};
     .group {
       order: 2;
       margin-top: 10px;
@@ -31,9 +32,11 @@ export const Container = styled.div`
   @media (max-width: 520px) {
     max-width: 80%;
     min-width: 80%;
+    background: ${(props) => (props.isCollapsed ? "#e3e8ed" : "white")};
   }
 
   @media (max-width: 400px) {
+    background: ${(props) => (props.isCollapsed ? "#e3e8ed" : "white")};
     max-width: 80%;
     min-width: 80%;
   }

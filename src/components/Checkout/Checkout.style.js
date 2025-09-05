@@ -21,12 +21,14 @@ export const Container = styled.div`
   flex: 1;
 
   @media (max-width: 1060px) {
+    flex: none;
     display: flex;
     flex-direction: column-reverse !important;
     align-items: center;
   }
 
   @media (max-width: 520px) {
+    flex: none;
     display: flex;
     flex-direction: column-reverse !important;
     align-items: center;

@@ -28,6 +28,9 @@ import {
   setIdentification,
   handleEditingIdentification,
 } from "../../../redux/identificationSlice";
+import { changeStep } from "../../../redux/stepSlice";
+import { cancelEditingIdentification } from "../../../redux/identificationSlice";
+import { editDelivery } from "../../../redux/deliverySlice";
 import axios from "axios";
 
 const validationSchema = Yup.object({
@@ -66,6 +69,8 @@ function Identification() {
     (state) => state.identification
   );
 
+  const { isEditing: deliveryEditing } = useSelector((state) => state.delivery);
+
   const { data } = useSelector((state) => state.summary);
 
   const [initialValues, setInitialValues] = useState({
@@ -78,6 +83,11 @@ function Identification() {
   const dispatch = useDispatch();
   const handleSetIdentification = (payload) => {
     dispatch(setIdentification(payload));
+    if (isEditing === true) {
+      dispatch(cancelEditingIdentification());
+      dispatch(editDelivery());
+      dispatch(changeStep(2));
+    }
 
     localStorage.setItem("Sterily_Buyer_Name", payload.name);
 
@@ -128,15 +138,17 @@ function Identification() {
       dispatch(handleEditingIdentification());
     }
   };
+
   return (
     <Container
       onClick={editData}
       id="step-1"
       success={!isEditing && hasFinished}
+      shouldHideOnMobile={deliveryEditing && hasFinished}
     >
       <Header>
         <Step success={!isEditing && hasFinished}>1</Step>
-        <Title success={!isEditing && hasFinished}>identificação</Title>
+        <Title success={!isEditing && hasFinished}>Identificação</Title>
         {!isEditing && hasFinished && (
           <>
             <StyledCheckIcon />

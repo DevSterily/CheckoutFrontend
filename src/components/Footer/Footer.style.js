@@ -30,7 +30,7 @@ export const Title = styled.div`
   color: #666666;
 
   @media (max-width: 1060px) {
-    font-size: 11px;
+    font-size: 13px;
     justify-content: center;
     display: flex;
   }
@@ -67,8 +67,8 @@ export const PaymentIcon = styled.img`
 
   @media (max-width: 1060px) {
     margin: 5px;
-    width: 29px;
-    height: 19px;
+    width: 39px;
+    height: 26px;
   }
 
   @media (max-width: 480px) {

@@ -9,6 +9,9 @@ import {
   StepLabel,
 } from "./CheckoutStepper.style";
 import { changeStep } from "../../../redux/stepSlice";
+import { handleEditingIdentification } from "../../../redux/identificationSlice";
+import { setDeliveryEditing } from "../../../redux/deliverySlice";
+import { setIdentificationEditing } from "../../../redux/identificationSlice";
 
 const CheckoutStepper = () => {
   const dispatch = useDispatch();
@@ -45,20 +48,23 @@ const CheckoutStepper = () => {
   ];
 
   const handleStepClick = (stepId) => {
-    console.log(stepId);
-
     if (
       stepId === 1 ||
       (stepId === 2 && identificationFinished) ||
       (stepId === 3 && identificationFinished && deliveryFinished)
     ) {
-      dispatch(changeStep(stepId));
-      const stepElement = document.getElementById(`step-${stepId}`);
-      if (stepElement) {
-        const elementPosition =
-          stepElement.getBoundingClientRect().top + window.scrollY;
-        const offsetPosition = elementPosition - 10;
-        window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+      if (stepId === 1 && identificationFinished) {
+        dispatch(handleEditingIdentification());
+        dispatch(setDeliveryEditing(false));
+        dispatch(changeStep(1));
+      } else if (stepId === 2 && identificationFinished) {
+        dispatch(setDeliveryEditing(true));
+        dispatch(setIdentificationEditing(false));
+        dispatch(changeStep(2));
+      } else if (stepId === 3 && deliveryFinished && identificationFinished) {
+        dispatch(setDeliveryEditing(false));
+        dispatch(setIdentificationEditing(false));
+        dispatch(changeStep(3));
       }
     }
   };

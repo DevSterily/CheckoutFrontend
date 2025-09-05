@@ -17,12 +17,15 @@ export const Container = styled.div`
 
   @media (max-width: 1060px) {
     box-sizing: border-box;
-    display: flex;
+    display: ${(props) =>
+      props.success || props.shouldHideOnMobile ? "none" : "flex"};
     max-width: 500px;
     min-width: 500px;
   }
 
   @media (max-width: 520px) {
+    display: ${(props) =>
+      props.success || props.shouldHideOnMobile ? "none" : "flex"};
     box-sizing: border-box;
     border: none;
     max-width: 100%;
@@ -42,12 +45,13 @@ export const Step = styled.span`
   border-radius: 50%;
   font-size: 12px;
   font-weight: 700;
-  line-height: 22px;
+
   width: 21px;
   height: 21px;
   display: flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
 `;
 
 export const Title = styled.p`

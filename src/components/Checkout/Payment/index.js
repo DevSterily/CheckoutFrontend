@@ -17,7 +17,8 @@ import {
   PaymentDisclaimer,
   PaymentList,
   PaymentTitle,
-  PaymentTotal,
+  BarcodeDescriptionPaymentTotal,
+  BarcodePaymentTotal,
   PixDescriptionPaymentTotal,
   PixPaymentTotal,
   PixIcon,
@@ -42,7 +43,8 @@ import { isValidCPF } from "../../../utils/isValidCpf";
 import { Formik, Field } from "formik";
 import axios from "axios";
 import { formatPrice } from "../../../utils/formatPrice";
-
+import { finishDelivery } from "../../../redux/deliverySlice";
+import { cancelEditingIdentification } from "../../../redux/identificationSlice";
 const validationSchema = Yup.object({
   cardNumber: Yup.string().required("Campo obrigatório."),
   cardExpiry: Yup.string()
@@ -84,8 +86,14 @@ const validationSchema = Yup.object({
 });
 
 function Payment() {
-  const { hasFinished: lastStepHasFinished, costumerId } = useSelector(
-    (state) => state.delivery
+  const {
+    hasFinished: deliveryFinished,
+    costumerId,
+    isEditing: deliveryEditing,
+  } = useSelector((state) => state.delivery);
+
+  const { isEditing: identificationEditing } = useSelector(
+    (state) => state.identification
   );
 
   const { data } = useSelector((state) => state.summary);
@@ -93,7 +101,7 @@ function Payment() {
   const { selectedPayment } = useSelector((state) => state.payment);
 
   useEffect(() => {
-    if (lastStepHasFinished) {
+    if (deliveryFinished) {
       const currentStep = document.getElementById("step-3");
       if (currentStep) {
         const elementPosition =
@@ -102,7 +110,7 @@ function Payment() {
         window.scrollTo({ top: offsetPosition, behavior: "smooth" });
       }
     }
-  }, [lastStepHasFinished]);
+  }, [deliveryFinished]);
 
   const dispatch = useDispatch();
   const handleSetPayment = (payment) => {
@@ -296,18 +304,30 @@ function Payment() {
     return installments;
   }
 
+  const shouldHideOnMobile = identificationEditing || deliveryEditing;
+
   return (
-    <Container id="step-3" closed={!lastStepHasFinished}>
+    <Container
+      id="step-3"
+      closed={!deliveryFinished}
+      onClick={() => {
+        if (deliveryEditing || identificationEditing) {
+          dispatch(finishDelivery());
+          dispatch(cancelEditingIdentification());
+        }
+      }}
+      shouldHideOnMobile={shouldHideOnMobile}
+    >
       <Header>
-        <Step closed={!lastStepHasFinished}>3</Step>
+        <Step closed={!deliveryFinished}>3</Step>
         <Title>Pagamento</Title>
       </Header>
-      {!lastStepHasFinished && (
+      {(deliveryEditing || identificationEditing) && (
         <Disclaimer>
           Preencha suas informações de entrega para continuar
         </Disclaimer>
       )}
-      {lastStepHasFinished && (
+      {deliveryFinished && !shouldHideOnMobile && (
         <>
           {" "}
           <Disclaimer>Escolha uma forma de pagamento</Disclaimer>
@@ -520,12 +540,14 @@ function Payment() {
                   de entrega passa a ser contado somente após a confirmação do
                   pagamento.
                 </PaymentDisclaimer>
-                <PaymentTotal>
+                <BarcodeDescriptionPaymentTotal>
                   Valor no boleto:{" "}
-                  {formatPrice(
-                    data?.resumo?.totalWithDiscount || data?.resumo?.total
-                  )}
-                </PaymentTotal>
+                  <BarcodePaymentTotal>
+                    {formatPrice(
+                      data?.resumo?.totalWithDiscount || data?.resumo?.total
+                    )}
+                  </BarcodePaymentTotal>
+                </BarcodeDescriptionPaymentTotal>
                 <Button
                   onClick={() => {
                     handlePayment("BOLETO");

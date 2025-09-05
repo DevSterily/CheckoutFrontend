@@ -24,12 +24,14 @@ export const Container = styled.div`
 
   @media (max-width: 1060px) {
     box-sizing: border-box;
-    display: ${(props) => (props.closed ? "none" : "flex")};
+    display: ${(props) =>
+      props.shouldHideOnMobile || props.closed ? "none" : "flex"};
     max-width: 500px;
     min-width: 500px;
   }
 
   @media (max-width: 520px) {
+    display: ${(props) => (props.shouldHideOnMobile ? "none" : "flex")};
     box-sizing: border-box;
     border: none;
     max-width: 100%;
@@ -56,7 +58,7 @@ export const Step = styled.span`
   border-radius: 50%;
   font-size: 12px;
   font-weight: 700;
-  line-height: 22px;
+  text-align: center;
   width: 21px;
   height: 21px;
   display: flex;
@@ -543,6 +545,23 @@ export const PixDescriptionPaymentTotal = styled.p`
 `;
 
 export const PixPaymentTotal = styled.span`
+  color: #000000;
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0;
+`;
+
+export const BarcodeDescriptionPaymentTotal = styled.p`
+  color: #000000;
+  font-size: 14px;
+  font-weight: 400;
+  margin-top: 20px !important;
+  margin-bottom: 20px !important;
+  align-items: center;
+  gap: 8px;
+`;
+
+export const BarcodePaymentTotal = styled.span`
   color: #000000;
   font-size: 14px;
   font-weight: 700;

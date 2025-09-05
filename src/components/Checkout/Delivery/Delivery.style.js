@@ -26,21 +26,30 @@ export const Container = styled.div`
   `};
 
   @media (max-width: 1060px) {
+    display: ${(props) =>
+      props.shouldHideOnMobile || props.success ? "none" : "flex"};
     max-width: 500px;
     min-width: 500px;
   }
 
   @media (max-width: 520px) {
+    display: ${(props) =>
+      props.shouldHideOnMobile || props.success ? "none" : "flex"};
+
     border: none;
     width: 100%;
   }
 
   @media (max-width: 470px) {
+    display: ${(props) =>
+      props.shouldHideOnMobile || props.success ? "none" : "flex"};
     max-width: 470px;
     min-width: 450px;
   }
 
   @media (max-width: 450px) {
+    display: ${(props) =>
+      props.shouldHideOnMobile || props.success ? "none" : "flex"};
     max-width: 450px;
     min-width: 400px;
   }
@@ -58,7 +67,7 @@ export const Step = styled.span`
   border-radius: 50%;
   font-size: 12px;
   font-weight: 700;
-  line-height: 22px;
+  text-align: center;
   width: 21px;
   height: 21px;
   display: flex;
