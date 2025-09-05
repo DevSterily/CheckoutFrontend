@@ -1,70 +1,158 @@
 import React from "react";
 import {
   Container,
-  StyledFooter,
-  Icon,
-  ItemSecurity,
-  Label,
+  PaymentMethodsHolder,
+  Title,
   PaymentList,
-  Text,
+  PaymentIcon,
+  LineBreak,
+  StoreInfoHolder,
+  StoreName,
+  Address,
+  SpaceHandler,
+  StoreDocument,
+  HolderStoreName,
+  HolderDocument,
+  Cnpj,
+  ContactHolder,
+  WhatsApp,
+  Email,
+  InlineBlock,
+  ItemSecurity,
 } from "./Footer.style";
 
-function Footer() {
-  const currentYear = new Date().getFullYear();
-  const storeInfo = [
-    {
-      type: "site",
-      text: "Sterily: sterilybrasil.com",
-    },
-    {
-      type: "adress",
-      text: "Rua Governador Valadares, 582 - Centro Extrema - MG",
-    },
-    {
-      type: "name",
-      text: `© ${currentYear} STERILY BRASIL INTERMEDIACAO DE COMERCIO ELETRONICO LTDA - CNPJ: 39.996.062/0003-00`,
-    },
-    {
-      type: "contact",
-      text: "Whatsapp: (35) 99141-6513 / E-mail: sac@sterilybrasil.com",
-    },
-  ];
-
-  const icons = [
-    { slug: "billet", icon: "assets/img/payment/card-billet.svg" },
-    { slug: "amex", icon: "assets/img/payment/card-amex.svg" },
-    { slug: "visa", icon: "assets/img/payment/card-visa.svg" },
-    { slug: "diners", icon: "assets/img/payment/card-diners.svg" },
-    { slug: "mastercard", icon: "assets/img/payment/card-mastercard.svg" },
-    { slug: "discover", icon: "assets/img/payment/card-discover.svg" },
-    { slug: "aura", icon: "assets/img/payment/card-aura.svg" },
-    { slug: "hipercard", icon: "assets/img/payment/card-hipercard.svg" },
-    { slug: "elo", icon: "assets/img/payment/card-elo.svg" },
-    { slug: "hiper", icon: "assets/img/payment/card-hiper.svg" },
-    { slug: "pix", icon: "assets/img/payment/card-pix.svg" },
-  ];
-
+const Footer = () => {
   return (
-    <StyledFooter>
-      <Container>
-        <Label>Formas de pagamento</Label>
+    <Container>
+      <PaymentMethodsHolder>
+        <Title>Formas de pagamento</Title>
+
         <PaymentList>
-          {icons.map((payment) => {
-            return (
-              <Icon src={payment.icon} alt={payment.slug} key={payment.slug} />
-            );
-          })}
+          <PaymentIcon
+            loading="lazy"
+            alt="billet"
+            width="30"
+            height="20"
+            src="https://icons.yampi.me/svg/card-billet.svg"
+          />
+          <LineBreak className="hide" />
+
+          <PaymentIcon
+            loading="lazy"
+            alt="amex"
+            width="39"
+            height="26"
+            src="https://icons.yampi.me/svg/card-amex.svg"
+          />
+          <LineBreak className="hide" />
+
+          <PaymentIcon
+            loading="lazy"
+            alt="visa"
+            width="39"
+            height="26"
+            src="https://icons.yampi.me/svg/card-visa.svg"
+          />
+          <LineBreak className="hide" />
+
+          <PaymentIcon
+            loading="lazy"
+            alt="diners"
+            width="39"
+            height="26"
+            src="https://icons.yampi.me/svg/card-diners.svg"
+          />
+          <LineBreak className="hide" />
+
+          <PaymentIcon
+            loading="lazy"
+            alt="mastercard"
+            width="39"
+            height="26"
+            src="https://icons.yampi.me/svg/card-mastercard.svg"
+          />
+          <LineBreak className="hide" />
+
+          <PaymentIcon
+            loading="lazy"
+            alt="discover"
+            width="39"
+            height="26"
+            src="https://icons.yampi.me/svg/card-discover.svg"
+          />
+          <LineBreak className="hide" />
+
+          <PaymentIcon
+            loading="lazy"
+            alt="aura"
+            width="39"
+            height="26"
+            src="https://icons.yampi.me/svg/card-aura.svg"
+          />
+          <LineBreak className="hide" />
+
+          <PaymentIcon
+            loading="lazy"
+            alt="hipercard"
+            width="39"
+            height="26"
+            src="https://icons.yampi.me/svg/card-hipercard.svg"
+          />
+          <LineBreak className="hide" />
+
+          <PaymentIcon
+            loading="lazy"
+            alt="elo"
+            width="39"
+            height="26"
+            src="https://icons.yampi.me/svg/card-elo.svg"
+          />
+          <LineBreak className="hide" />
+
+          <PaymentIcon
+            loading="lazy"
+            alt="hiper"
+            width="39"
+            height="26"
+            src="https://icons.yampi.me/svg/card-hiper.svg"
+          />
+          <LineBreak className="hide" />
+
+          <PaymentIcon
+            loading="lazy"
+            alt="pix"
+            width="39"
+            height="26"
+            src="https://icons.yampi.me/svg/card-pix.svg"
+          />
+          <LineBreak className="hide" />
         </PaymentList>
-        {storeInfo.map((info) => {
-          return <Text key={info.type}>{info.text}</Text>;
-        })}
-        <ItemSecurity
-          src="assets/img/safepayment.svg"
-          alt="Pagamento 100% Seguro"
-        />
-      </Container>
-    </StyledFooter>
+      </PaymentMethodsHolder>
+
+      <StoreName>Sterily: sterilybrasil.com</StoreName>
+
+      <Address className="space-handler">
+        Rua Governador Valadares, 582 - Centro - Extrema - MG
+      </Address>
+
+      <StoreDocument className="space-handler">
+        <HolderStoreName>
+          © 2025 STERILY BRASIL INTERMEDIACAO DE COMERCIO ELETRONICO LTDA
+        </HolderStoreName>
+        <Cnpj>CNPJ: 39.996.062/0003-00</Cnpj>
+      </StoreDocument>
+
+      <ContactHolder className="space-handler">
+        <WhatsApp>Whatsapp: (35) 99141-6513</WhatsApp>
+        <Email> E-mail: sac@sterilybrasil.com</Email>
+      </ContactHolder>
+
+      <ItemSecurity
+        src="assets/img/safepayment.svg"
+        alt="Pagamento 100% Seguro"
+      />
+    </Container>
   );
-}
+};
 
 export default Footer;

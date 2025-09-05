@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { StyledCheckout, Container } from "./Checkout.style";
+import CheckoutStepper from "./CheckoutStepper";
 import Identification from "./Identification";
 import Delivery from "./Delivery";
 import Payment from "./Payment";
@@ -27,36 +28,39 @@ function Checkout() {
         }
       )
       .then((results) => {
-        setIsPaid(results.data.status === 'paid');
+        setIsPaid(results.data.status === "paid");
       })
       .catch(() => {
         return;
       });
-  }
+  };
 
   if (paymentData) {
     setInterval(() => {
       checkPayment();
-    }, 10000)
+    }, 10000);
   }
 
   return (
     <StyledCheckout>
       {(!paymentData ||
         paymentData?.last_transaction?.status === "not_authorized") && (
-        <Container>
-          <div class="group">
-            <Identification />
-            <Delivery />
-          </div>
-          <Payment />
-          <Summary />
-        </Container>
+        <>
+          <CheckoutStepper />
+          <Container>
+            <div class="steps">
+              <Identification />
+              <Delivery />
+            </div>
+            <Payment />
+            <Summary />
+          </Container>
+        </>
       )}
-      {!isPaid && paymentData &&
+      {!isPaid &&
+        paymentData &&
         paymentData?.last_transaction &&
-        paymentData?.last_transaction?.transaction_type === "pix" &&
-        (
+        paymentData?.last_transaction?.transaction_type === "pix" && (
           <Pix paymentData={paymentData} />
         )}
       {paymentData &&
@@ -70,9 +74,7 @@ function Checkout() {
         paymentData?.last_transaction?.status !== "not_authorized" && (
           <Credito />
         )}
-      {isPaid && (
-          <Credito />
-        )}
+      {isPaid && <Credito />}
     </StyledCheckout>
   );
 }

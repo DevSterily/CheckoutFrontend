@@ -20,6 +20,9 @@ export const slice = createSlice({
     cancelEditingIdentification(state) {
       return { ...state, isEditing: false };
     },
+    setIdentificationEditing(state, { payload }) {
+      return { ...state, isEditing: payload };
+    },
   },
 });
 
@@ -27,6 +30,7 @@ export const {
   setIdentification,
   handleEditingIdentification,
   cancelEditingIdentification,
+  setIdentificationEditing,
 } = slice.actions;
 
 export default slice.reducer;

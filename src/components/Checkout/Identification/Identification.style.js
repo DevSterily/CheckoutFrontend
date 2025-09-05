@@ -13,22 +13,23 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
+  box-sizing: border-box;
 
   @media (max-width: 1060px) {
-    display: ${(props) => (props.success ? "none" : "flex")};
+    box-sizing: border-box;
+    display: ${(props) =>
+      props.success || props.shouldHideOnMobile ? "none" : "flex"};
     max-width: 500px;
     min-width: 500px;
   }
 
   @media (max-width: 520px) {
-    display: ${(props) => (props.success ? "none" : "flex")};
-    max-width: 80%;
-    min-width: 80%; 
-  }
-
-  @media (max-width: 400px) {
-    max-width: 80% !important;
-    min-width: 80%;
+    display: ${(props) =>
+      props.success || props.shouldHideOnMobile ? "none" : "flex"};
+    box-sizing: border-box;
+    border: none;
+    max-width: 100%;
+    min-width: 100%;
   }
 `;
 
@@ -44,12 +45,13 @@ export const Step = styled.span`
   border-radius: 50%;
   font-size: 12px;
   font-weight: 700;
-  line-height: 22px;
+
   width: 21px;
   height: 21px;
   display: flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
 `;
 
 export const Title = styled.p`
@@ -77,10 +79,11 @@ export const InputDefault = styled.input`
   display: flex;
   margin: 0;
   background: ${(props) => (props.error ? "#feecef" : "#fff")};
-  border: ${(props) => (props.error ? "1px solid #e50f38" : "1px solid #d0d0d0")};
+  border: ${(props) =>
+    props.error ? "1px solid #e50f38" : "1px solid #d0d0d0"};
   border-radius: 5px;
   color: #333;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 13px;
   font-weight: 400;
   line-height: 14px;
@@ -90,7 +93,8 @@ export const InputDefault = styled.input`
   max-width: ${(props) => (props.small ? "200px" : "initial")};
   width: ${(props) => (props.phone ? "100%" : "initial")};
   border-top-left-radius: ${(props) => (props.phone ? "0 !important" : "5px")};
-  border-bottom-left-radius: ${(props) => (props.phone ? "0 !important" : "5px")};
+  border-bottom-left-radius: ${(props) =>
+    props.phone ? "0 !important" : "5px"};
 
   &:focus {
     background: #f4f6f8;
@@ -98,9 +102,9 @@ export const InputDefault = styled.input`
   }
 
   background-image: ${(props) =>
-		props.isValid
-			? `url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2336b376"%3E%3Cpath d="M9 16.2l-3.5-3.5 1.4-1.4L9 13.4l7.1-7.1 1.4 1.4L9 16.2z"/%3E%3C/svg%3E')`
-			: "none"};
+    props.isValid
+      ? `url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2336b376"%3E%3Cpath d="M9 16.2l-3.5-3.5 1.4-1.4L9 13.4l7.1-7.1 1.4 1.4L9 16.2z"/%3E%3C/svg%3E')`
+      : "none"};
   background-repeat: no-repeat;
   background-position: right 10px center;
   background-size: 1.5rem;
@@ -137,7 +141,7 @@ export const Button = styled.button`
   width: 100%;
   min-height: 50px;
   line-height: 26px;
-  background-color: #58B62F;
+  background-color: #58b62f;
   color: #fff;
   padding: 12px 20px;
   font-size: 16px;
@@ -146,15 +150,16 @@ export const Button = styled.button`
   font-weight: 700;
   text-align: center;
   text-transform: uppercase;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: 20px !important;
   gap: 10px;
   cursor: pointer;
-  
+
   &:hover {
-    opacity: .8;
+    opacity: 0.8;
   }
 `;
 
@@ -207,10 +212,11 @@ export const StyledInputMask = styled(InputMask)`
   display: flex;
   margin: 0;
   background: ${(props) => (props.error ? "#feecef" : "#fff")};
-  border: ${(props) => (props.error ? "1px solid #e50f38" : "1px solid #d0d0d0")};
+  border: ${(props) =>
+    props.error ? "1px solid #e50f38" : "1px solid #d0d0d0"};
   border-radius: 5px;
   color: #333;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 13px;
   font-weight: 400;
   line-height: 14px;
@@ -220,7 +226,8 @@ export const StyledInputMask = styled(InputMask)`
   max-width: ${(props) => (props.small ? "200px" : "initial")};
   width: ${(props) => (props.phone ? "100%" : "initial")};
   border-top-left-radius: ${(props) => (props.phone ? "0 !important" : "5px")};
-  border-bottom-left-radius: ${(props) => (props.phone ? "0 !important" : "5px")};
+  border-bottom-left-radius: ${(props) =>
+    props.phone ? "0 !important" : "5px"};
 
   &:focus {
     background: #f4f6f8;
@@ -228,9 +235,9 @@ export const StyledInputMask = styled(InputMask)`
   }
 
   background-image: ${(props) =>
-		props.isValid
-			? `url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2336b376"%3E%3Cpath d="M9 16.2l-3.5-3.5 1.4-1.4L9 13.4l7.1-7.1 1.4 1.4L9 16.2z"/%3E%3C/svg%3E')`
-			: "none"};
+    props.isValid
+      ? `url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2336b376"%3E%3Cpath d="M9 16.2l-3.5-3.5 1.4-1.4L9 13.4l7.1-7.1 1.4 1.4L9 16.2z"/%3E%3C/svg%3E')`
+      : "none"};
   background-repeat: no-repeat;
   background-position: right 10px center;
   background-size: 1.5rem;

@@ -35,6 +35,9 @@ export const slice = createSlice({
     setCostumerId(state, { payload }) {
       return { ...state, costumerId: payload };
     },
+    setDeliveryEditing(state, { payload }) {
+      return { ...state, isEditing: payload };
+    },
   },
 });
 
@@ -47,6 +50,7 @@ export const {
   finishDelivery,
   editDelivery,
   setCostumerId,
+  setDeliveryEditing,
 } = slice.actions;
 
 export default slice.reducer;
