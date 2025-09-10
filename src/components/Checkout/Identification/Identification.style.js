@@ -16,6 +16,7 @@ export const Container = styled.div`
   box-sizing: border-box;
 
   @media (max-width: 1060px) {
+    padding: 30px 14px;
     box-sizing: border-box;
     display: ${(props) =>
       props.success || props.shouldHideOnMobile ? "none" : "flex"};
@@ -24,6 +25,7 @@ export const Container = styled.div`
   }
 
   @media (max-width: 520px) {
+    padding: 30px 14px;
     display: ${(props) =>
       props.success || props.shouldHideOnMobile ? "none" : "flex"};
     box-sizing: border-box;
@@ -59,6 +61,10 @@ export const Title = styled.p`
   font-weight: 700;
   color: ${(props) => (props.success ? "#36b376" : "#666667")};
   font-size: 18px;
+
+  @media (max-width: 1060px) {
+    font-size: 17px;
+  }
 `;
 
 export const Disclaimer = styled.p`
@@ -72,6 +78,7 @@ export const Disclaimer = styled.p`
 export const Label = styled.p`
   color: #333;
   font-size: 13px;
+
   margin-bottom: 6px !important;
 `;
 
@@ -99,6 +106,13 @@ export const InputDefault = styled.input`
   &:focus {
     background: #f4f6f8;
     border-color: #333;
+    background-image: ${(props) =>
+      props.isValid
+        ? `url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2336b376"%3E%3Cpath d="M9 16.2l-3.5-3.5 1.4-1.4L9 13.4l7.1-7.1 1.4 1.4L9 16.2z"/%3E%3C/svg%3E')`
+        : "none"};
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 1.5rem;
   }
 
   background-image: ${(props) =>
@@ -160,6 +174,10 @@ export const Button = styled.button`
 
   &:hover {
     opacity: 0.8;
+  }
+
+  @media (max-width: 1060px) {
+    margin-top: 10px !important;
   }
 `;
 
@@ -232,6 +250,13 @@ export const StyledInputMask = styled(InputMask)`
   &:focus {
     background: #f4f6f8;
     border-color: #333;
+    background-image: ${(props) =>
+      props.isValid
+        ? `url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2336b376"%3E%3Cpath d="M9 16.2l-3.5-3.5 1.4-1.4L9 13.4l7.1-7.1 1.4 1.4L9 16.2z"/%3E%3C/svg%3E')`
+        : "none"};
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 1.5rem;
   }
 
   background-image: ${(props) =>

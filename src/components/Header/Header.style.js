@@ -63,8 +63,8 @@ export const ItemSecurity = styled.div`
 
     @media (max-width: 520px) {
       display: block;
-      width: 28px;
-      height: 28px;
+      width: 24px;
+      height: 24px;
       fill: #4d4d4d;
     }
   }

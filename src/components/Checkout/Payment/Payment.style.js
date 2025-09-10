@@ -4,7 +4,6 @@ import LockIcon from "@mui/icons-material/Lock";
 import InputMask from "react-input-mask";
 
 export const Container = styled.div`
-  max-width: 350px !important;
   border: 2px solid #999999;
   cursor: default;
   background: #fff;
@@ -13,6 +12,7 @@ export const Container = styled.div`
   padding: 30px;
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
 
   ${(props) =>
     props.closed &&
@@ -23,26 +23,16 @@ export const Container = styled.div`
   `};
 
   @media (max-width: 1060px) {
-    box-sizing: border-box;
+    padding: 30px 14px 14px 14px;
     display: ${(props) =>
       props.shouldHideOnMobile || props.closed ? "none" : "flex"};
     max-width: 500px;
-    min-width: 500px;
   }
 
   @media (max-width: 520px) {
     display: ${(props) => (props.shouldHideOnMobile ? "none" : "flex")};
-    box-sizing: border-box;
     border: none;
-    max-width: 100%;
-    min-width: 100%;
-    padding: 30px 30px 30px 30px;
-  }
-
-  @media (max-width: 350px) {
-    box-sizing: border-box;
-    max-width: 80% !important;
-    min-width: 80%;
+    width: 100%;
   }
 `;
 
@@ -77,6 +67,10 @@ export const Title = styled.p`
   font-weight: 700;
   color: #666667;
   font-size: 18px;
+
+  @media (max-width: 520px) {
+    font-size: 17px !important;
+  }
 `;
 
 export const Disclaimer = styled.p`
@@ -120,6 +114,13 @@ export const InputDefault = styled.input`
   &:focus {
     background: #f4f6f8;
     border-color: #333;
+    background-image: ${(props) =>
+      props.isValid
+        ? `url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2336b376"%3E%3Cpath d="M9 16.2l-3.5-3.5 1.4-1.4L9 13.4l7.1-7.1 1.4 1.4L9 16.2z"/%3E%3C/svg%3E')`
+        : "none"};
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 1.5rem;
   }
 
   background-image: ${(props) =>
@@ -203,7 +204,10 @@ export const PaymentCard = styled.div`
   font-size: 11px;
   line-height: 14px;
   margin: 0 0 10px;
-  padding: 11px 15px;
+  padding: ${(props) =>
+    props.type === "barcode" || props.type === "pix"
+      ? "15px 16px"
+      : "11px 15px"};
   position: relative;
   ${(props) =>
     props.shipping &&
@@ -268,6 +272,9 @@ export const PaymentTitle = styled.p`
   gap: 5px;
   margin-bottom: ${(props) =>
     props.selected ? "20px !important" : "5px !important"};
+  @media (max-width: 520px) {
+    margin-bottom: 0px !important;
+  }
 `;
 
 export const PaymentDescription = styled.p`
@@ -335,6 +342,13 @@ export const ArrowRight = styled.i`
 export const PaymentList = styled.div`
   margin: 8px 0;
   margin-left: 30px !important;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  @media (max-width: 1060px) {
+    margin: 8px 0 0 30px !important;
+  }
 `;
 
 export const Icon = styled.img`
@@ -353,16 +367,17 @@ export const PixIcon = styled.i`
 
 export const BarcodeIcon = styled.i`
   background: url(assets/img/icons/barcode.svg?v=1) no-repeat;
-  height: 12px;
-  width: 14px;
+  height: 16px;
+  width: 16px;
+  margin-top: 4px;
   display: flex;
 `;
 
 export const PaymentDisclaimer = styled.p`
   font-size: 13px;
+  padding: 16px 6px 0px 6px;
   color: #333;
   line-height: 1.4em;
-  margin-bottom: 10px !important;
   font-weight: 500;
 `;
 
@@ -423,8 +438,8 @@ export const StyledHelpIcon = styled(HelpIcon)`
   fill: #999 !important;
 
   @media (max-width: 400px) {
-    width: 10px !important;
-    height: 10px !important;
+    width: 14px !important;
+    height: 14px !important;
   }
 `;
 
@@ -436,11 +451,16 @@ export const StyledLockIcon = styled(LockIcon)`
 export const Select = styled.select`
   display: flex;
   margin: 0;
-  background: ${(props) => (props.error ? "#feecef" : "#fff")};
+  background: ${(props) =>
+    props.error ? "#feecef" : props.disabled ? "#f5f5f5" : "#fff"};
   border: ${(props) =>
-    props.error ? "1px solid #e50f38" : "1px solid #d0d0d0"};
+    props.error
+      ? "1px solid #e50f38"
+      : props.disabled
+      ? "1px solid #e0e0e0"
+      : "1px solid #d0d0d0"};
   border-radius: 5px;
-  color: #333;
+  color: ${(props) => (props.disabled ? "#999" : "#333")};
   font-family: "Montserrat", sans-serif;
   font-size: 13px;
   font-weight: 400;
@@ -453,10 +473,25 @@ export const Select = styled.select`
   border-top-left-radius: ${(props) => (props.phone ? "0 !important" : "5px")};
   border-bottom-left-radius: ${(props) =>
     props.phone ? "0 !important" : "5px"};
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+
+  /* Custom arrow for select */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23666666%22%20d%3D%22M287%2C114.7L146.2%2C255.5L5.4%2C114.7c-7.8-7.8-7.8-20.5%2C0-28.3s20.5-7.8%2C28.3%2C0L146.2%2C200l112.5-112.5c7.8-7.8%2C20.5-7.8%2C28.3%2C0S294.8%2C106.9%2C287%2C114.7z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 20px center;
+  background-size: 12px;
+  padding-right: 45px;
 
   &:focus {
     background: #f4f6f8;
     border-color: #333;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23666666%22%20d%3D%22M287%2C114.7L146.2%2C255.5L5.4%2C114.7c-7.8-7.8-7.8-20.5%2C0-28.3s20.5-7.8%2C28.3%2C0L146.2%2C200l112.5-112.5c7.8-7.8%2C20.5-7.8%2C28.3%2C0S294.8%2C106.9%2C287%2C114.7z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 20px center;
+    background-size: 12px;
   }
 `;
 
@@ -470,7 +505,7 @@ export const StyledInputMask = styled(InputMask)`
   color: #333;
   font-family: "Montserrat", sans-serif;
   font-size: 13px;
-  font-weight: 400;
+  font-weight: ${(props) => (props.bold ? "bold" : "400")};
   line-height: 14px;
   outline: none;
   padding: 16px 35px 15px 20px;
@@ -481,9 +516,21 @@ export const StyledInputMask = styled(InputMask)`
   border-bottom-left-radius: ${(props) =>
     props.phone ? "0 !important" : "5px"};
 
+  &::placeholder {
+    font-weight: ${(props) => (props.bold ? "bold" : "400")};
+    color: #999;
+  }
+
   &:focus {
     background: #f4f6f8;
     border-color: #333;
+    background-image: ${(props) =>
+      props.isValid
+        ? `url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2336b376"%3E%3Cpath d="M9 16.2l-3.5-3.5 1.4-1.4L9 13.4l7.1-7.1 1.4 1.4L9 16.2z"/%3E%3C/svg%3E')`
+        : "none"};
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 1.5rem;
   }
 
   background-image: ${(props) =>
@@ -535,11 +582,10 @@ export const CardErrorButton = styled.button`
 `;
 
 export const PixDescriptionPaymentTotal = styled.p`
+  padding: 20px 6px 20px 6px;
   color: #000000;
   font-size: 14px;
   font-weight: 400;
-  margin-top: 20px !important;
-  margin-bottom: 20px !important;
   align-items: center;
   gap: 8px;
 `;
@@ -555,8 +601,7 @@ export const BarcodeDescriptionPaymentTotal = styled.p`
   color: #000000;
   font-size: 14px;
   font-weight: 400;
-  margin-top: 20px !important;
-  margin-bottom: 20px !important;
+  padding: 20px 6px 20px 6px;
   align-items: center;
   gap: 8px;
 `;

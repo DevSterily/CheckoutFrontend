@@ -6,13 +6,14 @@ export const StyledCheckout = styled.section`
   align-items: center;
   width: 100%;
   min-height: 70vh;
-  background: #f4f6f8;
-  padding: 25px 0 45px;
+  background: #f8f9fa;
+  padding: 25px 0 15px;
   overflow: hidden !important;
 `;
+
 export const Container = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 390px 390px 390px;
   align-items: start;
   gap: 30px;
   max-width: 1196px;
@@ -21,10 +22,11 @@ export const Container = styled.div`
   flex: 1;
 
   @media (max-width: 1060px) {
+    gap: 26px;
     flex: none;
     display: flex;
     flex-direction: column-reverse !important;
-    align-items: center;
+    align-items: stretch;
   }
 
   @media (max-width: 520px) {
@@ -33,6 +35,8 @@ export const Container = styled.div`
     flex-direction: column-reverse !important;
     align-items: center;
     max-width: 100%;
+    padding: 0 20px;
+    gap: 20px;
   }
 
   div.group {
@@ -52,7 +56,8 @@ export const Container = styled.div`
     @media (max-width: 520px) {
       display: flex;
       flex-direction: column !important;
-      align-items: start;
+      align-items: stretch;
+      width: 100%;
       max-width: 100%;
     }
   }
@@ -76,8 +81,10 @@ export const Container = styled.div`
       display: flex;
       box-sizing: border-box;
       flex-direction: column !important;
-      align-items: center;
-      max-width: 100%;
+      align-items: stretch;
+      width: 100%;
+      margin-bottom: 0px !important;
+      gap: 20px;
     }
   }
 `;

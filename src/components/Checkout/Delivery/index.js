@@ -5,6 +5,7 @@ import {
   City,
   Container,
   Disclaimer,
+  DisclaimerSelectAddress,
   Header,
   InputDefault,
   Label,
@@ -15,8 +16,9 @@ import {
   RadioButton,
   DeliveryTitle,
   DeliveryDescription,
-  EditIcon,
-  DeleteIcon,
+  IconButton,
+  IconWrapper,
+  IconText,
   DeliveryLabel,
   DeliveryPrice,
   DeliveryDiscount,
@@ -30,6 +32,7 @@ import {
   ErrorMessage,
   StyledLoading,
   BackButton,
+  ZipCodeContainer,
 } from "./Delivery.style";
 import { Tooltip } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
@@ -64,11 +67,8 @@ const validationSchema = Yup.object({
 });
 
 function Delivery() {
-  const {
-    hasFinished: lastStepHasFinished,
-    isEditing: isEditingLastStep,
-    name: recipientName,
-  } = useSelector((state) => state.identification);
+  const { hasFinished: lastStepHasFinished, isEditing: isEditingLastStep } =
+    useSelector((state) => state.identification);
 
   const { isEditing: paymentEditing } = useSelector((state) => state.payment);
 
@@ -163,6 +163,19 @@ function Delivery() {
   };
 
   console.log(localStorage.getItem("Sterily_Buyer_Name"));
+
+  // Foca no campo número quando a rua for carregada
+  useEffect(() => {
+    if (address && address.street && address.street !== "") {
+      // Pequeno delay para garantir que o campo esteja renderizado
+      setTimeout(() => {
+        const numberInput = document.querySelector('input[name="number"]');
+        if (numberInput) {
+          numberInput.focus();
+        }
+      }, 200);
+    }
+  }, [address]);
 
   const [initialValues, setInitialValues] = useState({
     zipCode: "",
@@ -396,11 +409,20 @@ function Delivery() {
         >
           2
         </Step>
-        <Title success={!isEditing && hasFinished}>Entregas</Title>
+        <Title success={!isEditing && hasFinished}>Entrega</Title>
         {!isEditing && hasFinished && (
           <>
             <StyledCheckIcon />
-            <Tooltip title="Editar" placement="top" arrow>
+            <Tooltip
+              title="Editar"
+              placement="top"
+              arrow
+              disableHoverListener={false}
+              disableFocusListener={false}
+              disableTouchListener={false}
+              enterTouchDelay={0}
+              leaveTouchDelay={3000}
+            >
               <FinalEditIcon />
             </Tooltip>
           </>
@@ -444,31 +466,36 @@ function Delivery() {
               }
 
               return (
-                <StyledForm>
+                <StyledForm autoComplete="off">
                   {addresses.length >= 1 && (
                     <BackButton onClick={goBack}>{`< Voltar`}</BackButton>
                   )}
                   <Label>CEP</Label>
-                  <Field
-                    name="zipCode"
-                    as={StyledInputMask}
-                    mask="99999-999"
-                    small
-                    error={hasError || (touched.zipCode && !!errors.zipCode)}
-                    isValid={
-                      !hasCalledApi &&
-                      !hasError &&
-                      touched.zipCode &&
-                      !errors.zipCode
-                    }
-                    disabled={hasCalledApi}
-                  />
-                  {hasCalledApi && <StyledLoading color="inherit" />}
-                  {(hasError || (touched.zipCode && errors.zipCode)) && (
-                    <ErrorMessage>
-                      {errors.zipCode || "CEP inválido."}
-                    </ErrorMessage>
-                  )}
+                  <ZipCodeContainer>
+                    <Field
+                      name="zipCode"
+                      as={StyledInputMask}
+                      mask="99999-999"
+                      small
+                      error={hasError || (touched.zipCode && !!errors.zipCode)}
+                      isValid={
+                        !hasCalledApi &&
+                        !hasError &&
+                        values.zipCode &&
+                        !errors.zipCode
+                      }
+                      disabled={hasCalledApi}
+                      autoComplete="postal-code"
+                      data-form-type="other"
+                    />
+
+                    {hasCalledApi && <StyledLoading color="inherit" />}
+                    {(hasError || (touched.zipCode && errors.zipCode)) && (
+                      <ErrorMessage>
+                        {errors.zipCode || "CEP inválido."}
+                      </ErrorMessage>
+                    )}
+                  </ZipCodeContainer>
                   {address && !hasError && (
                     <>
                       <City>
@@ -491,7 +518,9 @@ function Delivery() {
                             as={InputDefault}
                             number
                             error={touched.number && !!errors.number}
-                            isValid={touched.number}
+                            isValid={values.number && !errors.number}
+                            autoComplete="off"
+                            data-form-type="other"
                           />
                           {touched.number && errors.number && (
                             <ErrorMessage>{errors.number}</ErrorMessage>
@@ -529,7 +558,9 @@ function Delivery() {
                         name="recipient"
                         as={InputDefault}
                         error={touched.recipient && !!errors.recipient}
-                        isValid={touched.recipient && !errors.recipient}
+                        isValid={values.recipient && !errors.recipient}
+                        autoComplete="name"
+                        data-form-type="other"
                       />
                       {touched.recipient && errors.recipient && (
                         <ErrorMessage>{errors.recipient}</ErrorMessage>
@@ -545,6 +576,9 @@ function Delivery() {
       )}
       {!isEditingLastStep && step === 2 && isEditing && (
         <>
+          <DisclaimerSelectAddress>
+            Cadastre ou selecione um endereço
+          </DisclaimerSelectAddress>
           <NewAddressButton onClick={addNewAddress}>
             + Novo Endereço
           </NewAddressButton>
@@ -564,19 +598,45 @@ function Delivery() {
                 <DeliveryDescription>
                   {address.city}-{address.state} | CEP {address.zipCode}
                 </DeliveryDescription>
-                <Tooltip title="Editar" placement="top" arrow>
-                  <EditIcon
+                <Tooltip
+                  title="Editar"
+                  placement="top"
+                  arrow
+                  disableHoverListener={false}
+                  disableFocusListener={false}
+                  disableTouchListener={false}
+                  enterTouchDelay={0}
+                  leaveTouchDelay={3000}
+                >
+                  <IconButton
+                    type="edit"
                     onClick={() => {
                       handleEditAddress(index);
                     }}
-                  />
+                  >
+                    <IconWrapper icon="assets/img/icons/pencil-edit.svg" />
+                    <IconText>Editar</IconText>
+                  </IconButton>
                 </Tooltip>
-                <Tooltip title="Excluir" placement="top" arrow>
-                  <DeleteIcon
+                <Tooltip
+                  title="Excluir"
+                  placement="top"
+                  arrow
+                  disableHoverListener={false}
+                  disableFocusListener={false}
+                  disableTouchListener={false}
+                  enterTouchDelay={0}
+                  leaveTouchDelay={3000}
+                >
+                  <IconButton
+                    type="delete"
                     onClick={() => {
                       handleDeleteAddress(index);
                     }}
-                  />
+                  >
+                    <IconWrapper icon="assets/img/icons/delete.svg" />
+                    <IconText>Excluir</IconText>
+                  </IconButton>
                 </Tooltip>
               </DeliveryCard>
             );

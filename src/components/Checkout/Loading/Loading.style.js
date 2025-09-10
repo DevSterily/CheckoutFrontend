@@ -14,17 +14,24 @@ export const Background = styled.div`
   justify-content: center;
   flex-direction: column;
   gap: 10px;
-`
+`;
 export const StyledCircularProgress = styled(CircularProgress)`
   color: #999 !important;
   height: 30px !important;
   width: 30px !important;
-`
+`;
 export const Title = styled.p`
   font-size: 36px;
   font-weight: 700;
   color: #333;
-`
+`;
 export const Description = styled.p`
   color: #333;
-`
+
+  @media (max-width: 1060px) {
+    font-size: 17px;
+    color: #666667;
+    width: 80%;
+    text-align: center;
+  }
+`;

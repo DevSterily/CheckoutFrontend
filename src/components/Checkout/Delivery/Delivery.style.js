@@ -14,8 +14,8 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 30px;
+  margin-bottom: 20px;
   position: relative;
-  box-sizing: border-box;
 
   ${(props) =>
     props.closed &&
@@ -28,30 +28,26 @@ export const Container = styled.div`
   @media (max-width: 1060px) {
     display: ${(props) =>
       props.shouldHideOnMobile || props.success ? "none" : "flex"};
-    max-width: 500px;
-    min-width: 500px;
+    min-height: 260px;
+    padding: 30px 14px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   @media (max-width: 520px) {
     display: ${(props) =>
       props.shouldHideOnMobile || props.success ? "none" : "flex"};
-
     border: none;
     width: 100%;
   }
 
-  @media (max-width: 470px) {
-    display: ${(props) =>
-      props.shouldHideOnMobile || props.success ? "none" : "flex"};
-    max-width: 470px;
-    min-width: 450px;
-  }
+  @media (max-width: 520px) {
+    padding: 30px 14px;
 
-  @media (max-width: 450px) {
     display: ${(props) =>
       props.shouldHideOnMobile || props.success ? "none" : "flex"};
-    max-width: 450px;
-    min-width: 400px;
+    border: none;
+    margin: 0;
   }
 `;
 
@@ -59,6 +55,15 @@ export const Header = styled.div`
   display: flex;
   align-items: center;
   gap: 5px;
+`;
+
+export const ZipCodeContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  @media (max-width: 1060px) {
+    max-width: 170px;
+  }
 `;
 
 export const Step = styled.span`
@@ -89,11 +94,19 @@ export const Title = styled.p`
 `;
 
 export const Disclaimer = styled.p`
-  margin-top: 8px !important;
+  margin-top: 10px !important;
   line-height: 1.4;
   font-size: 13px;
   color: #666667;
   margin-bottom: 20px !important;
+`;
+
+export const DisclaimerSelectAddress = styled.p`
+  margin-top: 10px !important;
+  line-height: 1.4;
+  font-size: 13px;
+  color: #666667;
+  margin-bottom: 8px !important;
 `;
 
 export const Label = styled.p`
@@ -127,6 +140,13 @@ export const InputDefault = styled.input`
   &:focus {
     background: #f4f6f8;
     border-color: #333;
+    background-image: ${(props) =>
+      props.isValid
+        ? `url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2336b376"%3E%3Cpath d="M9 16.2l-3.5-3.5 1.4-1.4L9 13.4l7.1-7.1 1.4 1.4L9 16.2z"/%3E%3C/svg%3E')`
+        : "none"};
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 1.5rem;
   }
 
   background-image: ${(props) =>
@@ -269,7 +289,7 @@ export const DeliveryCard = styled.div`
   ${(props) =>
     props.shipping &&
     `
-    height: 40px;
+    min-height: 30px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -282,8 +302,8 @@ export const DeliveryCard = styled.div`
 `;
 
 export const RadioButton = styled.input.attrs({ type: "radio" })`
-  height: 25px;
-  width: 18px;
+  height: 20px;
+  width: 12px;
   cursor: pointer;
   margin: 0px;
   position: absolute;
@@ -303,8 +323,8 @@ export const RadioButton = styled.input.attrs({ type: "radio" })`
 
   &:checked::after {
     content: "";
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     background-color: #333;
     border-radius: 50%;
     position: absolute;
@@ -318,12 +338,13 @@ export const DeliveryTitle = styled.p`
   font-weight: 500;
   margin-left: 30px !important;
   font-size: ${(props) => (props.big ? "12px" : "11px")};
-  width: 70%;
+  width: 60%;
 `;
 
 export const DeliveryDescription = styled.p`
   margin-left: 30px !important;
   font-size: ${(props) => (props.big ? "12px" : "11px")};
+  width: 60%;
 `;
 
 export const EditIcon = styled.i`
@@ -350,6 +371,35 @@ export const DeleteIcon = styled.i`
   z-index: 2;
 `;
 
+export const IconButton = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: ${(props) => (props.type === "edit" ? "55px" : "10px")};
+  z-index: 2;
+  gap: 4px;
+`;
+
+export const IconWrapper = styled.i`
+  background: url(${(props) => props.icon}) no-repeat;
+  height: 16px;
+  width: 16px;
+  display: flex;
+  background-size: contain;
+`;
+
+export const IconText = styled.span`
+  font-size: 9px;
+  color: #999999;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1;
+`;
+
 export const DeliveryLabel = styled.p`
   border-top: 1px solid #eee;
   padding: 15px 0;
@@ -365,7 +415,7 @@ export const DeliveryPrice = styled.p`
   font-size: 12px;
   position: absolute;
   right: 15px;
-  top: ${(props) => (props.free ? "12px" : "24px")};
+  top: ${(props) => (props.free ? "12px" : "20px")};
 `;
 
 export const DeliveryDiscount = styled.p`
@@ -438,6 +488,13 @@ export const StyledInputMask = styled(InputMask)`
   &:focus {
     background: #f4f6f8;
     border-color: #333;
+    background-image: ${(props) =>
+      props.isValid
+        ? `url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2336b376"%3E%3Cpath d="M9 16.2l-3.5-3.5 1.4-1.4L9 13.4l7.1-7.1 1.4 1.4L9 16.2z"/%3E%3C/svg%3E')`
+        : "none"};
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 1.5rem;
   }
 
   background-image: ${(props) =>

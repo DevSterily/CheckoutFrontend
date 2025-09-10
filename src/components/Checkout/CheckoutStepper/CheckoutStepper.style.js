@@ -6,7 +6,7 @@ export const StepperContainer = styled.div`
     position: relative;
     width: 100%;
     max-width: 1196px;
-    padding: 30px 0;
+    padding: 20px 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -15,7 +15,7 @@ export const StepperContainer = styled.div`
 
     @media (max-width: 520px) {
       padding: 0px;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
     }
   }
 `;
@@ -32,7 +32,7 @@ export const StepsWrapper = styled.div`
   &::before {
     content: "";
     position: absolute;
-    top: 16px;
+    top: 10px;
     left: 0;
     right: 0;
     height: 2px;
@@ -53,7 +53,7 @@ export const StepsWrapper = styled.div`
 
 export const ProgressLine = styled.div`
   position: absolute;
-  top: 16px;
+  top: 10px;
   left: 0;
   width: ${(props) => props.progress}%;
   height: 2px;
@@ -122,27 +122,28 @@ export const StepCircle = styled.div`
   position: relative;
   z-index: 3;
   cursor: ${(props) => (props.isClickable ? "pointer" : "default")};
+  top: -1px;
 
   @media (max-width: 520px) {
-    width: 26px;
-    height: 26px;
-    font-size: 14px;
+    width: 20px;
+    height: 20px;
+    font-size: 13px;
+    top: -1px;
   }
 `;
 
 export const StepLabel = styled.div`
-  margin-top: 10px;
   font-size: 14px;
   color: ${(props) =>
     props.isCompleted ? "#000" : props.isActive ? "#000" : "#999"};
   font-weight: ${(props) =>
     props.isCompleted || props.isActive ? "bold" : "normal"};
   text-align: center;
-  line-height: 1.2;
+  line-height: 1;
   transition: all 0.3s ease;
   cursor: ${(props) => (props.isClickable ? "pointer" : "default")};
 
   @media (max-width: 520px) {
-    font-size: 14px;
+    font-size: 11px;
   }
 `;
