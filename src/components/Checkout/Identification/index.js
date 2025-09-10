@@ -152,7 +152,16 @@ function Identification() {
         {!isEditing && hasFinished && (
           <>
             <StyledCheckIcon />
-            <Tooltip title="Editar" placement="top" arrow>
+            <Tooltip
+              title="Editar"
+              placement="top"
+              arrow
+              disableHoverListener={false}
+              disableFocusListener={false}
+              disableTouchListener={false}
+              enterTouchDelay={0}
+              leaveTouchDelay={3000}
+            >
               <EditIcon />
             </Tooltip>
           </>
@@ -167,8 +176,8 @@ function Identification() {
             handleSetIdentification(values);
           }}
         >
-          {({ errors, touched, setFieldValue }) => (
-            <StyledForm>
+          {({ errors, touched, setFieldValue, values }) => (
+            <StyledForm autoComplete="off">
               <Disclaimer>
                 Utilizaremos seu e-mail para: Identificar seu perfil, histórico
                 de compra, notificação de pedidos e carrinho de compras.
@@ -181,6 +190,8 @@ function Identification() {
                 placeholder="ex.: Maria de Almeida Cruz"
                 error={touched.name && !!errors.name}
                 isValid={touched.name && !errors.name}
+                autoComplete="name"
+                data-form-type="other"
                 onChange={(e) => {
                   const capitalizedName = e.target.value
                     .toLowerCase()
@@ -188,14 +199,6 @@ function Identification() {
                   e.target.value = capitalizedName; // Atualiza o valor no campo
                   setFieldValue("name", capitalizedName); // Atualiza o valor no Formik
                   localStorage.setItem("Sterily_Buyer_Name", capitalizedName);
-                }}
-                onBlur={(e) => {
-                  const capitalizedName = e.target.value
-                    .toLowerCase()
-                    .replace(/(?:^|\s)\S/g, (a) => a.toUpperCase())
-                    .trim();
-                  e.target.value = capitalizedName; // Atualiza o valor no campo
-                  setFieldValue("name", capitalizedName); // Atualiza o valor no Formik
                 }}
               />
               {touched.name && errors.name && (
@@ -209,21 +212,13 @@ function Identification() {
                 placeholder="ex.: maria@gmail.com"
                 error={touched.email && !!errors.email}
                 isValid={touched.email && !errors.email}
+                autoComplete="email"
+                data-form-type="other"
                 onChange={(e) => {
                   const lowerCaseEmail = e.target.value.toLowerCase();
                   e.target.value = lowerCaseEmail; // Atualiza o valor no campo
                   setFieldValue("email", lowerCaseEmail); // Atualiza o valor no Formik
-                }}
-                onBlur={(e) => {
-                  let lowerCaseEmail = e.target.value.trim().toLowerCase();
-
-                  // remover o ultimo ponto se houver
-                  if (lowerCaseEmail.endsWith(".")) {
-                    lowerCaseEmail = lowerCaseEmail.slice(0, -1);
-                  }
-
-                  e.target.value = lowerCaseEmail; // Atualiza o valor no campo
-                  setFieldValue("email", lowerCaseEmail); // Atualiza o valor no Formik
+                  // Valida em tempo real
                 }}
               />
               {touched.email && errors.email && (
@@ -238,7 +233,9 @@ function Identification() {
                 small
                 placeholder="000.000.000-00"
                 error={touched.cpf && !!errors.cpf}
-                isValid={touched.cpf && !errors.cpf}
+                isValid={values.cpf && !errors.cpf}
+                autoComplete="off"
+                data-form-type="other"
               />
               {touched.cpf && errors.cpf && (
                 <ErrorMessage>{errors.cpf}</ErrorMessage>
@@ -254,7 +251,9 @@ function Identification() {
                   phone
                   placeholder="(00) 00000-0000"
                   error={touched.mobile && !!errors.mobile}
-                  isValid={touched.mobile && !errors.mobile}
+                  isValid={values.mobile && !errors.mobile}
+                  autoComplete="tel"
+                  data-form-type="other"
                 />
               </InputMobileContainer>
               {touched.mobile && errors.mobile && (

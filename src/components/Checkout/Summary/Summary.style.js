@@ -25,7 +25,7 @@ export const Container = styled.div`
     .group {
       order: 2;
       margin-top: 10px;
-      padding-top: 10px;
+      padding-top: 5px;
     }
   }
 
@@ -173,10 +173,14 @@ export const CouponContainer = styled.div`
   align-items: center;
   margin-bottom: 10px;
   postion: relative;
+
+  @media (max-width: 1060px) {
+    margin-bottom: ${(props) => (props.cumpomApplied ? "5px" : "20px")};
+  }
 `;
 
 export const CouponInput = styled.input`
-  height: 36px;
+  height: 32px;
   max-width: 211px;
   padding-left: 44px;
   width: 100%;
@@ -236,8 +240,9 @@ export const PriceTotal = styled.div`
   margin-top: 10px;
 
   @media (max-width: 1060px) {
+    margin-top: 5px;
+    margin-left: -5px;
     width: 90%;
-    padding: 15px;
   }
 `;
 
@@ -257,9 +262,8 @@ export const TotalContainer = styled.div`
   justify-content: space-between;
   font-size: 12px;
   line-height: 1;
-  padding: 9px 0;
   padding-bottom: 6px;
-  padding-top: 12px;
+  padding: 20px 0px 0 0px;
   font-weight: 700;
 
   > p:last-of-type {
@@ -274,6 +278,7 @@ export const ItemsContainer = styled.div`
   border-top: ${(props) => (props.isFirstItem ? "none" : "1px solid #eee")};
 
   @media (max-width: 1060px) {
+    padding: 5px 0 40px;
     border-bottom: ${(props) => (props.isLastItem ? "none" : "1px solid #eee")};
   }
 `;
@@ -350,6 +355,11 @@ export const QuantityInput = styled.input`
   line-height: 14px;
   margin: 0;
   outline: none;
+
+  @media (max-width: 520px) {
+    width: 162px;
+    height: 17px;
+  }
 `;
 
 export const QuantityAdd = styled.a`
@@ -402,8 +412,13 @@ export const ErrorMessage = styled.p`
   color: #e50f38;
   font-size: 11px;
   line-height: 1.3;
-  margin: 7px 0 15px !important;
+  margin: 0 !important;
   text-align: left;
+
+  @media (max-width: 1060px) {
+    font-size: 10px;
+    margin: 0px 0 0px !important;
+  }
 `;
 
 export const ModalErrorTitle = styled.p`
@@ -471,4 +486,55 @@ export const ModalErrorButtonFilled = styled.button`
   &:hover {
     opacity: 0.8;
   }
+`;
+
+export const CouponDiscountText = styled.p`
+  font-size: 11px;
+  color: #44c485;
+  font-weight: 700;
+`;
+
+export const RemoveCouponButton = styled.button`
+  background: none;
+  border: none;
+  color: #725bc2;
+  font-size: 11px;
+  cursor: pointer;
+  font-weight: 500;
+  padding: 0;
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 2px;
+  margin-bottom: 15px;
+
+  &:hover {
+    text-decoration: underline;
+    opacity: 0.8;
+  }
+`;
+
+export const CloseIcon = styled.svg`
+  width: 9px;
+  height: 9px;
+  fill: #725bc2;
+`;
+
+export const InfoIcon = styled.span`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #f4f6f8;
+  border: 1px solid gray;
+  color: gray;
+  font-size: 8px;
+  font-weight: bold;
+  margin-left: 5px;
+  cursor: help;
+  line-height: 1;
 `;

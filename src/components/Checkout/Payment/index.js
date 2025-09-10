@@ -46,7 +46,33 @@ import { formatPrice } from "../../../utils/formatPrice";
 import { finishDelivery } from "../../../redux/deliverySlice";
 import { cancelEditingIdentification } from "../../../redux/identificationSlice";
 const validationSchema = Yup.object({
-  cardNumber: Yup.string().required("Campo obrigatório."),
+  cardNumber: Yup.string()
+    .required("Campo obrigatório.")
+    .test("is-valid-card", "Número do cartão inválido", function (value) {
+      if (!value) return false;
+      const cleanNumber = value.replace(/\D/g, "");
+      if (cleanNumber.length < 13 || cleanNumber.length > 19) return false;
+
+      // Algoritmo de Luhn
+      let sum = 0;
+      let isEven = false;
+
+      for (let i = cleanNumber.length - 1; i >= 0; i--) {
+        let digit = parseInt(cleanNumber.charAt(i), 10);
+
+        if (isEven) {
+          digit *= 2;
+          if (digit > 9) {
+            digit -= 9;
+          }
+        }
+
+        sum += digit;
+        isEven = !isEven;
+      }
+
+      return sum % 10 === 0;
+    }),
   cardExpiry: Yup.string()
     .required("Campo obrigatório.")
     .matches(/^(0[1-9]|1[0-2])\/\d{2}$/, "Mês inválido")
@@ -141,6 +167,9 @@ function Payment() {
       { name: "mastercard", regex: /^5[1-5]/ },
       { name: "amex", regex: /^3[47]/ },
       { name: "dinersclub", regex: /^3(?:0[0-5]|[68])/ },
+      { name: "discover", regex: /^6(?:011|5)/ },
+      { name: "hipercard", regex: /^6062/ },
+      { name: "aura", regex: /^50[0-9]/ },
     ];
 
     for (let flag of flags) {
@@ -306,6 +335,34 @@ function Payment() {
 
   const shouldHideOnMobile = identificationEditing || deliveryEditing;
 
+  // Função para validar número do cartão usando algoritmo de Luhn
+  const isValidCardNumber = (cardNumber) => {
+    if (!cardNumber || cardNumber.length < 13) return false;
+
+    const cleanNumber = cardNumber.replace(/\D/g, "");
+
+    if (cleanNumber.length < 13 || cleanNumber.length > 19) return false;
+
+    let sum = 0;
+    let isEven = false;
+
+    for (let i = cleanNumber.length - 1; i >= 0; i--) {
+      let digit = parseInt(cleanNumber.charAt(i), 10);
+
+      if (isEven) {
+        digit *= 2;
+        if (digit > 9) {
+          digit -= 9;
+        }
+      }
+
+      sum += digit;
+      isEven = !isEven;
+    }
+
+    return sum % 10 === 0;
+  };
+
   return (
     <Container
       id="step-3"
@@ -337,7 +394,10 @@ function Payment() {
             }}
             checked={selectedPayment === "credit"}
           >
-            <RadioButton checked={selectedPayment === "credit"} />
+            <RadioButton
+              checked={selectedPayment === "credit"}
+              selected={selectedPayment}
+            />
             <PaymentTitle selected={selectedPayment === "credit"} big>
               Cartão de crédito
             </PaymentTitle>
@@ -376,6 +436,7 @@ function Payment() {
                         <Field
                           name="cardNumber"
                           as={StyledInputMask}
+                          bold
                           mask="9999 9999 9999 9999"
                           placeholder="1234 1234 1234 1234"
                           error={touched.cardNumber && !!errors.cardNumber}
@@ -405,9 +466,22 @@ function Payment() {
                             <Label>
                               Cód. de segurança{" "}
                               <Tooltip
-                                title="3 dígitos no verso do cartão. Amex: 4 dígitos na frente."
+                                title={
+                                  <div>
+                                    <div>3 dígitos no</div>
+                                    <div>verso do</div>
+                                    <div>cartão. Amex:</div>
+                                    <div>4 dígitos na</div>
+                                    <div>frente.</div>
+                                  </div>
+                                }
                                 placement="top"
                                 arrow
+                                disableHoverListener={false}
+                                disableFocusListener={false}
+                                disableTouchListener={false}
+                                enterTouchDelay={0}
+                                leaveTouchDelay={3000}
                               >
                                 <StyledHelpIcon />
                               </Tooltip>
@@ -433,6 +507,7 @@ function Payment() {
                           placeholder="ex.: Maria de Almeida Cruz"
                           error={touched.cardName && !!errors.cardName}
                           isValid={touched.cardName && !errors.cardName}
+                          autoComplete="name"
                         />
                         {touched.cardName && errors.cardName && (
                           <ErrorMessage>{errors.cardName}</ErrorMessage>
@@ -450,26 +525,36 @@ function Payment() {
                           <ErrorMessage>{errors.cardCpf}</ErrorMessage>
                         )}
                         <Label>Nº de Parcelas</Label>
-                        <Select>
-                          {handleFees(
-                            data?.resumo?.totalWithDiscount ||
-                              data?.resumo?.total
-                          ).map((item, index) => {
-                            return (
-                              <option
-                                onClick={() => {
-                                  setInstallment(index + 1);
-                                }}
-                                key={index}
-                              >
-                                {item}
-                              </option>
-                            );
-                          })}
+                        <Select
+                          disabled={!isValidCardNumber(values.cardNumber)}
+                        >
+                          {!isValidCardNumber(values.cardNumber) ? (
+                            <option value="" disabled>
+                              ...
+                            </option>
+                          ) : (
+                            handleFees(
+                              data?.resumo?.totalWithDiscount ||
+                                data?.resumo?.total
+                            ).map((item, index) => {
+                              return (
+                                <option
+                                  onClick={() => {
+                                    setInstallment(index + 1);
+                                  }}
+                                  key={index}
+                                >
+                                  {item}
+                                </option>
+                              );
+                            })
+                          )}
                         </Select>
-                        <span>
-                          Preencha o cartão para selecionar as parcelas
-                        </span>
+                        {!isValidCardNumber(values.cardNumber) && (
+                          <span>
+                            Preencha o cartão para selecionar as parcelas
+                          </span>
+                        )}
                         <Button
                           onClick={() => {
                             generateCardToken(values);
@@ -490,6 +575,7 @@ function Payment() {
             onClick={() => {
               handleSetPayment("pix");
             }}
+            type="pix"
             checked={selectedPayment === "pix"}
           >
             <RadioButton checked={selectedPayment === "pix"} />
@@ -526,11 +612,13 @@ function Payment() {
             onClick={() => {
               handleSetPayment("barcode");
             }}
+            type="barcode"
             checked={selectedPayment === "barcode"}
           >
             <RadioButton checked={selectedPayment === "barcode"} />
             <PaymentTitle selected={selectedPayment === "barcode"} big>
-              <BarcodeIcon></BarcodeIcon>Boleto
+              <BarcodeIcon />
+              Boleto
             </PaymentTitle>
             {selectedPayment === "barcode" && (
               <>

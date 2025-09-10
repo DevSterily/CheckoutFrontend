@@ -1,10 +1,10 @@
 body {
   margin: 0;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 
 :root {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   p {
     margin: 0;
   }
@@ -17,6 +17,34 @@ body {
   margin-left: -15px !important;
   pointer-events: none !important;
   cursor: default !important;
+
+  @media (max-width: 1060px) {
+    transform: scale(0.7);
+    margin-top: -10px !important;
+    margin-bottom: -22px !important;
+    margin-left: 40px !important;
+  }
+
+  @media (max-width: 768px) {
+    transform: scale(0.7);
+    margin-top: -10px !important;
+    margin-bottom: -22px !important;
+    margin-left: 40px !important;
+  }
+
+  @media (max-width: 520px) {
+    transform: scale(0.8);
+    margin-top: -10px !important;
+    margin-bottom: 2px !important;
+    margin-left: 20px !important;
+  }
+
+  @media (max-width: 450px) {
+    transform: scale(1.2);
+    margin-top: -10px !important;
+    margin-bottom: 2px !important;
+    margin-left: -5px !important;
+  }
 }
 
 .jp-card-identified {
@@ -24,5 +52,5 @@ body {
 }
 
 .jp-card-name {
-  font-size: 16px!important;
+  font-size: 16px !important;
 }

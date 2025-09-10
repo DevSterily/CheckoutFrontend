@@ -12,7 +12,7 @@ export const Container = styled.div`
   }
 
   @media (max-width: 480px) {
-    padding: 50px 38px;
+    padding: 30px 38px;
   }
 `;
 
@@ -39,6 +39,7 @@ export const Title = styled.div`
     font-size: 11px;
     justify-content: start;
     display: flex-start;
+    margin-bottom: 5px;
   }
 `;
 
@@ -113,7 +114,7 @@ export const Address = styled.div`
   font-size: 11px;
   color: #666666;
   font-family: "Montserrat", sans-serif;
-  margin-bottom: 4px;
+  margin-bottom: 10px;
   text-align: center;
 
   @media (max-width: 1060px) {
@@ -122,6 +123,7 @@ export const Address = styled.div`
 
   @media (max-width: 480px) {
     text-align: start;
+    max-width: 230px;
   }
 `;
 
@@ -164,6 +166,20 @@ export const HolderStoreName = styled.span`
   @media (max-width: 480px) {
     text-align: start;
   }
+
+  &.concatenated {
+    display: none;
+
+    @media (min-width: 391px) {
+      display: block;
+    }
+  }
+
+  &:not(.concatenated) {
+    @media (min-width: 391px) {
+      display: none;
+    }
+  }
 `;
 
 export const HolderDocument = styled.span`
@@ -189,6 +205,10 @@ export const Cnpj = styled.span`
 
   @media (max-width: 480px) {
     text-align: start;
+  }
+
+  @media (min-width: 391px) {
+    display: none;
   }
 `;
 
@@ -222,6 +242,20 @@ export const WhatsApp = styled.span`
     margin-top: 4px;
     margin-bottom: 4px;
   }
+
+  &.concatenated {
+    display: none;
+
+    @media (min-width: 391px) {
+      display: block;
+    }
+  }
+
+  &:not(.concatenated) {
+    @media (min-width: 391px) {
+      display: none;
+    }
+  }
 `;
 
 export const Email = styled.span`
@@ -229,6 +263,10 @@ export const Email = styled.span`
 
   @media (max-width: 670px) {
     display: block;
+  }
+
+  @media (min-width: 391px) {
+    display: none;
   }
 `;
 

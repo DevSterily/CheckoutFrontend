@@ -7,6 +7,10 @@ import {
   CouponIcon,
   CouponInput,
   CouponLabel,
+  CouponDiscountText,
+  RemoveCouponButton,
+  CloseIcon,
+  InfoIcon,
   Delete,
   DescriptionContainer,
   ErrorMessage,
@@ -55,6 +59,7 @@ function Summary() {
   );
 
   const [data, setData] = useState();
+  console.log("🚀 ~ Summary ~ data:", data);
   const [couponText, setCouponText] = useState();
 
   const getCartData = useCallback(async () => {
@@ -140,6 +145,7 @@ function Summary() {
   };
 
   const [couponData, setCouponData] = useState();
+  console.log("🚀 ~ Summary ~ couponData:", couponData);
   const [couponError, setCouponError] = useState();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const getCoupon = useCallback(
@@ -165,7 +171,7 @@ function Summary() {
           })
           .then((results) => {
             const couponData = results.data.find((item) => {
-              return item.codigo === couponText || coupon;
+              return item.codigo === couponText?.toLowerCase() || coupon;
             });
             if (couponData?.ativo) {
               setCouponError(false);
@@ -212,6 +218,10 @@ function Summary() {
       : couponData.valor_desconto;
   };
 
+  const calculateDiscount = (data) => {
+    return formatPrice(data?.resumo?.total - data?.resumo?.totalWithDiscount);
+  };
+
   const { hasFinished: hasDeliveryFinished } = useSelector(
     (state) => state.delivery
   );
@@ -228,10 +238,6 @@ function Summary() {
       window.location.href = "https://www.sterilybrasil.com/";
     }
   }, [data]);
-
-  useEffect(() => {
-    setIsCollapsed(isMobile || isTablet);
-  }, [isMobile, isTablet]);
 
   return (
     <Container isCollapsed={isCollapsed}>
@@ -260,7 +266,7 @@ function Summary() {
                 stroke="currentColor"
                 strokeWidth="2"
                 style={{
-                  transform: isCollapsed ? "rotate(180deg)" : "rotate(0deg)",
+                  transform: !isCollapsed ? "rotate(180deg)" : "rotate(0deg)",
                   transition: "transform 0.3s ease",
                 }}
               >
@@ -276,7 +282,7 @@ function Summary() {
           <CouponLabel>
             {couponData ? "Cupom aplicado" : "Tem um cupom?"}
           </CouponLabel>
-          <CouponContainer>
+          <CouponContainer cumpomApplied={couponData}>
             <CouponIcon />
             <CouponInput
               type="text"
@@ -287,7 +293,7 @@ function Summary() {
               required
               // disabled={couponData}
               onChange={(e) => {
-                setCouponText(e.target.value.toLowerCase());
+                setCouponText(e.target.value);
               }}
             />
             {/* {!couponData && ( */}
@@ -300,7 +306,58 @@ function Summary() {
             </CouponButton>
             {/* )} */}
           </CouponContainer>
-          {couponError && <ErrorMessage>Cupom inválido</ErrorMessage>}
+          {couponData && !couponError && (
+            <div>
+              <CouponDiscountText>
+                Desconto (- {""}
+                {calculateDiscount(data)})
+              </CouponDiscountText>
+            </div>
+          )}
+          {couponError && <ErrorMessage>Cupom não encontrado</ErrorMessage>}
+          {couponData && (
+            <RemoveCouponButton
+              onClick={() => {
+                // Remover cupom
+                axios
+                  .put(
+                    `${process.env.REACT_APP_API_URL}/cart/${cartId}/remove-coupon`,
+                    {},
+                    {
+                      headers: {
+                        accept: "application/json",
+                        Authorization: `Bearer ${process.env.REACT_APP_API_KEY}`,
+                      },
+                    }
+                  )
+                  .then(() => {
+                    setCouponData(null);
+                    setCouponText("");
+                    setCouponError(false);
+                    cupomAtual = "";
+                    getCartData();
+                  });
+              }}
+            >
+              <CloseIcon
+                viewBox="0 0 9 9"
+                fill="#725bc2"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M1.5311 0.691559L8.30828 7.46875L7.46859 8.30844L0.691406 1.53125L1.5311 0.691559Z"
+                ></path>
+                <path
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M0.691411 7.46876L7.4686 0.691569L8.30829 1.53126L1.5311 8.30845L0.691411 7.46876Z"
+                ></path>
+              </CloseIcon>
+              Remover
+            </RemoveCouponButton>
+          )}
           {data?.resumo?.totalItems > 0 && (
             <PriceTotal>
               <DescriptionContainer>
@@ -309,13 +366,24 @@ function Summary() {
               </DescriptionContainer>
               {couponData && (
                 <DescriptionContainer>
-                  <p>Cupom</p>
+                  <p>
+                    Descontos
+                    <Tooltip
+                      title={`Cupom de desconto  ${calculateDiscount(data)}`}
+                      placement="top"
+                      arrow
+                      disableHoverListener={false}
+                      disableFocusListener={false}
+                      disableTouchListener={false}
+                      enterTouchDelay={0}
+                      leaveTouchDelay={3000}
+                    >
+                      <InfoIcon>i</InfoIcon>
+                    </Tooltip>
+                  </p>
                   <p>
                     {/* {couponData && `- ${formatPrice(handleDiscount() * 100)}`} */}
-                    {couponData &&
-                      `- ${formatPrice(
-                        data?.resumo?.total - data?.resumo?.totalWithDiscount
-                      )}`}
+                    {couponData && `- ${calculateDiscount(data)}`}
                   </p>
                 </DescriptionContainer>
               )}
@@ -354,9 +422,9 @@ function Summary() {
                   alt={item.featured_image.alt}
                 />
                 <ItemDetails>
-                  <ItemName>{item.title}</ItemName>
-                  {item.variation_title && (
-                    <ItemVariaton>{item.variation_title}</ItemVariaton>
+                  <ItemName>{item.product_title}</ItemName>
+                  {item.variant_title && (
+                    <ItemVariaton>Opções: {item.variant_title}</ItemVariaton>
                   )}
                   <ItemPrice>{formatPrice(item.price)}</ItemPrice>
                   <QuantityContainer>
@@ -382,7 +450,16 @@ function Summary() {
                     )}
                   </QuantityContainer>
                 </ItemDetails>
-                <Tooltip title="Excluir" placement="top" arrow>
+                <Tooltip
+                  title="Excluir"
+                  placement="top"
+                  arrow
+                  disableHoverListener={false}
+                  disableFocusListener={false}
+                  disableTouchListener={false}
+                  enterTouchDelay={0}
+                  leaveTouchDelay={3000}
+                >
                   <Delete
                     onClick={() => {
                       handleItemQuantity(item.id, item.quantity, "delete");

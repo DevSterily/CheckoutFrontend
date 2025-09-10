@@ -6,18 +6,14 @@ import {
   PaymentList,
   PaymentIcon,
   LineBreak,
-  StoreInfoHolder,
   StoreName,
   Address,
-  SpaceHandler,
   StoreDocument,
   HolderStoreName,
-  HolderDocument,
   Cnpj,
   ContactHolder,
   WhatsApp,
   Email,
-  InlineBlock,
   ItemSecurity,
 } from "./Footer.style";
 
@@ -140,11 +136,18 @@ const Footer = () => {
           © 2025 STERILY BRASIL INTERMEDIACAO DE COMERCIO ELETRONICO LTDA
         </HolderStoreName>
         <Cnpj>CNPJ: 39.996.062/0003-00</Cnpj>
+        <HolderStoreName className="concatenated">
+          © 2025 STERILY BRASIL INTERMEDIACAO DE COMERCIO ELETRONICO LTDA -
+          CNPJ: 39.996.062/0003-00
+        </HolderStoreName>
       </StoreDocument>
 
       <ContactHolder className="space-handler">
         <WhatsApp>Whatsapp: (35) 99141-6513</WhatsApp>
         <Email> E-mail: sac@sterilybrasil.com</Email>
+        <WhatsApp className="concatenated">
+          Whatsapp: (35) 99141-6513 / E-mail: sac@sterilybrasil.com
+        </WhatsApp>
       </ContactHolder>
 
       <ItemSecurity
