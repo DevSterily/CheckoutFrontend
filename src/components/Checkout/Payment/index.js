@@ -97,9 +97,10 @@ const validationSchema = Yup.object({
 
       return true;
     }),
-  cardCvc: Yup.string().required("Campo obrigatório."),
+  cardCvc: Yup.string().required("Campo obrigatório.").trim(),
   cardName: Yup.string()
     .required("Campo obrigatório.")
+    .trim()
     .matches(
       /^[A-Za-zÀ-ÖØ-öø-ÿ0-9]+(?: [A-Za-zÀ-ÖØ-öø-ÿ0-9]+)+$/,
       "Digite seu nome completo."
@@ -306,10 +307,10 @@ function Payment() {
       .post("https://api.pagar.me/core/v5/tokens?appId=pk_4qmNvqnI5UrmbQ9l", {
         card: {
           number: payload.cardNumber.replace(/\s+/g, ""),
-          holder_name: payload.cardName,
+          holder_name: payload.cardName.trim(),
           exp_month: payload.cardExpiry.split("/")[0],
           exp_year: payload.cardExpiry.split("/")[1],
-          cvv: payload.cardCvc,
+          cvv: payload.cardCvc.trim(),
         },
         type: "card",
       })
