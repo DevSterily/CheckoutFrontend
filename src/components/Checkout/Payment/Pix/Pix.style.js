@@ -170,3 +170,24 @@ export const LoadingDots = styled.div`
     }
   }
 `;
+
+export const GatewayContainer = styled.div`
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  border-top: 1px dashed #ccc;
+  padding-top: 20px;
+`;
+
+export const GatewayLabel = styled.div`
+  color: #666;
+  font-size: 11px;
+`;
+
+export const GatewayLogo = styled.img`
+  height: 24px;
+  width: auto;
+`;

@@ -91,10 +91,15 @@ export const Title = styled.p`
   font-weight: 700;
   color: ${(props) => (props.success ? "#36b376" : "#666667")};
   font-size: 18px;
+
+  @media (max-width: 1060px) {
+    font-size: 17px;
+    font-family: "Nunito", sans-serif;
+  }
 `;
 
 export const Disclaimer = styled.p`
-  margin-top: 10px !important;
+  margin-top: 8px !important;
   line-height: 1.4;
   font-size: 13px;
   color: #666667;
@@ -102,7 +107,7 @@ export const Disclaimer = styled.p`
 `;
 
 export const DisclaimerSelectAddress = styled.p`
-  margin-top: 10px !important;
+  margin-top: 8px !important;
   line-height: 1.4;
   font-size: 13px;
   color: #666667;
@@ -127,6 +132,7 @@ export const InputDefault = styled.input`
   font-size: 13px;
   font-weight: 400;
   line-height: 14px;
+  max-height: 12px;
   outline: none;
   padding: 16px 35px 15px 20px;
   margin-bottom: ${(props) => (props.error ? "0px" : "15px")};
@@ -203,7 +209,7 @@ export const Button = styled.button`
   align-items: center;
   justify-content: center;
   gap: 10px;
-  margin-top: 20px !important;
+  margin-top: 10px !important;
   cursor: pointer;
   z-index: 9;
 
@@ -248,7 +254,7 @@ export const NewAddressButton = styled.a`
   cursor: pointer;
   text-transform: uppercase;
   margin-bottom: 8px;
-  margin-top: 20px;
+  margin-top: 12px;
   background: transparent;
   font-family: "Montserrat", sans-serif;
 
@@ -265,7 +271,7 @@ export const BackButton = styled.a`
   border: 0;
   cursor: pointer;
   text-transform: uppercase;
-  margin-bottom: 8px;
+  margin-bottom: 15px;
   background: transparent;
   font-family: "Montserrat", sans-serif;
 
@@ -475,6 +481,7 @@ export const StyledInputMask = styled(InputMask)`
   font-size: 13px;
   font-weight: 400;
   line-height: 14px;
+  max-height: 12px;
   outline: none;
   padding: 16px 35px 15px 20px;
   margin-bottom: ${(props) => (props.error ? "0px" : "15px")};

@@ -93,8 +93,7 @@ function Delivery() {
   const [address, setAddress] = useState(undefined);
   const [hasError, setHasError] = useState(false);
   const [hasCalledApi, setHasCalledApi] = useState(false);
-  const [noStreet, setNoStreet] = useState(false);
-  const [noNeighborhood, setNoNeighborhood] = useState(false);
+  const [shouldFocusOnNumber, setShouldFocusOnNumber] = useState(false);
 
   // useEffect(() => {
   // 	const storedName = localStorage.getItem("Sterily_Buyer_Name");
@@ -133,19 +132,12 @@ function Delivery() {
           }
           setHasCalledApi(false);
           if (!results.data.street || results?.data?.street === "") {
-            setNoStreet(true);
+            setShouldFocusOnNumber(false);
           } else {
-            setNoStreet(false);
+            setShouldFocusOnNumber(true);
           }
 
-          if (
-            !results.data.neighborhood ||
-            results?.data?.neighborhood === ""
-          ) {
-            setNoNeighborhood(true);
-          } else {
-            setNoNeighborhood(false);
-          }
+          // Verificação de bairro removida - não é mais necessária
         })
         .catch(() => {
           setHasError(address.cep === zipCode ? false : true);
@@ -164,9 +156,15 @@ function Delivery() {
 
   console.log(localStorage.getItem("Sterily_Buyer_Name"));
 
-  // Foca no campo número quando a rua for carregada
+  // Foca no campo número apenas quando a API do CEP retorna uma rua
   useEffect(() => {
-    if (address && address.street && address.street !== "") {
+    if (
+      shouldFocusOnNumber &&
+      address &&
+      address.street &&
+      address.street !== "" &&
+      hasCalledApi === false
+    ) {
       // Pequeno delay para garantir que o campo esteja renderizado
       setTimeout(() => {
         const numberInput = document.querySelector('input[name="number"]');
@@ -174,8 +172,10 @@ function Delivery() {
           numberInput.focus();
         }
       }, 200);
+      // Reset da flag para evitar foco em edições manuais
+      setShouldFocusOnNumber(false);
     }
-  }, [address]);
+  }, [shouldFocusOnNumber, address, hasCalledApi]);
 
   const [initialValues, setInitialValues] = useState({
     zipCode: "",
@@ -277,6 +277,14 @@ function Delivery() {
     setCurrentEditingAddress(index);
     dispatch(newAddress());
     setInitialValues(addresses[index]);
+
+    setAddress({
+      street: addresses[index].street,
+      neighborhood: addresses[index].neighborhood,
+      city: addresses[index].city,
+      state: addresses[index].state,
+      cep: addresses[index].cep,
+    });
   };
 
   const handleDeleteAddress = (indexAddress) => {
@@ -439,6 +447,7 @@ function Delivery() {
           <Formik
             innerRef={formikRef} // Passa a referência ao Formik
             initialValues={initialValues}
+            enableReinitialize={true}
             validationSchema={validationSchema}
             onSubmit={(values) => {
               handleSetAddresses(values);
@@ -503,11 +512,11 @@ function Delivery() {
                       </City>
                       <Label>Endereço</Label>
                       <InputDefault
-                        disabled={!noStreet}
                         isValid={address?.street && address?.street !== ""}
                         value={address?.street}
                         onChange={(e) => {
                           setAddress({ ...address, street: e.target.value });
+                          setShouldFocusOnNumber(false);
                         }}
                       ></InputDefault>
                       <AddressContainer>
@@ -529,7 +538,6 @@ function Delivery() {
                         <div>
                           <Label>Bairro</Label>
                           <InputDefault
-                            disabled={!noNeighborhood}
                             isValid={
                               address?.neighborhood &&
                               address?.neighborhood !== ""

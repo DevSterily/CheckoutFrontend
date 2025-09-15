@@ -54,3 +54,10 @@ body {
 .jp-card-name {
   font-size: 16px !important;
 }
+
+.jp-card-elo .jp-card-logo .e,
+.jp-card-elo .jp-card-logo .l,
+.jp-card-elo .jp-card-logo .o {
+  display: inline-block;
+  letter-spacing: -0.2em;
+}

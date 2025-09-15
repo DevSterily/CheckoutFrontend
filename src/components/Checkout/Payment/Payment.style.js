@@ -68,8 +68,9 @@ export const Title = styled.p`
   color: #666667;
   font-size: 18px;
 
-  @media (max-width: 520px) {
-    font-size: 17px !important;
+  @media (max-width: 1060px) {
+    font-size: 17px;
+    font-family: "Nunito", sans-serif;
   }
 `;
 
@@ -102,6 +103,7 @@ export const InputDefault = styled.input`
   font-size: 13px;
   font-weight: 400;
   line-height: 14px;
+  max-height: 12px;
   outline: none;
   padding: 16px 35px 15px 20px;
   margin-bottom: ${(props) => (props.error ? "0px" : "15px")};
@@ -375,7 +377,7 @@ export const BarcodeIcon = styled.i`
 
 export const PaymentDisclaimer = styled.p`
   font-size: 13px;
-  padding: 16px 6px 0px 6px;
+  padding: 16px 0px 0px 0px;
   color: #333;
   line-height: 1.4em;
   font-weight: 500;
@@ -465,6 +467,7 @@ export const Select = styled.select`
   font-size: 13px;
   font-weight: 400;
   line-height: 14px;
+  height: 40px;
   outline: none;
   padding: 12px 35px 11px 20px;
   margin-bottom: ${(props) => (props.error ? "0px" : "15px")};
@@ -507,6 +510,7 @@ export const StyledInputMask = styled(InputMask)`
   font-size: 13px;
   font-weight: ${(props) => (props.bold ? "bold" : "400")};
   line-height: 14px;
+  max-height: 12px;
   outline: none;
   padding: 16px 35px 15px 20px;
   margin-bottom: ${(props) => (props.error ? "0px" : "15px")};

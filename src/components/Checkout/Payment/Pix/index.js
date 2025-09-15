@@ -3,6 +3,9 @@ import {
   Container,
   CopyCodeButton,
   Description,
+  GatewayContainer,
+  GatewayLabel,
+  GatewayLogo,
   InstructionsContainer,
   LoadingDots,
   PaymentContainer,
@@ -162,6 +165,16 @@ function Pix({ paymentData }) {
             insira o código copiado
           </span>
         </InstructionsContainer>
+
+        <GatewayContainer>
+          <GatewayLabel>Pix processado por</GatewayLabel>
+          <GatewayLogo
+            loading="lazy"
+            src="https://icons.yampi.me/svg/pagarmev5.svg?v1"
+            alt="Logo pagarmev5"
+          />
+        </GatewayContainer>
+
         {showCopiado && (
           <Alert
             display="hidden"
