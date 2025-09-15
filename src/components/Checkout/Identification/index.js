@@ -36,6 +36,7 @@ import axios from "axios";
 const validationSchema = Yup.object({
   name: Yup.string()
     .required("Campo obrigatório.")
+    .trim()
     .matches(
       /^[A-Za-zÀ-ÖØ-öø-ÿ0-9]+(?: [A-Za-zÀ-ÖØ-öø-ÿ0-9]+)+$/,
       "Digite seu nome completo."
@@ -43,6 +44,7 @@ const validationSchema = Yup.object({
     .matches(/^[a-zA-ZÀ-ÿ\s]+$/, "O nome deve conter apenas letras e espaços."),
   email: Yup.string()
     .required("Campo obrigatório.")
+    .trim()
     .email("Digite um e-mail válido.")
     .matches(
       /^[a-z0-9._]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/,
@@ -82,14 +84,21 @@ function Identification() {
 
   const dispatch = useDispatch();
   const handleSetIdentification = (payload) => {
-    dispatch(setIdentification(payload));
+    // Remove espaços em branco dos dados antes de enviar
+    const cleanPayload = {
+      ...payload,
+      name: payload.name?.trim(),
+      email: payload.email?.trim(),
+    };
+
+    dispatch(setIdentification(cleanPayload));
     if (isEditing === true) {
       dispatch(cancelEditingIdentification());
       dispatch(editDelivery());
       dispatch(changeStep(2));
     }
 
-    localStorage.setItem("Sterily_Buyer_Name", payload.name);
+    localStorage.setItem("Sterily_Buyer_Name", cleanPayload.name);
 
     const queryParams = new URLSearchParams(window.location.search);
     const cartId = queryParams.get("cartId");
@@ -98,10 +107,10 @@ function Identification() {
       {
         status: "DADOS CLIENTE CAPTURADOS",
         dados_capturados: {
-          nome: payload.name,
-          email: payload.email,
-          cpf: payload.cpf,
-          celular: payload.mobile,
+          nome: cleanPayload.name,
+          email: cleanPayload.email,
+          cpf: cleanPayload.cpf,
+          celular: cleanPayload.mobile,
         },
       },
       {
@@ -215,7 +224,7 @@ function Identification() {
                 autoComplete="email"
                 data-form-type="other"
                 onChange={(e) => {
-                  const lowerCaseEmail = e.target.value.toLowerCase();
+                  const lowerCaseEmail = e.target.value.trim().toLowerCase();
                   e.target.value = lowerCaseEmail; // Atualiza o valor no campo
                   setFieldValue("email", lowerCaseEmail); // Atualiza o valor no Formik
                   // Valida em tempo real

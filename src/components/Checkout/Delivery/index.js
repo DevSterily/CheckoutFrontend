@@ -58,12 +58,13 @@ const validationSchema = Yup.object({
   number: Yup.string().required("Campo obrigatório."),
   recipient: Yup.string()
     .required("Campo obrigatório.")
+    .trim()
     .matches(
       /^[A-Za-zÀ-ÖØ-öø-ÿ0-9]+(?: [A-Za-zÀ-ÖØ-öø-ÿ0-9]+)+$/,
       "Digite seu nome completo."
     )
     .matches(/^[a-zA-ZÀ-ÿ\s]+$/, "O nome deve conter apenas letras e espaços."),
-  additionalData: Yup.string(),
+  additionalData: Yup.string().trim(),
 });
 
 function Delivery() {
@@ -206,17 +207,23 @@ function Delivery() {
 
   const dispatch = useDispatch();
   const handleSetAddresses = (payload) => {
+    const cleanPayload = {
+      ...payload,
+      recipient: payload.recipient?.trim(),
+      additionalData: payload.additionalData?.trim(),
+      street: payload.street?.trim(),
+    };
     if (currentEditingAddress >= 0) {
       dispatch(
         editAddresses([
           ...addresses.filter((_, index) => index !== currentEditingAddress),
-          { ...payload, ...address },
+          { ...cleanPayload, ...address },
         ])
       );
       setCurrentEditingAddress(undefined);
       setAddress(undefined);
     } else {
-      dispatch(setAddresses({ ...payload, ...address }));
+      dispatch(setAddresses({ ...cleanPayload, ...address }));
       const queryParams = new URLSearchParams(window.location.search);
       const cartId = queryParams.get("cartId");
       axios.put(
@@ -225,12 +232,12 @@ function Delivery() {
           status: "ENDERECO CLIENTE CAPTURADOS",
           dados_capturados: {
             cep: payload.zipCode,
-            bairro: address.neighborhood,
-            cidade: address.city,
-            estado: address.state,
-            numero: parseInt(payload.number),
-            complemento: payload.additionalData || "",
-            endereco: address.street,
+            bairro: address.neighborhood.trim(),
+            cidade: address.city.trim(),
+            estado: address.state.trim(),
+            numero: parseInt(payload.number.trim()),
+            complemento: payload.additionalData.trim() || "",
+            endereco: address.street.trim(),
           },
         },
         {
@@ -279,11 +286,14 @@ function Delivery() {
     setInitialValues(addresses[index]);
 
     setAddress({
-      street: addresses[index].street,
-      neighborhood: addresses[index].neighborhood,
-      city: addresses[index].city,
-      state: addresses[index].state,
-      cep: addresses[index].cep,
+      street: addresses[index].street.trim(),
+      neighborhood: addresses[index].neighborhood.trim(),
+      city: addresses[index].city.trim(),
+      state: addresses[index].state.trim(),
+      cep: addresses[index].cep.trim(),
+      number: addresses[index].number.trim(),
+      additionalData: addresses[index].additionalData.trim(),
+      recipient: addresses[index].recipient.trim(),
     });
   };
 
