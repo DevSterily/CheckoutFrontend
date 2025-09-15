@@ -64,6 +64,7 @@ export const Title = styled.p`
 
   @media (max-width: 1060px) {
     font-size: 17px;
+    font-family: "Nunito", sans-serif;
   }
 `;
 
@@ -94,6 +95,7 @@ export const InputDefault = styled.input`
   font-size: 13px;
   font-weight: 400;
   line-height: 14px;
+  max-height: 12px;
   outline: none;
   padding: 16px 35px 15px 20px;
   margin-bottom: ${(props) => (props.error ? "0px" : "15px")};
@@ -143,7 +145,7 @@ export const InputMobileCode = styled.span`
   color: #333;
   font-size: 13px;
   font-weight: 500;
-  height: 45px;
+  max-height: 43px;
   line-height: 14px;
   white-space: nowrap;
   width: 64px;
@@ -238,6 +240,7 @@ export const StyledInputMask = styled(InputMask)`
   font-size: 13px;
   font-weight: 400;
   line-height: 14px;
+  max-height: 12px;
   outline: none;
   padding: 16px 35px 15px 20px;
   margin-bottom: ${(props) => (props.error ? "0px" : "15px")};

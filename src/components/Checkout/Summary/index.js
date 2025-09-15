@@ -59,7 +59,6 @@ function Summary() {
   );
 
   const [data, setData] = useState();
-  console.log("🚀 ~ Summary ~ data:", data);
   const [couponText, setCouponText] = useState();
 
   const getCartData = useCallback(async () => {
@@ -145,7 +144,6 @@ function Summary() {
   };
 
   const [couponData, setCouponData] = useState();
-  console.log("🚀 ~ Summary ~ couponData:", couponData);
   const [couponError, setCouponError] = useState();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const getCoupon = useCallback(
@@ -253,6 +251,7 @@ function Summary() {
           <div className="title-actions">
             <PriceDisplay>
               {data &&
+                isCollapsed &&
                 formatPrice(
                   data?.resumo?.totalWithDiscount || data?.resumo?.total
                 )}

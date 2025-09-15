@@ -40,7 +40,11 @@ import {
 } from "../../../redux/paymentSlice";
 import * as Yup from "yup";
 import { isValidCPF } from "../../../utils/isValidCpf";
-import { Formik, Field } from "formik";
+import { Formik, Field, useFormikContext } from "formik";
+import {
+  transformUnknownToElo,
+  transformToUnknown,
+} from "../../../utils/transformCardElo";
 import axios from "axios";
 import { formatPrice } from "../../../utils/formatPrice";
 import { finishDelivery } from "../../../redux/deliverySlice";
@@ -159,6 +163,23 @@ function Payment() {
     setIsBackCard(!isBackCard);
   };
 
+  const CardNumberWatcher = () => {
+    const { values } = useFormikContext();
+
+    useEffect(() => {
+      if (values.cardNumber && values.cardNumber.trim() !== "") {
+        const cardType = handleFlag(values.cardNumber);
+        if (cardType === "elo") {
+          transformUnknownToElo();
+        } else if (!cardType) {
+          transformToUnknown();
+        }
+      }
+    }, [values.cardNumber]);
+
+    return null;
+  };
+
   const handleFlag = (number) => {
     const cardNumber = number.replace(/\s+/g, "");
 
@@ -167,9 +188,13 @@ function Payment() {
       { name: "mastercard", regex: /^5[1-5]/ },
       { name: "amex", regex: /^3[47]/ },
       { name: "dinersclub", regex: /^3(?:0[0-5]|[68])/ },
-      { name: "discover", regex: /^6(?:011|5)/ },
+      { name: "discover", regex: /^6(?:011|5(?!0921))/ },
       { name: "hipercard", regex: /^6062/ },
-      { name: "aura", regex: /^50[0-9]/ },
+      {
+        name: "elo",
+        regex:
+          /^(401178|401179|438935|451416|457393|457631|457632|504175|506699|5067[0-6]|50677[0-8]|50900[0-9]|5090[1-9]|509[1-9]|627780|636297|636369|65003[1-3]|65003[5-9]|65004[0-9]|65005[0-1]|65040[5-9]|6504[1-3]|65048[5-9]|65049|6505[0-2]|65053[0-8]|65054[1-9]|6505[5-8]|65059[0-8]|65070[0-9]|65071[0-8]|65072[0-7]|65090[1-9]|65091|650920|650921|65165[2-9]|6516[6-7]|65500[0-9]|65501[0-9]|65502[1-9]|6550[3-4]|65505[0-8])/,
+      },
     ];
 
     for (let flag of flags) {
@@ -424,6 +449,7 @@ function Payment() {
                   {({ errors, touched, values }) => {
                     return (
                       <>
+                        <CardNumberWatcher />
                         <Plastic
                           type={handleFlag(values.cardNumber)}
                           name={values.cardName || "NOME E SOBRENOME"}
@@ -526,9 +552,19 @@ function Payment() {
                         )}
                         <Label>Nº de Parcelas</Label>
                         <Select
-                          disabled={!isValidCardNumber(values.cardNumber)}
+                          disabled={
+                            !isValidCardNumber(values.cardNumber) ||
+                            !values.cardExpiry ||
+                            !!errors.cardExpiry ||
+                            !values.cardCvc ||
+                            !!errors.cardCvc
+                          }
                         >
-                          {!isValidCardNumber(values.cardNumber) ? (
+                          {!isValidCardNumber(values.cardNumber) ||
+                          !values.cardExpiry ||
+                          !!errors.cardExpiry ||
+                          !values.cardCvc ||
+                          !!errors.cardCvc ? (
                             <option value="" disabled>
                               ...
                             </option>
@@ -550,7 +586,11 @@ function Payment() {
                             })
                           )}
                         </Select>
-                        {!isValidCardNumber(values.cardNumber) && (
+                        {(!isValidCardNumber(values.cardNumber) ||
+                          !values.cardExpiry ||
+                          !!errors.cardExpiry ||
+                          !values.cardCvc ||
+                          !!errors.cardCvc) && (
                           <span>
                             Preencha o cartão para selecionar as parcelas
                           </span>

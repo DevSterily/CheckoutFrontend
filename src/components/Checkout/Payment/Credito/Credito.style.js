@@ -7,23 +7,32 @@ export const Container = styled.div`
   flex-direction: column;
   min-height: 50vh;
   gap: 20px;
-`
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100vw;
+
+  @media (max-width: 520px) {
+    padding: 30px !important;
+  }
+`;
 export const TextContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 20px;
-`
+`;
 export const Title = styled.p`
   font-size: 24px;
   font-weight: 700;
   color: #666;
-`
+`;
 
 export const Description = styled.p`
   color: #333;
-`
+  justify-content: center;
+  text-align: center;
+`;
 
 export const Button = styled.button`
   margin: 0;
@@ -39,18 +48,18 @@ export const Button = styled.button`
   font-weight: 700;
   text-align: center;
   text-transform: uppercase;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
   cursor: pointer;
   z-index: 9;
-  
+
   &:hover {
-    opacity: .8;
+    opacity: 0.8;
   }
-`
+`;
 
 export const Status = styled.p`
   background: #ffffd1;
@@ -61,7 +70,7 @@ export const Status = styled.p`
   padding: 5px;
   text-align: center;
   border-radius: 8px;
-`
+`;
 export const PaymentContainer = styled.div`
   background: #fcf8e3;
   border: 1px solid #faebcc;
@@ -71,22 +80,22 @@ export const PaymentContainer = styled.div`
   padding: 20px 40px;
   align-items: center;
   gap: 10px;
-`
+`;
 export const PaymentTitle = styled.p`
   font-size: 14px;
   text-align: center;
-`
+`;
 export const PaymentInstructions = styled.p`
   font-size: 14px;
   text-align: center;
   color: #917a50;
-`
+`;
 
 export const PaymentLabel = styled.p`
   font-size: 12px;
   font-weight: 700;
   margin-top: 10px !important;
-`
+`;
 
 export const PaymentValue = styled.p`
   border-radius: 8px;
@@ -95,4 +104,4 @@ export const PaymentValue = styled.p`
   font-weight: 700;
   padding: 10px;
   border: 1px dotted #333;
-`
+`;

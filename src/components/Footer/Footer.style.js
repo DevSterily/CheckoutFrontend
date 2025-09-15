@@ -123,6 +123,8 @@ export const Address = styled.div`
 
   @media (max-width: 480px) {
     text-align: start;
+  }
+  @media (max-width: 391px) {
     max-width: 230px;
   }
 `;
