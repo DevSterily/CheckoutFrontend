@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyledCheckout, Container } from "./Checkout.style";
 import CheckoutStepper from "./CheckoutStepper";
 import Identification from "./Identification";
 import Delivery from "./Delivery";
 import Payment from "./Payment";
 import Summary from "./Summary";
+import CheckoutFinished from "./CheckoutFinished";
 import { useSelector } from "react-redux";
 import Pix from "./Payment/Pix";
 import Boleto from "./Payment/Boleto";
@@ -14,31 +15,38 @@ import axios from "axios";
 function Checkout() {
   const { paymentData } = useSelector((state) => state.payment);
 
-  const [isPaid, setIsPaid] = useState(false);
+  const [showCheckoutFinished, setShowCheckoutFinished] = useState(false);
 
-  const checkPayment = async () => {
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/payment/${paymentData.paymentId}`,
-        {
-          headers: {
-            accept: "application/json",
-            Authorization: `Bearer ${process.env.REACT_APP_API_KEY}`,
-          },
-        }
-      )
-      .then((results) => {
-        setIsPaid(results.data.status === "paid");
-      })
-      .catch(() => {
-        return;
-      });
+  const checkPaymentByCartId = async () => {
+    const queryParams = new URLSearchParams(window.location.search);
+    const cartId = queryParams.get("cartId");
+
+    if (cartId) {
+      try {
+        await axios
+          .get(`${process.env.REACT_APP_API_URL}/payment/cart/${cartId}`, {
+            headers: {
+              accept: "application/json",
+              Authorization: `Bearer ${process.env.REACT_APP_API_KEY}`,
+            },
+          })
+          .then((results) => {
+            if (results.data.id) {
+              setShowCheckoutFinished(true);
+            }
+          });
+      } catch (error) {
+        console.log("No payment found for cart ID:", cartId);
+      }
+    }
   };
 
-  if (paymentData) {
-    setInterval(() => {
-      checkPayment();
-    }, 10000);
+  useEffect(() => {
+    checkPaymentByCartId();
+  }, []);
+
+  if (showCheckoutFinished) {
+    return <CheckoutFinished />;
   }
 
   return (
@@ -57,8 +65,7 @@ function Checkout() {
           </Container>
         </>
       )}
-      {!isPaid &&
-        paymentData &&
+      {paymentData &&
         paymentData?.last_transaction &&
         paymentData?.last_transaction?.transaction_type === "pix" && (
           <Pix paymentData={paymentData} />
@@ -74,7 +81,6 @@ function Checkout() {
         paymentData?.last_transaction?.status !== "not_authorized" && (
           <Credito />
         )}
-      {isPaid && <Credito />}
     </StyledCheckout>
   );
 }
