@@ -5,23 +5,11 @@ import {
   City,
   Container,
   Disclaimer,
-  DisclaimerSelectAddress,
   Header,
   InputDefault,
   Label,
   Step,
   Title,
-  NewAddressButton,
-  DeliveryCard,
-  RadioButton,
-  DeliveryTitle,
-  DeliveryDescription,
-  IconButton,
-  IconWrapper,
-  IconText,
-  DeliveryLabel,
-  DeliveryPrice,
-  DeliveryDiscount,
   ArrowRight,
   FinalEditIcon,
   StyledCheckIcon,
@@ -41,15 +29,14 @@ import { Formik, Field } from "formik";
 import * as Yup from "yup";
 import { cancelEditingIdentification } from "../../../redux/identificationSlice";
 import {
-  setAddresses,
   newAddress,
-  listAddress,
   selectAddress,
   editAddresses,
   finishDelivery,
   editDelivery,
   setCostumerId,
 } from "../../../redux/deliverySlice";
+import { setCheckoutData } from "../../../redux/summarySlice";
 
 const validationSchema = Yup.object({
   zipCode: Yup.string()
@@ -106,6 +93,10 @@ function Delivery() {
   const [lastZipCode, setLastZipCode] = useState();
   const getAddress = async (zipCode) => {
     setLastZipCode(zipCode);
+
+    if (lastZipCode.trim() === zipCode.trim()) {
+      return;
+    }
     try {
       await axios
         .get(`https://brasilapi.com.br/api/cep/v1/${zipCode}`)
@@ -120,13 +111,13 @@ function Delivery() {
             results.data &&
             results?.data?.street === "" &&
             results?.data?.neighborhood === "" &&
-            addresses[currentEditingAddress]?.street !== "" &&
-            addresses[currentEditingAddress]?.neighborhood !== ""
+            addresses[0]?.street !== "" &&
+            addresses[0]?.neighborhood !== ""
           ) {
             setAddress({
               ...results.data,
-              street: addresses[currentEditingAddress]?.street,
-              neighborhood: addresses[currentEditingAddress]?.neighborhood,
+              street: addresses[0]?.street,
+              neighborhood: addresses[0]?.neighborhood,
             });
           } else {
             setAddress(results.data);
@@ -203,30 +194,50 @@ function Delivery() {
   // 	});
   // }, [recipientName]);
 
-  const [currentEditingAddress, setCurrentEditingAddress] = useState(undefined);
+  // const [currentEditingAddress, setCurrentEditingAddress] = useState(undefined);
 
   const dispatch = useDispatch();
+
+  // Carrega os dados do endereço confirmado quando o usuário voltar para editar
+  useEffect(() => {
+    if (addresses.length > 0) {
+      const savedAddress = addresses[0];
+      setInitialValues({
+        zipCode: savedAddress.zipCode,
+        number: savedAddress.number,
+        recipient: savedAddress.recipient,
+        additionalData: savedAddress.additionalData || "",
+      });
+      setAddress({
+        street: savedAddress.street,
+        neighborhood: savedAddress.neighborhood,
+        city: savedAddress.city,
+        state: savedAddress.state,
+        cep: savedAddress.cep,
+      });
+      setLastZipCode(savedAddress.cep.replace("-", ""));
+
+      dispatch(newAddress());
+    }
+    // eslint-disable-next-line
+  }, [isEditing, hasFinished]);
+
   const handleSetAddresses = (payload) => {
-    const cleanPayload = {
-      ...payload,
+    const queryParams = new URLSearchParams(window.location.search);
+    const cartId = queryParams.get("cartId");
+
+    const updatedAddress = {
+      ...address,
       recipient: payload.recipient?.trim(),
       additionalData: payload.additionalData?.trim(),
-      street: payload.street?.trim(),
+      number: payload.number?.trim(),
+      zipCode: payload.zipCode?.trim(),
     };
-    if (currentEditingAddress >= 0) {
-      dispatch(
-        editAddresses([
-          ...addresses.filter((_, index) => index !== currentEditingAddress),
-          { ...cleanPayload, ...address },
-        ])
-      );
-      setCurrentEditingAddress(undefined);
-      setAddress(undefined);
-    } else {
-      dispatch(setAddresses({ ...cleanPayload, ...address }));
-      const queryParams = new URLSearchParams(window.location.search);
-      const cartId = queryParams.get("cartId");
-      axios.put(
+
+    dispatch(editAddresses([updatedAddress]));
+
+    axios
+      .put(
         `${process.env.REACT_APP_API_URL}/cart/${cartId}`,
         {
           status: "ENDERECO CLIENTE CAPTURADOS",
@@ -246,9 +257,25 @@ function Delivery() {
             Authorization: `Bearer ${process.env.REACT_APP_API_KEY}`,
           },
         }
-      );
-      setAddress(undefined);
-    }
+      )
+      .then(() => {
+        dispatch(
+          setCheckoutData({
+            ...data,
+            dados_capturados: {
+              ...data?.dados_capturados,
+              cep: payload.zipCode,
+              bairro: address.neighborhood.trim(),
+              cidade: address.city.trim(),
+              estado: address.state.trim(),
+              numero: parseInt(payload.number.trim()),
+              complemento: payload.additionalData.trim() || "",
+              endereco: address.street.trim(),
+            },
+          })
+        );
+      });
+    dispatch(finishDelivery());
   };
 
   const editData = () => {
@@ -261,51 +288,44 @@ function Delivery() {
     }
   };
 
-  const addNewAddress = () => {
-    setInitialValues({
-      zipCode: "",
-      number: "",
-      recipient: localStorage.getItem("Sterily_Buyer_Name"),
-      additionalData: "",
-    });
-    setAddress(undefined);
-    dispatch(newAddress());
-  };
+  // const addNewAddress = () => {
+  //   setInitialValues({
+  //     zipCode: "",
+  //     number: "",
+  //     recipient: localStorage.getItem("Sterily_Buyer_Name"),
+  //     additionalData: "",
+  //   });
+  //   setAddress(undefined);
+  //   dispatch(newAddress());
+  // };
 
-  const goBack = () => {
-    dispatch(listAddress());
-  };
+  // const goBack = () => {
+  //   dispatch(listAddress());
+  // };
 
   const handleSelectedAddress = (index) => {
     dispatch(selectAddress(index));
   };
 
-  const handleEditAddress = (index) => {
-    setCurrentEditingAddress(index);
-    dispatch(newAddress());
-    setInitialValues(addresses[index]);
+  // const handleEditAddress = (index) => {
+  //   setCurrentEditingAddress(index);
+  //   dispatch(newAddress());
+  //   setInitialValues(addresses[index]);
 
-    setAddress({
-      street: addresses[index].street.trim(),
-      neighborhood: addresses[index].neighborhood.trim(),
-      city: addresses[index].city.trim(),
-      state: addresses[index].state.trim(),
-      cep: addresses[index].cep.trim(),
-      number: addresses[index].number.trim(),
-      additionalData: addresses[index].additionalData.trim(),
-      recipient: addresses[index].recipient.trim(),
-    });
-  };
+  //   setAddress({
+  //     street: addresses[index].street,
+  //     neighborhood: addresses[index].neighborhood,
+  //     city: addresses[index].city,
+  //     state: addresses[index].state,
+  //     cep: addresses[index].cep,
+  //   });
+  // };
 
-  const handleDeleteAddress = (indexAddress) => {
-    dispatch(
-      editAddresses([...addresses.filter((_, index) => index !== indexAddress)])
-    );
-  };
-
-  const handleFinishDelivery = () => {
-    dispatch(finishDelivery());
-  };
+  // const handleDeleteAddress = (indexAddress) => {
+  //   dispatch(
+  //     editAddresses([...addresses.filter((_, index) => index !== indexAddress)])
+  //   );
+  // };
 
   useEffect(() => {
     if (addresses.length > 0) {
@@ -314,9 +334,7 @@ function Delivery() {
         "STERILY_CHECKOUT_ADDRESS",
         JSON.stringify(addresses)
       );
-      handleSelectedAddress(addresses.length - 1);
-    } else {
-      addNewAddress();
+      handleSelectedAddress(0);
     }
     // eslint-disable-next-line
   }, [addresses]);
@@ -451,7 +469,7 @@ function Delivery() {
           Preencha suas informações pessoais para continuar
         </Disclaimer>
       )}
-      {!isEditingLastStep && lastStepHasFinished && step === 1 && (
+      {!isEditingLastStep && lastStepHasFinished && step === 1 && isEditing && (
         <>
           <Disclaimer>Cadastre ou selecione um endereço</Disclaimer>
           <Formik
@@ -478,7 +496,8 @@ function Delivery() {
                 zipCodeRegex.test(values.zipCode) &&
                 (!address || address.cep !== values.zipCode.replace("-", "")) &&
                 !hasCalledApi &&
-                !hasError
+                !hasError &&
+                lastZipCode !== values.zipCode.replace("-", "")
               ) {
                 setHasCalledApi(true);
                 getAddress(values.zipCode.replace("-", ""));
@@ -486,9 +505,9 @@ function Delivery() {
 
               return (
                 <StyledForm autoComplete="off">
-                  {addresses.length >= 1 && (
+                  {/* {addresses.length >= 1 && (
                     <BackButton onClick={goBack}>{`< Voltar`}</BackButton>
-                  )}
+                  )} */}
                   <Label>CEP</Label>
                   <ZipCodeContainer>
                     <Field
@@ -583,7 +602,10 @@ function Delivery() {
                       {touched.recipient && errors.recipient && (
                         <ErrorMessage>{errors.recipient}</ErrorMessage>
                       )}
-                      <Button type="submit">CONTINUAR</Button>
+                      <Button type="submit">
+                        IR PARA PAGAMENTO
+                        <ArrowRight />
+                      </Button>
                     </>
                   )}
                 </StyledForm>
@@ -592,7 +614,7 @@ function Delivery() {
           </Formik>
         </>
       )}
-      {!isEditingLastStep && step === 2 && isEditing && (
+      {/* {!isEditingLastStep && step === 2 && isEditing && (
         <>
           <DisclaimerSelectAddress>
             Cadastre ou selecione um endereço
@@ -673,6 +695,7 @@ function Delivery() {
           </Button>
         </>
       )}
+        */}
       {!isEditing && hasFinished && (
         <>
           <DeliveryFinalTitle>Endereço para entrega:</DeliveryFinalTitle>
