@@ -94,7 +94,7 @@ function Delivery() {
   const getAddress = async (zipCode) => {
     setLastZipCode(zipCode);
 
-    if (lastZipCode.trim() === zipCode.trim()) {
+    if (lastZipCode && zipCode && lastZipCode.trim() === zipCode.trim()) {
       return;
     }
     try {
