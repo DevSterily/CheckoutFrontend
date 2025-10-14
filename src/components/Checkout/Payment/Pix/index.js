@@ -56,7 +56,7 @@ function Pix({ paymentData }) {
   const checkPayment = async () => {
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/payment/${paymentData.paymentId}`,
+        `${process.env.REACT_APP_API_URL}/payment/${paymentData.paymentId.id}`,
         {
           headers: {
             accept: "application/json",
