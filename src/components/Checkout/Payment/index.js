@@ -49,6 +49,9 @@ import axios from "axios";
 import { formatPrice } from "../../../utils/formatPrice";
 import { finishDelivery } from "../../../redux/deliverySlice";
 import { cancelEditingIdentification } from "../../../redux/identificationSlice";
+
+import ReactPixel from '../../../utils/facebookPixel'
+
 const validationSchema = Yup.object({
   cardNumber: Yup.string()
     .required("Campo obrigatório.")
@@ -130,6 +133,75 @@ function Payment() {
   const { data } = useSelector((state) => state.summary);
 
   const { selectedPayment } = useSelector((state) => state.payment);
+
+
+  const submitMetaPixelPurchase = async (type) => {
+    const queryParams = new URLSearchParams(window.location.search);
+    const cartId = queryParams.get("cartId");
+    if (cartId) {
+      try {
+        const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/cart/${cartId}`, {
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${process.env.REACT_APP_API_KEY}`,
+          },
+        });
+
+        const valorTotalCompra = data.resumo.totalWithDiscount ? data.resumo.totalWithDiscount : data.resumo.total
+
+        const itens = data.dados.items.map(item => {
+          return {
+            id: item.sku,
+            quantity: item.quantity,
+          }
+        })
+
+        ReactPixel.track('Purchase', {
+          value: valorTotalCompra,
+          currency: 'BRL',      // moeda
+          contents: itens,
+          content_type: 'product', // geralmente "product"
+        });
+      } catch (error) {
+        console.error("Error fetching cart items:", error);
+      }
+    }
+  }
+
+  const submitMetaPixelAddPaymentInfo = async (type) => {
+    const queryParams = new URLSearchParams(window.location.search);
+    const cartId = queryParams.get("cartId");
+    if (cartId) {
+      try {
+        const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/cart/${cartId}`, {
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${process.env.REACT_APP_API_KEY}`,
+          },
+        });
+
+        const valorTotalCompra = data.resumo.totalWithDiscount ? data.resumo.totalWithDiscount : data.resumo.total
+
+        const itens = data.dados.items.map(item => {
+          return {
+            id: item.sku,
+            quantity: item.quantity,
+          }
+        })
+
+        ReactPixel.track('AddPaymentInfo', {
+          currency: 'BRL',
+          value: valorTotalCompra / 100,
+          contents: itens,
+          payment_method: type
+        })
+
+        submitMetaPixelPurchase(type)
+      } catch (error) {
+        console.error("Error fetching cart items:", error);
+      }
+    }
+  };
 
   useEffect(() => {
     if (deliveryFinished) {
@@ -598,6 +670,7 @@ function Payment() {
                         )}
                         <Button
                           onClick={() => {
+                            submitMetaPixelAddPaymentInfo('credit_card')
                             generateCardToken(values);
                           }}
                           type="submit"
@@ -640,6 +713,7 @@ function Payment() {
 
                 <Button
                   onClick={() => {
+                    submitMetaPixelAddPaymentInfo('pix')
                     handlePayment("PIX");
                   }}
                 >
@@ -679,6 +753,7 @@ function Payment() {
                 </BarcodeDescriptionPaymentTotal>
                 <Button
                   onClick={() => {
+                    submitMetaPixelAddPaymentInfo('boleto')
                     handlePayment("BOLETO");
                   }}
                 >

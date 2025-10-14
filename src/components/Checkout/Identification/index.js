@@ -33,6 +33,8 @@ import { cancelEditingIdentification } from "../../../redux/identificationSlice"
 import { editDelivery } from "../../../redux/deliverySlice";
 import axios from "axios";
 
+import ReactPixel from '../../../utils/facebookPixel'
+
 const validationSchema = Yup.object({
   name: Yup.string()
     .required("Campo obrigatório.")
@@ -121,6 +123,42 @@ function Identification() {
       }
     );
   };
+
+  const getCartItens = async () => {
+    const queryParams = new URLSearchParams(window.location.search);
+    const cartId = queryParams.get("cartId");
+    if (cartId) {
+      try {
+        const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/cart/${cartId}`, {
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${process.env.REACT_APP_API_KEY}`,
+          },
+        });
+
+        data.dados.items.map(item => {
+          ReactPixel.track('AddToCart', {
+            content_ids: item.sku,
+            content_name: item.title,
+            content_type: 'product',
+            value: item.price,
+            currency: 'BRL',
+            contents: [{
+              id: item.sku,
+              quantity: item.quantity, // Or the actual quantity added
+              item_price: item.price,
+            }],
+          })
+        })
+      } catch (error) {
+        console.error("Error fetching cart items:", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    getCartItens();
+  },  [])
 
   useEffect(() => {
     const cachedData =
