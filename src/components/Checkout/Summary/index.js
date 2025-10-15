@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import {
   AddIcon,
   Container,
@@ -45,6 +45,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCheckoutData } from "../../../redux/summarySlice";
 import { formatPrice } from "../../../utils/formatPrice";
 import { useResponsive } from "../../../hooks/useResponsive";
+import ReactPixel from "react-facebook-pixel";
 
 let cupomAtual = "";
 
@@ -60,6 +61,8 @@ function Summary() {
 
   const [data, setData] = useState();
   const [couponText, setCouponText] = useState();
+
+  const initiateCheckoutSent = useRef(false);
 
   const getCartData = useCallback(async () => {
     await axios
@@ -206,6 +209,20 @@ function Summary() {
     },
     [couponText, cartId, getCartData]
   );
+
+  useEffect(() => {
+    if (data?.resumo && !initiateCheckoutSent.current) {
+      ReactPixel.track("InitiateCheckout", {
+        value: data.resumo.total / 100,
+        num_items: data?.resumo?.totalItems,
+        content_ids: data?.dados?.items?.map((item) => item.id),
+        currency: "BRL",
+        contents: data?.dados?.items,
+      });
+
+      initiateCheckoutSent.current = true;
+    }
+  }, [data]);
 
   const handleDiscount = () => {
     return couponData.tipo_desconto === "porcentagem"
